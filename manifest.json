@@ -1,0 +1,49 @@
+{
+  "name": "ChromeHybridTvViewer",
+  "version": "0.1",
+  "manifest_version": 2,
+  "description": "Extension making CHROME to open CE-HTML,BML,OHTV,HbbTV webpages instead of downloading them (HbbTV, StreamEvents, CI+ and DVB-SI are software emulated)",
+  "permissions": [
+    "activeTab",
+    "processes",
+    "management",
+    "webRequest",
+    "webRequestBlocking",
+    "<all_urls>"
+  ],
+  "minimum_chrome_version": "18",
+  "background": {
+    "scripts": [ "patcher.js" ]
+  },
+  "options_page": "options.html",
+  "web_accessible_resources": [ "hbbtv.js" ],
+  "nacl_modules": [{
+    "path": "native-object.nmf",
+    "mime_type": "application/oipfConfiguration"
+  },
+  {
+    "path": "native-object.nmf",
+    "mime_type": "application/oipfApplicationManager"
+  },
+  {
+    "path": "native-object.nmf",
+    "mime_type": "application/oipfCapabilities"
+  },
+  {
+    "path": "native-object.nmf",
+    "mime_type": "application/oipfSearchManager"
+  },
+  {
+    "path": "native-object.nmf",
+    "mime_type": "application/oipfParentalControlManager"
+  }],
+  "browser_action": {
+    "default_icon": {
+      "128": "img/tv-icon128-off.png"
+    },
+    "default_title": "Hybrid TV viewer"
+  },
+  "icons": {
+    "128": "img/tv-icon128-on.png"
+  }
+}
