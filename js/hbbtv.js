@@ -1,3 +1,5 @@
+/* global Application, oipfObjectFactory, oipfApplicationManager, oipfConfiguration, oipfCapabilities */
+
 // 7.1 Object factory API ------------------------------------------------------
 
 (function (oipfObjectFactory) {

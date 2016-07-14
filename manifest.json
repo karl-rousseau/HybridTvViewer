@@ -7,16 +7,19 @@
 
   "permissions": [
     "activeTab",
-    //"processes",
-    //"management",
     "webRequest",
     "webRequestBlocking",
     "<all_urls>"
   ],
+  "web_accessible_resources": [
+    "js/hbbtv.js",
+    "img/*.png"
+  ],
 
   "browser_action": {
     "default_icon": {
-      "128": "img/tv-icon128-off.png"
+      "19": "img/tv-icon19-off.png",
+      "38": "img/tv-icon38-off.png"
     },
     "default_title": "Hybrid TV viewer"
   },
@@ -27,8 +30,8 @@
   "background": {
     "scripts": [ "js/patcher.js" ]
   },
+
   "options_page": "html/options.html",
-  "web_accessible_resources": [ "js/hbbtv.js" ],
 
   "nacl_modules": [{
     "path": "plugins/native-object.nmf",
