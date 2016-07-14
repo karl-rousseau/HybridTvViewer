@@ -1,7 +1,7 @@
 # CHROME/Chromium extension
 
 ## Status
----
+
 - :white_check_mark: ~~removing CHROME warning popups for various undefined mime-types~~
 - :construction: currently only as a prototype stage ~~but the proof of concept has been validated~~
 - :skull: SUN MHP technology has been put aside as it will need to have a JVM installed with its associated plugin
@@ -26,7 +26,7 @@ This extension might use a CHROME application in the future in order to have vid
 ```
 
 ## Detection and usage
----
+
 In order to automatically activate the extension on an given web page, you need to follow
 standard implementation as seen for example on SAMSUNG iDTV devices that are looking for
 this HTTP header field:
@@ -56,7 +56,7 @@ and sometime with the addition of a given DOCTYPE:
 In other cases, you can also manually click on the extension icon inside CHROME's bar to force the page to be interpreted as an Hybrid iDTV page. (this action is saved in local storage for further visits)
 
 ## Examples
----
+
 The purpose of this extension is mainly to validate the **MIT-xperts test suite** under CHROME.
 Here are some example URL that have been extracted from various sources:
 
