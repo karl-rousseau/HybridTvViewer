@@ -1,0 +1,6 @@
+// Toggle the activation value on the current WEB page ...
+var pageNotActivated = localStorage.getItem('tvViewer_active') !== 'true';
+localStorage.setItem('tvViewer_active', pageNotActivated);
+
+// Just refresh the page in order to inject new CSS and JS ...
+document.location.reload();
