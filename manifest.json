@@ -6,6 +6,7 @@
   "description": "Extension making CHROME to open HbbTV,CE-HTML,BML,OHTV webpages instead of downloading them (HbbTV, StreamEvents, CI+ and DVB-SI are software emulated)",
 
   "permissions": [
+    "tabs",
     "activeTab",
     "webRequest",
     "webRequestBlocking",
@@ -13,6 +14,7 @@
   ],
   "web_accessible_resources": [
     "js/hbbtv.js",
+    "plugins/native-object.nmf",
     "img/*.png"
   ],
 
@@ -41,6 +43,10 @@
   "options_page": "html/options.html",
 
   "nacl_modules": [{
+    "path": "plugins/native-object.nmf",
+    "mime_type": "video/broadcast"
+  },
+  {
     "path": "plugins/native-object.nmf",
     "mime_type": "application/oipfConfiguration"
   },
