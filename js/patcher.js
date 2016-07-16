@@ -43,22 +43,76 @@
         'aitx': 'application/vnd.dvb.ait'
     };
 
+    if (typeof String.prototype.endsWith !== 'function') { // don't use ES6 if CHROME is older than V41 ... then use a polyfill
+        String.prototype.endsWith = function(suffix) {
+            return this.indexOf(suffix, this.length - suffix.length) !== -1;
+        };
+    }
+
+    function isUrlStored(url) {
+        var urlFound = false;
+        var hybridPages = localStorage.getItem("tvViewer_tabs");
+        hybridPages = hybridPages ? JSON.parse(hybridPages) : [];
+        for (var i = 0; i < hybridPages.length; i++) {
+            if (url.indexOf(hybridPages[i]) > -1) {
+                urlFound = true;
+                break;
+            }
+        }
+        return urlFound;
+    }
+
     // -- Filtering browser's HTTP headers -------------------------------------
 
     var callback = function(info) {
-        console.log("onHeadersReceived: " + Math.round(info.timeStamp) + " url: " + (info.url ? info.url : ''));
+        var url = (info.url ? info.url : '');
+        console.log("onHeadersReceived: " + Math.round(info.timeStamp) + " url: " + url);
 
-        // if (info.url.indexOf(".cehtml")) { // if URL is ended with .cehtml like ARTE page then we do the injection ...
+        // if (info.url.indexOf(".cehtml") > -1) { // if URL is ended with .cehtml like ARTE page then we do the injection ...
         //     console.log("CE HTML found !");
         //
         // }
 
+        if (//isUrlStored(url) ||
+            url.endsWith(".ico") ||
+            url.endsWith(".json") ||
+            url.endsWith(".js") ||
+            url.endsWith(".css") ||
+            url.endsWith(".jpg") ||
+            url.endsWith(".png") ||
+            url.endsWith(".gif") ||
+            url.endsWith(".webp") ||
+            url.endsWith(".m3u8") ||
+            url.endsWith(".mpd") ||
+            url.endsWith(".ts") ||
+            url.endsWith(".mpg") ||
+            url.endsWith(".mp3") ||
+            url.endsWith(".mp4") ||
+            url.endsWith(".mov") ||
+            url.endsWith(".avi") ||
+            url.endsWith(".pdf") ||
+            url.endsWith(".ppt") ||
+            url.endsWith(".pptx") ||
+            url.endsWith(".xls") ||
+            url.endsWith(".xlsx") ||
+            url.endsWith(".doc") ||
+            url.endsWith(".docx") ||
+            url.endsWith(".zip") ||
+            url.endsWith(".rar") ||
+            url.endsWith(".7z") // FIXME: put those extensions in an array to scan
+        ) { // already parsed, detected and stored URL page or un-wanted one ?
+            return {
+                responseHeaders: headers
+            };
+        }
+
         var headers = info.responseHeaders;
         headers.forEach(function(header) {
             var headerWithHbbtv = header.value.substring(0, knownMimeTypes.hbbtv.length) === knownMimeTypes.hbbtv;
+            var headerWithCeHtml = header.value.substring(0, knownMimeTypes.cehtml.length) === knownMimeTypes.cehtml;
             switch (header.name.toLowerCase()) {
                 case 'content-type':
-                    if (headerWithHbbtv) {
+                    if (headerWithHbbtv || headerWithCeHtml) {
                         console.log("onHeadersReceived : url: " + (info.url ? info.url : ''));
 
                         chrome.browserAction.setIcon({
@@ -70,6 +124,8 @@
                         localStorage.setItem("tvViewer_tabs", JSON.stringify(tabs)); // store patched URL (for tabs retrieval)
 
                         header.value = 'text/html'; // override current content-type to avoid CHROME automatic download
+
+                        // TODO: also inject the CSS and JS ... as if we had clicked on the extension icon
 
                     }
                     /*else if (header.value.substring(0, 'application/xhtml+xml'.length) === 'application/xhtml+xml') {
@@ -126,18 +182,7 @@
 
     chrome.tabs.onActivated.addListener(function(activeInfo) {
         chrome.tabs.getSelected(null, function(tabInfo) {
-            var urlFound = false;
-            var hybridPages = localStorage.getItem("tvViewer_tabs");
-            hybridPages = hybridPages ? JSON.parse(hybridPages) : [];
-            console.log("HYBRIDS: ", hybridPages);
-            if (hybridPages) {
-                for (var i = 0; i < hybridPages.length; i++) {
-                    if (tabInfo.url == hybridPages[i]) { // current tab = same page as previously found as Hybrid ?
-                        urlFound = true;
-                        break;
-                    }
-                }
-            }
+            var urlFound = isUrlStored(tabInfo.url);
 
             chrome.browserAction.setIcon({
                 path: "./img/tv-icon128-" + (urlFound ? "on" : "off") + ".png"
@@ -151,17 +196,12 @@
         chrome.tabs.getSelected(null, function(selectedTab) {
             console.log("TAB UPDATE: ", tab.url, changeInfo);
 
-            if (tab.url === selectedTab.url && tab.status === "complete") { // page has been fully reloaded ... then inject JS simulator ...
-                var urlFound = false;
-                var hybridPages = localStorage.getItem("tvViewer_tabs");
-                hybridPages = hybridPages ? JSON.parse(hybridPages) : [];
-                for (var i = 0; i < hybridPages.length; i++) {
-                    if (hybridPages[i] == tab.url) {
-                        urlFound = true;
-                        break;
-                    }
-                }
+            if (tab.url === selectedTab.url && tab.status === "loading") { // page is loading ... then inject CSS ...
 
+            }
+
+            if (tab.url === selectedTab.url && tab.status === "complete") { // page has been fully reloaded ... then inject JS simulator ...
+                var urlFound = isUrlStored(tab.url);
                 if (urlFound) {
                     var pluginPath = chrome.extension.getURL("js/hbbtv.js");
                     console.log("JS PATH: " + pluginPath);
@@ -171,7 +211,11 @@
                         code: injectedScript,
                         runAt: "document_end"
                     }, function() {
-                        console.log("HbbTV JS injection done.");
+                        if (chrome.runtime.lastError) {
+                            console.error(chrome.runtime.lastError.message);
+                        } else {
+                            console.log("HbbTV JS injection done.");
+                        }
                     });
                 }
             }
@@ -181,20 +225,14 @@
     // -- Listen to ICON click ... ---------------------------------------------
 
     chrome.browserAction.onClicked.addListener(function(tabInfo) {
-        // TODO: refactor this code inside a proper method for re-use (here used three times)
-        var urlFound = false;
+        var urlFound = isUrlStored(tabInfo.url);
         var hybridPages = localStorage.getItem("tvViewer_tabs");
         hybridPages = hybridPages ? JSON.parse(hybridPages) : [];
-        for (var i = 0; i < hybridPages.length; i++) {
-            if (hybridPages[i] == tabInfo.url) {
-                urlFound = true;
-                break;
-            }
-        }
         if (!urlFound) {
             hybridPages.push(tabInfo.url);
         } else {
-            hybridPages.splice(i, 1);
+            var idx = hybridPages.indexOf(tabInfo.url);
+            hybridPages.splice(idx, 1);
         }
         localStorage.setItem("tvViewer_tabs", JSON.stringify(hybridPages)); // store patched URL (for tabs retrieval)
 
