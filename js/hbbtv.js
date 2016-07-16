@@ -175,8 +175,9 @@ window.Application = {};
 // 7.15.3 The application/oipfCapabilities embedded object ---------------------
 
 (function (oipfCapabilities) {
-   // FIXME: here hardcoded value but will have to be taken from local storage
-   var currentCapabilities = '<profilelist>' +
+   var storedCapabilities = localStorage.getItem("tvViewer_capabilities"); // FIXME: postMessage to retrieve this value from Chrome extension
+   var currentCapabilities = storedCapabilities ||
+      '<profilelist>' +
       '<ui_profile name="OITF_HD_UIPROF+META_SI+META_EIT+TRICKMODE+RTSP+AVCAD+DRM+DVB_T">' +
       '<ext>' +
       '<colorkeys>true</colorkeys>' +
