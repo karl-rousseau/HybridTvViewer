@@ -329,6 +329,10 @@ window.Application = {};
                 } else if (objType === "oipfCapabilities") {
                     console.log("re-using user-defined oipfCapabilities");
                     mixin(window.oipfCapabilities, int_objs[objType]);
+                } else if (objType === "video/broadcast") {
+
+                } else if (objType === "video/mpeg4") {
+
                 }
             }
         }

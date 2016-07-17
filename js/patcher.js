@@ -53,6 +53,7 @@
         var urlFound = false;
         var hybridPages = localStorage.getItem("tvViewer_tabs");
         hybridPages = hybridPages ? JSON.parse(hybridPages) : [];
+
         for (var i = 0; i < hybridPages.length; i++) {
             if (url.indexOf(hybridPages[i]) > -1) {
                 urlFound = true;
@@ -60,6 +61,23 @@
             }
         }
         return urlFound;
+    }
+
+    function checkAndStoreUrl(url, forceToDelete) {
+      var hybridPages = localStorage.getItem("tvViewer_tabs");
+      hybridPages = hybridPages ? JSON.parse(hybridPages) : [];
+
+      var domainOnly = url.split('/').slice(0, 3).join('/');
+      var urlFound = isUrlStored(domainOnly);
+      if (!urlFound) {
+          hybridPages.push(domainOnly); // TODO: add the type of recognized hybrid technology (to update setBadgeText)
+          localStorage.setItem("tvViewer_tabs", JSON.stringify(hybridPages)); // store patched URL (for tabs retrieval)
+      } else if (forceToDelete) {
+          var idx = hybridPages.indexOf(domainOnly);
+          hybridPages.splice(idx, 1);
+          localStorage.setItem("tvViewer_tabs", JSON.stringify(hybridPages));
+      }
+      return urlFound;
     }
 
     // -- Filtering browser's HTTP headers -------------------------------------
@@ -115,23 +133,17 @@
             switch (header.name.toLowerCase()) {
                 case 'content-type':
                     if (headerWithHbbtv || headerWithCeHtml || headerWithOhtv || headerWithBml) {
-                        console.log("onHeadersReceived -> hybrid url: " + (info.url ? info.url : ''));
+                        console.log("onHeadersReceived -> hybrid url: " + url.split('/').slice(0, 3).join('/'));
 
                         chrome.browserAction.setIcon({
                             path: "./img/tv-icon128-on.png"
                         });
 
-                        var tabs = [];
-                        var domainOnly = (info.url).split('/').slice(0, 3).join('/');
-                        if (isUrlStored(url) === false) {
-                            tabs.push(domainOnly); // TODO: add the type of recognized hybrid technology (to update setBadgeText)
-                            localStorage.setItem("tvViewer_tabs", JSON.stringify(tabs)); // store patched URL (for tabs retrieval)
-                        }
+                        checkAndStoreUrl(url);
 
                         header.value = 'text/html'; // override current content-type to avoid CHROME automatic download
 
-                        // TODO: also inject the CSS and JS ... as if we had clicked on the extension icon
-
+                        // TODO: also inject the CSS and JS on onCompleted event ? (as if we had clicked on the extension icon)
                     }
                     break;
             }
@@ -237,18 +249,9 @@
     // -- Listen to ICON click ... ---------------------------------------------
 
     chrome.browserAction.onClicked.addListener(function(tabInfo) {
-        var urlFound = isUrlStored(tabInfo.url);
-        var hybridPages = localStorage.getItem("tvViewer_tabs");
-        hybridPages = hybridPages ? JSON.parse(hybridPages) : [];
-        if (!urlFound) {
-            hybridPages.push(tabInfo.url);
-        } else {
-            var idx = hybridPages.indexOf(tabInfo.url);
-            hybridPages.splice(idx, 1);
-        }
-        localStorage.setItem("tvViewer_tabs", JSON.stringify(hybridPages)); // store patched URL (for tabs retrieval)
+        var urlFound = checkAndStoreUrl(tabInfo.url, true);
 
-        console.log("onclick urlFound=" + urlFound);
+        console.log("onclick urlFound=" + urlFound + " url=" + tabInfo.url);
 
         chrome.browserAction.setIcon({
             path: "./img/tv-icon128-" + (urlFound === false ? "on" : "off") + ".png"

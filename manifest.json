@@ -13,7 +13,7 @@
     "<all_urls>"
   ],
   "web_accessible_resources": [
-    "js/hbbtv.js",
+    "js/*.js",
     "plugins/native-object.nmf",
     "img/*.png"
   ],
