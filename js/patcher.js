@@ -37,10 +37,10 @@
     var knownMimeTypes = {
         'hbbtv': 'application/vnd.hbbtv.xhtml+xml',
         'cehtml': 'application/ce-html+xml',
-        'bml': 'text/X-arib-bml',
         'ohtv': 'application/vnd.ohtv',
-        'mheg': 'application/x-mheg-5',
-        'aitx': 'application/vnd.dvb.ait'
+        'bml': 'text/X-arib-bml'
+        //'mheg': 'application/x-mheg-5',
+        //'aitx': 'application/vnd.dvb.ait'
     };
 
     if (typeof String.prototype.endsWith !== 'function') { // don't use ES6 if CHROME is older than V41 ... then use a polyfill
@@ -65,17 +65,16 @@
     // -- Filtering browser's HTTP headers -------------------------------------
 
     var callback = function(info) {
-        var url = (info.url ? info.url : '');
-        console.log("onHeadersReceived: " + Math.round(info.timeStamp) + " url: " + url);
+        var url = (info.url || '');
+        var headers = info.responseHeaders;
 
-        // if (info.url.indexOf(".cehtml") > -1) { // if URL is ended with .cehtml like ARTE page then we do the injection ...
+        // if (info.url.indexOf(".cehtml") > -1) { // if URL is ended with .cehtml like some ARTE pages then we do the injection ...
         //     console.log("CE HTML found !");
         //
         // }
 
-        if (//isUrlStored(url) ||
+        if (url.indexOf(".json") > -1 || // also .jsonp
             url.endsWith(".ico") ||
-            url.endsWith(".json") ||
             url.endsWith(".js") ||
             url.endsWith(".css") ||
             url.endsWith(".jpg") ||
@@ -106,59 +105,34 @@
             };
         }
 
-        var headers = info.responseHeaders;
+        console.log("onHeadersReceived: " + Math.round(info.timeStamp) + " url: " + url);
+
         headers.forEach(function(header) {
             var headerWithHbbtv = header.value.substring(0, knownMimeTypes.hbbtv.length) === knownMimeTypes.hbbtv;
             var headerWithCeHtml = header.value.substring(0, knownMimeTypes.cehtml.length) === knownMimeTypes.cehtml;
+            var headerWithOhtv = header.value.substring(0, knownMimeTypes.ohtv.length) === knownMimeTypes.ohtv;
+            var headerWithBml = header.value.substring(0, knownMimeTypes.bml.length) === knownMimeTypes.bml;
             switch (header.name.toLowerCase()) {
                 case 'content-type':
-                    if (headerWithHbbtv || headerWithCeHtml) {
-                        console.log("onHeadersReceived : url: " + (info.url ? info.url : ''));
+                    if (headerWithHbbtv || headerWithCeHtml || headerWithOhtv || headerWithBml) {
+                        console.log("onHeadersReceived -> hybrid url: " + (info.url ? info.url : ''));
 
                         chrome.browserAction.setIcon({
                             path: "./img/tv-icon128-on.png"
                         });
 
                         var tabs = [];
-                        tabs.push(info.url); // TODO: add the type of recognized hybrid technology (to update setBadgeText)
-                        localStorage.setItem("tvViewer_tabs", JSON.stringify(tabs)); // store patched URL (for tabs retrieval)
+                        var domainOnly = (info.url).split('/').slice(0, 3).join('/');
+                        if (isUrlStored(url) === false) {
+                            tabs.push(domainOnly); // TODO: add the type of recognized hybrid technology (to update setBadgeText)
+                            localStorage.setItem("tvViewer_tabs", JSON.stringify(tabs)); // store patched URL (for tabs retrieval)
+                        }
 
                         header.value = 'text/html'; // override current content-type to avoid CHROME automatic download
 
                         // TODO: also inject the CSS and JS ... as if we had clicked on the extension icon
 
                     }
-                    /*else if (header.value.substring(0, 'application/xhtml+xml'.length) === 'application/xhtml+xml') {
-                        console.log("onHeadersReceived : checking content of url " + (info.url ? info.url : ''));
-
-                        var xmlRequest = new XMLHttpRequest();
-                        xmlRequest.open('GET', info.url, true); // Ajax call to preload content to seek META tag content ... downside: heavy network usage :(
-                        xmlRequest.send();
-
-                        xmlRequest.onreadystatechange = function() {
-                            if (xmlRequest.readyState==4 && xmlRequest.status==200) {
-                                var text = xmlRequest.responseText;
-                                console.log("URL XML length=" + text.length);
-                                if (text.indexOf("application/vnd.hbbtv.xhtml+xml") !== -1) {
-                                   chrome.tabs.query({ url: info.url }, function(tabs) {
-                                        console.log(tabs);
-                                        if (tabs && tabs.length > 0 && tabs[0].id) {
-                                            selectedTabId = tabs[0].id;
-
-                                            var pluginPath = chrome.extension.getURL("js/hbbtv.js");
-                                            console.log("=> JS PATH: " + pluginPath);
-                                            var injectedScript = "(function(d){var e=d.createElement('script');";
-                                            injectedScript += "e.setAttribute('type','text/javascript');e.setAttribute('src','" + pluginPath + "');d.head.insertBefore(e,d.head.firstChild)}(document));";
-                                            console.log(injectedScript);
-                                            chrome.tabs.executeScript(selectedTabId, { code: injectedScript }, function() {
-                                                console.log("=> HbbTV JS injection done.");
-                                            });
-                                        }
-                                    });
-                                }
-                            }
-                        };
-                    }*/
                     break;
             }
         });
@@ -176,6 +150,44 @@
         filter,
         opt_extraInfoSpec
     ); // filtering headers of each browser request ...
+
+    // chrome.webRequest.onCompleted.addListener(
+    //     function(details) {
+    //       console.log("onCompleted: ", details);
+    //
+    //       // TODO: filter the URL as done before in the header analysis
+    //
+    //       var xmlRequest = new XMLHttpRequest();
+    //       xmlRequest.open('GET', details.url, true); // Ajax call to preload content to seek META tag content ... downside: heavy network usage :(
+    //       xmlRequest.send();
+    //
+    //       xmlRequest.onreadystatechange = function() {
+    //           if (xmlRequest.readyState==4 && xmlRequest.status==200) {
+    //               var text = xmlRequest.responseText;
+    //               console.log("URL XML length=" + text.length);
+    //               if (text.indexOf("application/vnd.hbbtv.xhtml+xml") !== -1) {
+    //                  chrome.tabs.query({ url: details.url }, function(tabs) {
+    //                       console.log(tabs);
+    //                       if (tabs && tabs.length > 0 && tabs[0].id) {
+    //                           selectedTabId = tabs[0].id;
+    //
+    //                           var pluginPath = chrome.extension.getURL("js/hbbtv.js");
+    //                           console.log("=> JS PATH: " + pluginPath);
+    //                           var injectedScript = "(function(d){var e=d.createElement('script');";
+    //                           injectedScript += "e.setAttribute('type','text/javascript');e.setAttribute('src','" + pluginPath + "');d.head.insertBefore(e,d.head.firstChild)}(document));";
+    //                           console.log(injectedScript);
+    //                           chrome.tabs.executeScript(selectedTabId, { code: injectedScript }, function() {
+    //                               console.log("=> HbbTV JS injection done.");
+    //                           });
+    //                       }
+    //                   });
+    //               }
+    //           }
+    //       };
+    //     },
+    //     filter,
+    //     ["responseHeaders"]
+    // );
 
     // -- Listen to active TAB ... ---------------------------------------------
     // if page is an hybrid one, we active the extension icon with a text ...

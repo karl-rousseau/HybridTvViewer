@@ -17,24 +17,61 @@ html.tvViewer > body {
     margin-top: -360px;
     margin-left: -640px;
     overflow: hidden;
+    box-shadow: 0 0 120px 10px black;
+}
+
+#redkey {
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
+    width: 40px;
+    height: 20px;
+    background-color: #DA0000;
+}
+
+#greenkey {
+    position: absolute;
+    bottom: 5px;
+    left: 60px;
+    width: 40px;
+    height: 20px;
+    background-color: #008F15;
+}
+
+#yellowkey {
+    position: absolute;
+    bottom: 5px;
+    left: 110px;
+    width: 40px;
+    height: 20px;
+    background-color: #DCBB00;
+}
+
+#bluekey {
+    position: absolute;
+    bottom: 5px;
+    left: 160px;
+    width: 40px;
+    height: 20px;
+    background-color: #3993D9;
 }
 
 body.720p {
-  zoom: 1.0;
+    zoom: 1.0;
 }
 
 body.768p {
-  zoom: 1.06666666;
+    zoom: 1.06666666;
 }
 
 body.1080p {
-  zoom: 1.5;
+    zoom: 1.5;
 }
 
 body.1440p {
-  zoom: 2.0;
+    zoom: 2.0;
 }
 
 body.2160p {
-  zoom: 3.0;
+    zoom: 3.0;
 }
