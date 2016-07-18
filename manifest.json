@@ -15,6 +15,7 @@
   "web_accessible_resources": [
     "js/*.js",
     "plugins/native-object.nmf",
+    "css/*.css",
     "img/*.png"
   ],
 
@@ -32,14 +33,6 @@
   "background": {
     "scripts": [ "js/patcher.js" ]
   },
-  "content_scripts": [
-    {
-        "matches": [ "http://*/*", "https://*/*" ],
-        "js": [ "js/injector.js" ],
-        "css": [ "css/injector.css" ],
-        "run_at": "document_start"
-    }
-  ],
   "options_page": "html/options.html",
 
   "nacl_modules": [{

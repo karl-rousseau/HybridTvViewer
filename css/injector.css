@@ -10,19 +10,19 @@ html.tvViewer {
 
 html.tvViewer > body {
     position: absolute;
-    width: 1280px;
-    height: 720px;
+    width: 1280px !important;
+    height: 720px !important;
     top: 50%;
     left: 50%;
     margin-top: -360px;
     margin-left: -640px;
-    overflow: hidden;
-    box-shadow: 0 0 120px 10px black;
+    box-shadow: 0 0 100px 50px black;
+    overflow: visible !important;
 }
 
 #redkey {
     position: absolute;
-    bottom: 5px;
+    bottom: -30px;
     left: 10px;
     width: 40px;
     height: 20px;
@@ -31,7 +31,7 @@ html.tvViewer > body {
 
 #greenkey {
     position: absolute;
-    bottom: 5px;
+    bottom: -30px;
     left: 60px;
     width: 40px;
     height: 20px;
@@ -40,7 +40,7 @@ html.tvViewer > body {
 
 #yellowkey {
     position: absolute;
-    bottom: 5px;
+    bottom: -30px;
     left: 110px;
     width: 40px;
     height: 20px;
@@ -49,7 +49,7 @@ html.tvViewer > body {
 
 #bluekey {
     position: absolute;
-    bottom: 5px;
+    bottom: -30px;
     left: 160px;
     width: 40px;
     height: 20px;

@@ -142,8 +142,6 @@
                         checkAndStoreUrl(url);
 
                         header.value = 'text/html'; // override current content-type to avoid CHROME automatic download
-
-                        // TODO: also inject the CSS and JS on onCompleted event ? (as if we had clicked on the extension icon)
                     }
                     break;
             }
@@ -221,16 +219,46 @@
             console.log("TAB UPDATE: ", tab.url, changeInfo);
 
             if (tab.url === selectedTab.url && tab.status === "loading") { // page is loading ... then inject CSS ...
+              var urlFound = isUrlStored(tab.url);
+              if (urlFound) {
+                  var pluginPath = chrome.extension.getURL("css/injector.css");
+                  var injectedScript = "(function(d){var e=d.createElement('link');e.setAttribute('rel','stylesheet');";
+                  injectedScript += "e.setAttribute('type','text/css');e.setAttribute('href','" + pluginPath + "');d.head.insertBefore(e,d.head.firstChild)}(document));";
+                  chrome.tabs.executeScript(null, {
+                      code: injectedScript,
+                      runAt: "document_start"
+                  }, function() {
+                      if (chrome.runtime.lastError) {
+                          console.error(chrome.runtime.lastError.message);
+                      } else {
+                          console.log("HbbTV CSS injection done.");
+                      }
+                  });
+
+                  pluginPath = chrome.extension.getURL("js/hbbtv.js");
+                  injectedScript = "(function(d){var e=d.createElement('script');";
+                  injectedScript += "e.setAttribute('type','text/javascript');e.setAttribute('src','" + pluginPath + "');d.head.insertBefore(e,d.head.firstChild)}(document));";
+                  chrome.tabs.executeScript(null, {
+                      code: injectedScript,
+                      runAt: "document_end"
+                  }, function() {
+                      if (chrome.runtime.lastError) {
+                          console.error(chrome.runtime.lastError.message);
+                      } else {
+                          console.log("HbbTV JS injection done.");
+                      }
+                  });
+              }
 
             }
 
             if (tab.url === selectedTab.url && tab.status === "complete") { // page has been fully reloaded ... then inject JS simulator ...
                 var urlFound = isUrlStored(tab.url);
                 if (urlFound) {
-                    var pluginPath = chrome.extension.getURL("js/hbbtv.js");
+                    var pluginPath = chrome.extension.getURL("js/hbbdom.js");
                     console.log("JS PATH: " + pluginPath);
-                    var injectedScript = "(function(d){var e=d.createElement('script');";
-                    injectedScript += "e.setAttribute('type','text/javascript');e.setAttribute('src','" + pluginPath + "');d.head.insertBefore(e,d.head.firstChild)}(document));";
+                    var injectedScript = "(function(d){var e=d.createElement('script');e.setAttribute('defer', 'defer');";
+                    injectedScript += "e.setAttribute('type','text/javascript');e.setAttribute('src','" + pluginPath + "');d.body.appendChild(e)}(document));";
                     chrome.tabs.executeScript(null, {
                         code: injectedScript,
                         runAt: "document_end"
@@ -238,7 +266,7 @@
                         if (chrome.runtime.lastError) {
                             console.error(chrome.runtime.lastError.message);
                         } else {
-                            console.log("HbbTV JS injection done.");
+                            console.log("HbbTV DOM JS injection done.");
                         }
                     });
                 }
