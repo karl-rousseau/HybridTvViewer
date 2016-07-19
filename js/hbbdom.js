@@ -31,27 +31,23 @@
 */
 
 // If the extension is not activated for this web page then we do nothing and
-// wait for the user to click on the extension icon ...
+// wait for the user to click on the extension icon ... otherwise we inject stuff in the DOM
 var pageActivated = localStorage.getItem('tvViewer_active') == 'true';
 if (pageActivated) {
-    function addClass(element, className) {
-        if (element.classList) {
-            element.classList.add(className);
-        } else {
-            element.className += ' ' + className;
+    (function(document) {
+        function addClass(element, className) {
+            if (element.classList) {
+                element.classList.add(className);
+            } else {
+                element.className += ' ' + className;
+            }
         }
-    }
 
-    function removeClass(element, className) {
-        if (element.classList) {
-            element.classList.remove(className);
-        }
-    }
-    // Just tag current page as activated and also do CSS injection at the same time ...
-    addClass(document.documentElement, "tvViewer");
+        // Just tag current page as activated and also do CSS injection at the same time ...
+        addClass(document.documentElement, "tvViewer");
+    })(window.document);
 
-
-    // Colored keys emulator -------------------------------------------------------
+    // Button keys emulator --------------------------------------------------------
 
     (function(document) {
         //document.addEventListener("DOMContentLoaded", function() {
@@ -78,6 +74,9 @@ if (pageActivated) {
         generateColoredButton("greenkey", 0x4A);
         generateColoredButton("yellowkey", 0x56);
         generateColoredButton("bluekey", 0x52);
+
+        // TODO: add resizing screen buttons ...
+
         //})
     })(window.document);
 
@@ -96,8 +95,6 @@ if (pageActivated) {
             config: window.oipfConfiguration,
             capobj: window.oipfCapabilities
         };
-
-        if (int_objs.length) return;
 
         function mixin(source, target) { // soon we might use ES6 Object.assign()
             for (var prop in source) {
@@ -154,5 +151,5 @@ if (pageActivated) {
         }
     })(window.document);
 
-    console.log("DOM HbbTV emulator added !");
+    console.log("DOM HbbTV emulator added.");
 }

@@ -215,17 +215,18 @@
     // -- Listen to TAB update (F5 or JavaScript reload) ... -------------------
 
     chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+        // TODO: scan all the tabs and not only the selected one ... for example at CHROME's startup to update all tabs
         chrome.tabs.getSelected(null, function(selectedTab) {
             console.log("TAB UPDATE: ", tab.url, changeInfo);
 
+            var urlFound = isUrlStored(tab.url);
             if (tab.url === selectedTab.url && tab.status === "loading") { // page is loading ... then inject CSS ...
-              var urlFound = isUrlStored(tab.url);
               if (urlFound) {
-                  var pluginPath = chrome.extension.getURL("css/injector.css");
-                  var injectedScript = "(function(d){var e=d.createElement('link');e.setAttribute('rel','stylesheet');";
-                  injectedScript += "e.setAttribute('type','text/css');e.setAttribute('href','" + pluginPath + "');d.head.insertBefore(e,d.head.firstChild)}(document));";
+                  var injectedPath = chrome.extension.getURL("css/injector.css");
+                  var injectedFile = "(function(d){var e=d.createElement('link');e.setAttribute('rel','stylesheet');";
+                  injectedFile += "e.setAttribute('type','text/css');e.setAttribute('href','" + injectedPath + "');d.head.insertBefore(e,d.head.firstChild)}(document));";
                   chrome.tabs.executeScript(null, {
-                      code: injectedScript,
+                      code: injectedFile,
                       runAt: "document_start"
                   }, function() {
                       if (chrome.runtime.lastError) {
@@ -235,11 +236,11 @@
                       }
                   });
 
-                  pluginPath = chrome.extension.getURL("js/hbbtv.js");
-                  injectedScript = "(function(d){var e=d.createElement('script');";
-                  injectedScript += "e.setAttribute('type','text/javascript');e.setAttribute('src','" + pluginPath + "');d.head.insertBefore(e,d.head.firstChild)}(document));";
+                  injectedPath = chrome.extension.getURL("js/hbbtv.js");
+                  injectedFile = "(function(d){var e=d.createElement('script');";
+                  injectedFile += "e.setAttribute('type','text/javascript');e.setAttribute('src','" + injectedPath + "');d.head.insertBefore(e,d.head.firstChild)}(document));";
                   chrome.tabs.executeScript(null, {
-                      code: injectedScript,
+                      code: injectedFile,
                       runAt: "document_end"
                   }, function() {
                       if (chrome.runtime.lastError) {
@@ -253,7 +254,6 @@
             }
 
             if (tab.url === selectedTab.url && tab.status === "complete") { // page has been fully reloaded ... then inject JS simulator ...
-                var urlFound = isUrlStored(tab.url);
                 if (urlFound) {
                     var pluginPath = chrome.extension.getURL("js/hbbdom.js");
                     console.log("JS PATH: " + pluginPath);

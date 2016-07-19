@@ -1,6 +1,6 @@
 {
   "name": "ChromeHybridTvViewer",
-  "version": "0.1",
+  "version": "0.2",
   "manifest_version": 2,
   "minimum_chrome_version": "18",
   "description": "Extension making CHROME to open HbbTV,CE-HTML,BML,OHTV webpages instead of downloading them (HbbTV, StreamEvents, CI+ and DVB-SI are software emulated)",
