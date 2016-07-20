@@ -34,7 +34,7 @@
 // wait for the user to click on the extension icon ... otherwise we inject stuff in the DOM
 var pageActivated = localStorage.getItem('tvViewer_active') == 'true';
 if (pageActivated) {
-    (function(document) {
+    (function injectClass(document) {
         function addClass(element, className) {
             if (element.classList) {
                 element.classList.add(className);
@@ -47,10 +47,44 @@ if (pageActivated) {
         addClass(document.documentElement, "tvViewer");
     })(window.document);
 
+    // UserAgent spoofing ----------------------------------------------------------
+
+    var newUserAgent = "Mozilla/5.0 (Linux mipsel; U; HbbTV/1.1.1 (; TOSHIBA; DTV_L7300; 7.2.67.14.01.1; a5; ) ; ToshibaTP/2.0.0 (+DRM) ; xx) AppleWebKit/537.4 (KHTML, like Gecko) TOSHIBA-DTV (DTV_L7300; 7.2.67.14.01.1; 2013A; NA)";
+    var modifiedNavigator;
+    if ('userAgent' in Navigator.prototype) { // Chrome V43+ moved all properties from navigator to the prototype
+        modifiedNavigator = Navigator.prototype;
+    }
+    Object.defineProperties(modifiedNavigator, {
+        userAgent: {
+            value: newUserAgent,
+            configurable: false,
+            enumerable: true,
+            writable: false
+        },
+        appName: {
+            value: "ChromeTvViewer",
+            configurable: false,
+            enumerable: true,
+            writable: false
+        },
+        appVersion: {
+            value: "AppleWebKit/537.4 (KHTML, like Gecko) TOSHIBA-DTV (DTV_L7300; 7.2.67.14.01.1; 2013A; NA)",
+            configurable: false,
+            enumerable: true,
+            writable: false
+        },
+        platform: {
+            value: 'Chrome',
+            configurable: false,
+            enumerable: true,
+            writable: false
+        }
+    });
+
     // Button keys emulator --------------------------------------------------------
 
-    (function(document) {
-        //document.addEventListener("DOMContentLoaded", function() {
+    (function injectButtons(document) {
+
         function doKeyPress(key) {
             var event = document.createEvent('Event');
             event.keyCode = key;
@@ -70,19 +104,18 @@ if (pageActivated) {
             }
         }
 
-        generateColoredButton("redkey", 0x42);
-        generateColoredButton("greenkey", 0x4A);
-        generateColoredButton("yellowkey", 0x56);
-        generateColoredButton("bluekey", 0x52);
+        generateColoredButton("redkey", window.KeyEvent && window.KeyEvent.VK_RED ? window.KeyEvent.VK_RED : 403);
+        generateColoredButton("greenkey", window.KeyEvent && window.KeyEvent.VK_GREEN ? window.KeyEvent.VK_GREEN : 404);
+        generateColoredButton("yellowkey", window.KeyEvent && window.KeyEvent.VK_YELLOW ? window.KeyEvent.VK_YELLOW : 405);
+        generateColoredButton("bluekey", window.KeyEvent && window.KeyEvent.VK_BLUE ? window.KeyEvent.VK_BLUE : 406);
 
         // TODO: add resizing screen buttons ...
 
-        //})
     })(window.document);
 
     // OIPF objects mapping --------------------------------------------------------
 
-    (function(document) {
+    (function injectOipf(document) {
         console.log("Checking for OIPF objects ...");
         var int_objs = [];
         var int_objTypes = {
@@ -124,7 +157,7 @@ if (pageActivated) {
                         mixin(window.oipfCapabilities, int_objs[objType]);
                     } else if (objType === "video/broadcast") {
 
-                    } else if (objType === "video/mpeg4") {
+                    } else if (objType === "video/mp4") {
 
                     }
                 }

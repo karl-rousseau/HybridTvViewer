@@ -33,6 +33,14 @@
   "background": {
     "scripts": [ "js/patcher.js" ]
   },
+  "content_scripts": [ // done by Chrome and faster than inside JS with chrome.tabs.executeScript (+ not seen in network panel)
+  {
+      "matches": [ "http://*/*", "https://*/*" ],
+      "js": [ "js/first.js" ],
+      "css": [ "css/injector.css" ],
+      "run_at": "document_start"
+  }
+],
   "options_page": "html/options.html",
 
   "nacl_modules": [{
