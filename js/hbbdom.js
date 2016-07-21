@@ -104,10 +104,16 @@ if (pageActivated) {
             }
         }
 
-        generateColoredButton("redkey", window.KeyEvent && window.KeyEvent.VK_RED ? window.KeyEvent.VK_RED : 403);
-        generateColoredButton("greenkey", window.KeyEvent && window.KeyEvent.VK_GREEN ? window.KeyEvent.VK_GREEN : 404);
-        generateColoredButton("yellowkey", window.KeyEvent && window.KeyEvent.VK_YELLOW ? window.KeyEvent.VK_YELLOW : 405);
-        generateColoredButton("bluekey", window.KeyEvent && window.KeyEvent.VK_BLUE ? window.KeyEvent.VK_BLUE : 406);
+        // warning: here for ARTE, we can't use the KeyEvent object but only the global VK_xx
+        window.KeyEvent = window.KeyEvent || {};
+        var redValue = window.KeyEvent.VK_RED ? window.KeyEvent.VK_RED : (typeof VK_RED !== 'undefined' ? VK_RED : 403);
+        var greenValue = window.KeyEvent.VK_GREEN ? window.KeyEvent.VK_GREEN : (typeof VK_GREEN !== 'undefined' ? VK_GREEN : 404);
+        var yellowValue = window.KeyEvent.VK_YELLOW ? window.KeyEvent.VK_YELLOW : (typeof VK_YELLOW !== 'undefined' ? VK_YELLOW : 405);
+        var blueValue = window.KeyEvent.VK_BLUE ? window.KeyEvent.VK_BLUE : (typeof VK_BLUE !== 'undefined' ? VK_BLUE : 406);
+        generateColoredButton("redkey", redValue);
+        generateColoredButton("greenkey", greenValue);
+        generateColoredButton("yellowkey", yellowValue);
+        generateColoredButton("bluekey", blueValue);
 
         // TODO: add resizing screen buttons ...
 
@@ -119,14 +125,14 @@ if (pageActivated) {
         console.log("Checking for OIPF objects ...");
         var int_objs = [];
         var int_objTypes = {
-            appMan: "oipfApplicationManager",
-            config: "oipfConfiguration",
-            capobj: "oipfCapabilities"
+            oipfAppMan: "oipfApplicationManager",
+            oipfAppConfig: "oipfConfiguration",
+            oipfAppCapObj: "oipfCapabilities"
         };
         var int_objTypesClass = {
-            appMan: window.oipfApplicationManager,
-            config: window.oipfConfiguration,
-            capobj: window.oipfCapabilities
+            oipfAppMan: window.oipfApplicationManager,
+            oipfAppConfig: window.oipfConfiguration,
+            oipfAppCapObj: window.oipfCapabilities
         };
 
         function mixin(source, target) { // soon we might use ES6 Object.assign()
@@ -164,15 +170,23 @@ if (pageActivated) {
             }
         }
 
-        // create missing objects ...
-        var oipfObjs = document.createElement("div");
+        // create missing objects ... (not needed by default as the app is creating them)
+        /*var oipfObjs = document.createElement("div");
         var objCreated = false;
         for (var typeId in int_objTypes) {
             var type = int_objTypes[typeId];
             if (!int_objs[type]) {
                 var obj = document.createElement("object");
-                obj.setAttribute("id", type);
+                obj.setAttribute("id", typeId);
                 obj.setAttribute("type", "application/" + type);
+                if (typeId == "oipfAppMan") {
+                    if (oipfApplicationManager) {
+                      mixin(window.oipfApplicationManager, obj);
+                    } else {
+                      obj.getOwnerApplication = function() { return {}; };
+                      // ... see hbbtv.js code to replicate here ...
+                    }
+                }
                 oipfObjs.appendChild(obj);
                 int_objs[type] = obj;
                 objCreated = true;
@@ -181,7 +195,7 @@ if (pageActivated) {
         if (objCreated) {
             oipfObjs.setAttribute("style", "visibility:hidden; width:0; height:0;");
             document.getElementsByTagName("body")[0].appendChild(oipfObjs);
-        }
+        }*/
     })(window.document);
 
     console.log("DOM HbbTV emulator added.");
