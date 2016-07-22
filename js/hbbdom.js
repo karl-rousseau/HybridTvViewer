@@ -123,6 +123,8 @@ if (pageActivated) {
 
     (function injectOipf(document) {
         console.log("Checking for OIPF objects ...");
+        window.oipf = window.oipf || {};
+
         var int_objs = [];
         var int_objTypes = {
             oipfAppMan: "oipfApplicationManager",
@@ -156,29 +158,36 @@ if (pageActivated) {
                     if (objType === "oipfApplicationManager") {
                         console.log("re-using user-defined oipfApplicationManager");
                         mixin(window.oipfApplicationManager, int_objs[objType]);
+                        break;
                     } else if (objType === "oipfConfiguration") {
                         console.log("re-using user-defined oipfConfiguration");
                         mixin(window.oipfConfiguration, int_objs[objType]);
+                        break;
                     } else if (objType === "oipfCapabilities") {
                         console.log("re-using user-defined oipfCapabilities");
                         mixin(window.oipfCapabilities, int_objs[objType]);
-                    } else if (objType === "video/broadcast") {
-                        var currentChannel = {
-                            'TYPE_TV': 12,
-                            'channelType': 12,
-                            'sid': 1,
-                            'onid': 1,
-                            'tsid': 1,
-                            'name': 'test'
-                        };
-                        oipfPluginObject.currentChannel = currentChannel;
-                        oipfPluginObject.bindToCurrentChannel = function() {
-                            return currentChannel;
-                        };
-
-                    } else if (objType === "video/mp4") {
-
+                        break;
                     }
+                }
+            }
+            if (sType.indexOf("video/") !== -1) {
+                if (sType === "video/broadcast") {
+                    console.log("re-using user-defined video object");
+                    window.oipf.videoObject = oipfPluginObject;
+                    var currentChannel = {
+                        'TYPE_TV': 12,
+                        'channelType': 12,
+                        'sid': 1,
+                        'onid': 1,
+                        'tsid': 1,
+                        'name': 'test'
+                    };
+                    oipfPluginObject.currentChannel = currentChannel;
+                    oipfPluginObject.bindToCurrentChannel = function() {
+                        return currentChannel;
+                    };
+                } else if (sType === "video/mp4") {
+
                 }
             }
         }
