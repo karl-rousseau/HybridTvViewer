@@ -36,6 +36,8 @@
 var pageActivated = localStorage.getItem('tvViewer_active') == 'true';
 if (pageActivated) {
 
+    window.oipf = window.oipf || {};
+
     // Default key mapping ---------------------------------------------------------
 
     window.KeyEvent = window.KeyEvent || {}; // defining default global KeyEvent as defined in CEA-HTML 2014 specs
@@ -46,15 +48,9 @@ if (pageActivated) {
     window.KeyEvent.VK_ENTER = (typeof window.KeyEvent.VK_ENTER !== 'undefined' ? window.KeyEvent.VK_ENTER : 0x0d);
     window.KeyEvent.VK_BACK = (typeof window.KeyEvent.VK_BACK !== 'undefined' ? window.KeyEvent.VK_BACK : 0xa6);
 
-    // window.KeyEvent.VK_RED = (typeof window.KeyEvent.VK_RED !== 'undefined' ? window.KeyEvent.VK_RED : 0x74);
-    // window.KeyEvent.VK_GREEN = (typeof window.KeyEvent.VK_GREEN !== 'undefined' ? window.KeyEvent.VK_GREEN : 0x75);
-    // window.KeyEvent.VK_YELLOW = (typeof window.KeyEvent.VK_YELLOW !== 'undefined' ? window.KeyEvent.VK_YELLOW : 0x76);
-    // window.KeyEvent.VK_BLUE = (typeof window.KeyEvent.VK_BLUE !== 'undefined' ? window.KeyEvent.VK_BLUE : 0x77);
-
     window.KeyEvent.VK_PLAY = (typeof window.KeyEvent.VK_PLAY !== 'undefined' ? window.KeyEvent.VK_PLAY : 0x50);
     window.KeyEvent.VK_PAUSE = (typeof window.KeyEvent.VK_PAUSE !== 'undefined' ? window.KeyEvent.VK_PAUSE : 0x51);
     window.KeyEvent.VK_STOP = (typeof window.KeyEvent.VK_STOP !== 'undefined' ? window.KeyEvent.VK_STOP : 0x53);
-
     window.KeyEvent.VK_FAST_FWD = (typeof window.KeyEvent.VK_FAST_FWD !== 'undefined' ? window.KeyEvent.VK_FAST_FWD : 0x46);
     window.KeyEvent.VK_REWIND = (typeof window.KeyEvent.VK_REWIND !== 'undefined' ? window.KeyEvent.VK_REWIND : 0x52);
 
@@ -153,8 +149,8 @@ if (pageActivated) {
             "currentChannel": {
                 enumerable: true,
                 get: function currentChannel() {
-                    var currentCcid = window.hbbtv.getCurrentTVChannel().ccid; // FIXME: ccid is platform-dependent
-                    return window.ChannelConfig.channelList.getChannel(currentCcid) || {};
+                    var currentCcid = window.oipf.getCurrentTVChannel().ccid; // FIXME: ccid is platform-dependent
+                    return window.oipf.channelList.getChannel(currentCcid) || {};
                 }
             }
         });
@@ -260,6 +256,23 @@ if (pageActivated) {
 
     // 7.13.1 The video/broadcast embedded object ----------------------------------
 
+    (function(oipfCapabilities) {
+        window.oipf.channelList = {};
+        window.oipf.channelList._list = [];
+        window.oipf.channelList._list.push({
+            'id': '0',
+            'idType' : 12,
+            'name': 'channel0',
+            'ccid': 'ccid:dvbt.0'
+        });
+        window.oipf.channelList.getChannel = function (id) {
+            return window.oipf.channelList._list[id];
+        };
+        window.oipf.getCurrentTVChannel = function () {
+            return window.oipf.channelList.getChannel(0);
+        };
+
+    })(window.oipf || (window.oipf = {}));
 
     // 7.13.6 Extensions to video/broadcast for DRM rights errors ------------------
 

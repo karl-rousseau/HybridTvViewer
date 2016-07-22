@@ -146,12 +146,13 @@ if (pageActivated) {
         // Introspection: looking for existing objects ...
         var objects = document.getElementsByTagName("object");
         for (var i = 0; i < objects.length; i++) {
-            var sType = objects.item(i).getAttribute("type");
+            var oipfPluginObject = objects.item(i);
+            var sType = oipfPluginObject.getAttribute("type");
             console.log((i + 1) + " / " + objects.length + " : " + sType);
             for (var eType in int_objTypes) {
                 var objType = int_objTypes[eType];
                 if (sType === "application/" + objType) {
-                    int_objs[objType] = objects.item(i);
+                    int_objs[objType] = oipfPluginObject;
                     if (objType === "oipfApplicationManager") {
                         console.log("re-using user-defined oipfApplicationManager");
                         mixin(window.oipfApplicationManager, int_objs[objType]);
@@ -162,6 +163,18 @@ if (pageActivated) {
                         console.log("re-using user-defined oipfCapabilities");
                         mixin(window.oipfCapabilities, int_objs[objType]);
                     } else if (objType === "video/broadcast") {
+                        var currentChannel = {
+                            'TYPE_TV': 12,
+                            'channelType': 12,
+                            'sid': 1,
+                            'onid': 1,
+                            'tsid': 1,
+                            'name': 'test'
+                        };
+                        oipfPluginObject.currentChannel = currentChannel;
+                        oipfPluginObject.bindToCurrentChannel = function() {
+                            return currentChannel;
+                        };
 
                     } else if (objType === "video/mp4") {
 
