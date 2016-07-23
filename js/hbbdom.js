@@ -45,6 +45,8 @@ if (pageActivated) {
 
         // Just tag current page as activated and also do CSS injection at the same time ...
         addClass(document.documentElement, "tvViewer");
+        var pageResolution = localStorage.getItem('tvViewer_resolution') || "res720p";
+        addClass(document.body, pageResolution);
     })(window.document);
 
     // UserAgent spoofing ----------------------------------------------------------
@@ -84,6 +86,10 @@ if (pageActivated) {
     // Button keys emulator --------------------------------------------------------
 
     (function injectButtons(document) {
+
+        if (document.getElementById("redkey")) {
+            return ;
+        }
 
         function doKeyPress(key) {
             var event = document.createEvent('Event');
@@ -186,7 +192,10 @@ if (pageActivated) {
                     oipfPluginObject.bindToCurrentChannel = function() {
                         return currentChannel;
                     };
-                } else if (sType === "video/mp4") {
+                } else if (sType === "video/mp4" || sType === "video/mpeg4") {
+                    window.oipf.videoObject = oipfPluginObject;
+                    oipfPluginObject.play = function (speed) {
+                    };
 
                 }
             }

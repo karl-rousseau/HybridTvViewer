@@ -56,22 +56,18 @@ html.tvViewer > body {
     background-color: #3993D9;
 }
 
-body.720p {
+html.tvViewer > body.res720p {
     zoom: 1.0;
 }
 
-body.768p {
-    zoom: 1.06666666;
-}
-
-body.1080p {
+html.tvViewer > body.res1080p {
     zoom: 1.5;
 }
 
-body.1440p {
+html.tvViewer > body.res1440p {
     zoom: 2.0;
 }
 
-body.2160p {
+html.tvViewer > body.res2160p {
     zoom: 3.0;
 }
