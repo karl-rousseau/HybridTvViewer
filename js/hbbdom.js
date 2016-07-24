@@ -124,7 +124,7 @@ if (pageActivated) {
                     var res = keyId.replace(/key/g, 'p');
                     addClass(document.body, res);
                     addClass(document.getElementById(keyId), "focus");
-                    localStorage.setItem('tvViewer_resolution', res);
+                    localStorage.setItem('tvViewer_resolution', res); // TODO: store this value in Chrome's extension
                 }
             });
             var body = document.getElementsByTagName("body")[0];
