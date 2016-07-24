@@ -20,12 +20,15 @@ html.tvViewer > body {
     overflow: visible !important;
 }
 
+.keybutton {
+    width: 40px;
+    height: 20px;
+}
+
 #redkey {
     position: absolute;
     bottom: -30px;
     left: 10px;
-    width: 40px;
-    height: 20px;
     background-color: #DA0000;
 }
 
@@ -33,8 +36,6 @@ html.tvViewer > body {
     position: absolute;
     bottom: -30px;
     left: 60px;
-    width: 40px;
-    height: 20px;
     background-color: #008F15;
 }
 
@@ -42,8 +43,6 @@ html.tvViewer > body {
     position: absolute;
     bottom: -30px;
     left: 110px;
-    width: 40px;
-    height: 20px;
     background-color: #DCBB00;
 }
 
@@ -51,9 +50,52 @@ html.tvViewer > body {
     position: absolute;
     bottom: -30px;
     left: 160px;
-    width: 40px;
-    height: 20px;
     background-color: #3993D9;
+}
+
+html.tvViewer > body span.keybutton {
+    text-align: center;
+    background-color: darkgray;
+}
+
+html.tvViewer > body span.keybutton.focus {
+    background-color: gray;
+}
+
+#res2160key {
+    position: absolute;
+    bottom: -30px;
+    right: 10px;
+}
+#res2160key:after {
+    content: "2160p";
+}
+
+#res1440key {
+    position: absolute;
+    bottom: -30px;
+    right: 60px;
+}
+#res1440key:after {
+    content: "1440p";
+}
+
+#res1080key {
+    position: absolute;
+    bottom: -30px;
+    right: 110px;
+}
+#res1080key:after {
+    content: "1080p";
+}
+
+#res720key {
+    position: absolute;
+    bottom: -30px;
+    right: 160px;
+}
+#res720key:after {
+    content: "720p";
 }
 
 html.tvViewer > body.res720p {

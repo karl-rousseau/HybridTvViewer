@@ -34,19 +34,23 @@
 // wait for the user to click on the extension icon ... otherwise we inject stuff in the DOM
 var pageActivated = localStorage.getItem('tvViewer_active') == 'true';
 if (pageActivated) {
-    (function injectClass(document) {
-        function addClass(element, className) {
-            if (element.classList) {
-                element.classList.add(className);
-            } else {
-                element.className += ' ' + className;
-            }
+    function addClass(element, className) {
+        if (element.classList) {
+            element.classList.add(className);
+        } else {
+            element.className += ' ' + className;
         }
+    }
 
+    function removeClass(element, className) {
+        if (element.classList) {
+            element.classList.remove(className);
+        }
+    }
+
+    (function injectClass(document) {
         // Just tag current page as activated and also do CSS injection at the same time ...
         addClass(document.documentElement, "tvViewer");
-        var pageResolution = localStorage.getItem('tvViewer_resolution') || "res720p";
-        addClass(document.body, pageResolution);
     })(window.document);
 
     // UserAgent spoofing ----------------------------------------------------------
@@ -98,15 +102,34 @@ if (pageActivated) {
             document.dispatchEvent(event);
         }
 
-        function generateColoredButton(keyId, keyValue) {
-            var coloredKeyButton = document.createElement('span');
-            coloredKeyButton.setAttribute("id", keyId);
-            coloredKeyButton.addEventListener('click', function() {
-                doKeyPress(keyValue);
+        function doKeyChangeResolution(key) {
+        }
+
+        function generateButton(keyId, keyValue) {
+            var keyButton = document.createElement('span');
+            keyButton.setAttribute("id", keyId);
+            keyButton.setAttribute("class", "keybutton");
+            keyButton.addEventListener('click', function() {
+                if (keyValue) {
+                    doKeyPress(keyValue);
+                } else {
+                    removeClass(document.getElementById("res720key"), "focus");
+                    removeClass(document.getElementById("res1080key"), "focus");
+                    removeClass(document.getElementById("res1440key"), "focus");
+                    removeClass(document.getElementById("res2160key"), "focus");
+                    removeClass(document.body, "res720p");
+                    removeClass(document.body, "res1080p");
+                    removeClass(document.body, "res1440p");
+                    removeClass(document.body, "res2160p");
+                    var res = keyId.replace(/key/g, 'p');
+                    addClass(document.body, res);
+                    addClass(document.getElementById(keyId), "focus");
+                    localStorage.setItem('tvViewer_resolution', res);
+                }
             });
             var body = document.getElementsByTagName("body")[0];
             if (body) {
-                body.appendChild(coloredKeyButton);
+                body.appendChild(keyButton);
             }
         }
 
@@ -116,13 +139,22 @@ if (pageActivated) {
         var greenValue = window.KeyEvent.VK_GREEN ? window.KeyEvent.VK_GREEN : (typeof VK_GREEN !== 'undefined' ? VK_GREEN : 404);
         var yellowValue = window.KeyEvent.VK_YELLOW ? window.KeyEvent.VK_YELLOW : (typeof VK_YELLOW !== 'undefined' ? VK_YELLOW : 405);
         var blueValue = window.KeyEvent.VK_BLUE ? window.KeyEvent.VK_BLUE : (typeof VK_BLUE !== 'undefined' ? VK_BLUE : 406);
-        generateColoredButton("redkey", redValue);
-        generateColoredButton("greenkey", greenValue);
-        generateColoredButton("yellowkey", yellowValue);
-        generateColoredButton("bluekey", blueValue);
+        generateButton("redkey", redValue);
+        generateButton("greenkey", greenValue);
+        generateButton("yellowkey", yellowValue);
+        generateButton("bluekey", blueValue);
 
-        // TODO: add resizing screen buttons ...
+        // add resizing screen buttons ...
+        generateButton("res720key");
+        generateButton("res1080key");
+        generateButton("res1440key");
+        generateButton("res2160key");
 
+        var pageResolution = localStorage.getItem('tvViewer_resolution') || "res720p";
+        addClass(document.body, pageResolution);
+
+        var resButton = document.getElementById(pageResolution.replace(/p/g, "key"));
+        addClass(resButton, "focus");
     })(window.document);
 
     // OIPF objects mapping --------------------------------------------------------
