@@ -102,7 +102,25 @@ if (pageActivated) {
             document.dispatchEvent(event);
         }
 
-        function doKeyChangeResolution(key) {
+        function doKeyChangeResolution(keyId) {
+            // just verify that the click is not done on the same selected button ...
+            var res = keyId.replace(/key/g, 'p');
+            var storedResolution = localStorage.getItem('tvViewer_resolution') || "res720p";
+            if (res == storedResolution) {
+                return ;
+            }
+
+            removeClass(document.getElementById("res720key"), "focus");
+            removeClass(document.getElementById("res1080key"), "focus");
+            removeClass(document.getElementById("res1440key"), "focus");
+            removeClass(document.getElementById("res2160key"), "focus");
+            removeClass(document.body, "res720p");
+            removeClass(document.body, "res1080p");
+            removeClass(document.body, "res1440p");
+            removeClass(document.body, "res2160p");
+            addClass(document.body, res);
+            addClass(document.getElementById(keyId), "focus");
+            localStorage.setItem('tvViewer_resolution', res); // TODO: store this value in Chrome's extension
         }
 
         function generateButton(keyId, keyValue) {
@@ -113,18 +131,7 @@ if (pageActivated) {
                 if (keyValue) {
                     doKeyPress(keyValue);
                 } else {
-                    removeClass(document.getElementById("res720key"), "focus");
-                    removeClass(document.getElementById("res1080key"), "focus");
-                    removeClass(document.getElementById("res1440key"), "focus");
-                    removeClass(document.getElementById("res2160key"), "focus");
-                    removeClass(document.body, "res720p");
-                    removeClass(document.body, "res1080p");
-                    removeClass(document.body, "res1440p");
-                    removeClass(document.body, "res2160p");
-                    var res = keyId.replace(/key/g, 'p');
-                    addClass(document.body, res);
-                    addClass(document.getElementById(keyId), "focus");
-                    localStorage.setItem('tvViewer_resolution', res); // TODO: store this value in Chrome's extension
+                    doKeyChangeResolution(keyId);
                 }
             });
             var body = document.getElementsByTagName("body")[0];

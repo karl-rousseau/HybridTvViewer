@@ -320,6 +320,38 @@
         });
     });
 
+    // -- Listen to external JS messages ... -----------------------------------
+
+    chrome.runtime.onConnect.addListener(function(port) {
+        port.onMessage.addListener(function(msg) {
+            console.log("onMessage msg=", msg);
+            //port.postMessage({data: ""});
+        });
+    });
+
+    chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+        console.log("onRequest request=", request, " send=", sender);
+        //sendResponse({data: ""});
+    });
+
+    chrome.runtime.onMessageExternal.addListener(
+      function(request, sender, sendResponse) {
+        console.log("onMessageExternal request=", request, " sender=", sender);
+    });
+
+    chrome.runtime.onConnectExternal.addListener(function(port) {
+        port.onMessage.addListener(function(msg) {
+            console.log("onConnectExternal msg: ", msg);
+        });
+    });
+
+    (function(document) {
+        window.addEventListener("message", function(event) {
+            console.log("extension event received: ", event);
+
+        });
+    })(window.document);
+
 })(
     typeof self !== "undefined" && self ||
     typeof window !== "undefined" && window ||
