@@ -21,50 +21,109 @@ html.tvViewer > body {
 }
 
 .keybutton {
+    position: absolute;
+    bottom: -30px;
     width: 40px;
     height: 20px;
+    line-height: 20px;
+    vertical-align: middle;
+    font-size: 12px;
+    font-family: tiresias,sans-serif;
+}
+
+html.tvViewer > body span.keybutton {
+    text-align: center;
+    border-radius: 5px;
+    background-color: darkgray;
+}
+
+html.tvViewer > body span.keybutton.focus {
+    background-color: #333;
 }
 
 #redkey {
-    position: absolute;
-    bottom: -30px;
     left: 10px;
     background-color: #DA0000;
 }
 
 #greenkey {
-    position: absolute;
-    bottom: -30px;
     left: 60px;
     background-color: #008F15;
 }
 
 #yellowkey {
-    position: absolute;
-    bottom: -30px;
     left: 110px;
     background-color: #DCBB00;
 }
 
 #bluekey {
-    position: absolute;
-    bottom: -30px;
     left: 160px;
     background-color: #3993D9;
 }
 
-html.tvViewer > body span.keybutton {
-    text-align: center;
-    background-color: darkgray;
+#f11key {
+    width: 40px;
+    left: 50%;
+    margin-left: -40px;
+
+    background-color: #3993D9;
+    background-image: linear-gradient(bottom, rgb(44,160,202) 0%, rgb(62,184,229) 100%);
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgb(44,160,202)), color-stop(1, rgb(62,184,229)));
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+#f11key:before {
+    content: "F11";
+
+    display: block;
+    position: absolute;
+    left: -30px;
+    width: 30px;
+
+    background-color: #2561b4;
+    background-image: linear-gradient(bottom, rgb(10,94,125) 0%, rgb(14,139,184) 100%);
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgb(10,94,125)), color-stop(1, rgb(14,139,184)));
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+#f11key:after {
+    content: "fullscr";
 }
 
-html.tvViewer > body span.keybutton.focus {
-    background-color: gray;
+#f12key {
+    width: 40px;
+    left: 50%;
+    margin-left: 40px;
+
+    background-color: #3993D9;
+    background-image: linear-gradient(bottom, rgb(44,160,202) 0%, rgb(62,184,229) 100%);
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgb(44,160,202)), color-stop(1, rgb(62,184,229)));
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+#f12key:before {
+    content: "F12";
+
+    display: block;
+    position: absolute;
+    left: -30px;
+    width: 30px;
+
+    background-color: #2561b4;
+    background-image: linear-gradient(bottom, rgb(10,94,125) 0%, rgb(14,139,184) 100%);
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgb(10,94,125)), color-stop(1, rgb(14,139,184)));
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+#f12key:after {
+    content: "debug";
 }
 
 #res2160key {
-    position: absolute;
-    bottom: -30px;
     right: 10px;
 }
 #res2160key:after {
@@ -72,8 +131,6 @@ html.tvViewer > body span.keybutton.focus {
 }
 
 #res1440key {
-    position: absolute;
-    bottom: -30px;
     right: 60px;
 }
 #res1440key:after {
@@ -81,8 +138,6 @@ html.tvViewer > body span.keybutton.focus {
 }
 
 #res1080key {
-    position: absolute;
-    bottom: -30px;
     right: 110px;
 }
 #res1080key:after {
@@ -90,8 +145,6 @@ html.tvViewer > body span.keybutton.focus {
 }
 
 #res720key {
-    position: absolute;
-    bottom: -30px;
     right: 160px;
 }
 #res720key:after {

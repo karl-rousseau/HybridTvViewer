@@ -130,7 +130,7 @@ if (pageActivated) {
             keyButton.addEventListener('click', function() {
                 if (keyValue) {
                     doKeyPress(keyValue);
-                } else {
+                } else if (typeof keyValue == 'undefined') {
                     doKeyChangeResolution(keyId);
                 }
             });
@@ -150,6 +150,10 @@ if (pageActivated) {
         generateButton("greenkey", greenValue);
         generateButton("yellowkey", yellowValue);
         generateButton("bluekey", blueValue);
+
+        // add F11 and F12 buttons ... (not clickable as the browser will handle their actions by default)
+        generateButton("f11key", null);
+        generateButton("f12key", null);
 
         // add resizing screen buttons ...
         generateButton("res720key");
