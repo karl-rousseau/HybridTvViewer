@@ -123,10 +123,10 @@ if (pageActivated) {
             localStorage.setItem('tvViewer_resolution', res); // TODO: store this value in Chrome's extension
         }
 
-        function generateButton(keyId, keyValue) {
+        function generateButton(keyId, keyValue, optionClassName) {
             var keyButton = document.createElement('span');
             keyButton.setAttribute("id", keyId);
-            keyButton.setAttribute("class", "keybutton");
+            keyButton.setAttribute("class", "keybutton" + (optionClassName ? ' ' + optionClassName : ''));
             keyButton.addEventListener('click', function() {
                 if (keyValue) {
                     doKeyPress(keyValue);
@@ -152,8 +152,8 @@ if (pageActivated) {
         generateButton("bluekey", blueValue);
 
         // add F11 and F12 buttons ... (not clickable as the browser will handle their actions by default)
-        generateButton("f11key", null);
-        generateButton("f12key", null);
+        generateButton("f11key", null, "btleftgradient btrightgradient");
+        generateButton("f12key", null, "btleftgradient btrightgradient");
 
         // add resizing screen buttons ...
         generateButton("res720key");

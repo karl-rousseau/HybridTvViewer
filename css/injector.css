@@ -61,18 +61,28 @@ html.tvViewer > body span.keybutton.focus {
     background-color: #3993D9;
 }
 
+span.keybutton.btleftgradient:before {
+    background-color: #2561b4;
+    background-image: linear-gradient(bottom, rgb(10,94,125) 0%, rgb(14,139,184) 100%);
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgb(10,94,125)), color-stop(1, rgb(14,139,184)));
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+span.keybutton.btrightgradient {
+  background-color: #3993D9 !important;
+  background-image: linear-gradient(bottom, rgb(44,160,202) 0%, rgb(62,184,229) 100%);
+  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgb(44,160,202)), color-stop(1, rgb(62,184,229)));
+  border-top-right-radius: 5px !important;
+  border-bottom-right-radius: 5px !important;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
 #f11key {
     width: 40px;
     left: 50%;
     margin-left: -40px;
-
-    background-color: #3993D9;
-    background-image: linear-gradient(bottom, rgb(44,160,202) 0%, rgb(62,184,229) 100%);
-    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgb(44,160,202)), color-stop(1, rgb(62,184,229)));
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
 }
 #f11key:before {
     content: "F11";
@@ -81,12 +91,6 @@ html.tvViewer > body span.keybutton.focus {
     position: absolute;
     left: -30px;
     width: 30px;
-
-    background-color: #2561b4;
-    background-image: linear-gradient(bottom, rgb(10,94,125) 0%, rgb(14,139,184) 100%);
-    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgb(10,94,125)), color-stop(1, rgb(14,139,184)));
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
 }
 #f11key:after {
     content: "fullscr";
@@ -96,14 +100,6 @@ html.tvViewer > body span.keybutton.focus {
     width: 40px;
     left: 50%;
     margin-left: 40px;
-
-    background-color: #3993D9;
-    background-image: linear-gradient(bottom, rgb(44,160,202) 0%, rgb(62,184,229) 100%);
-    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgb(44,160,202)), color-stop(1, rgb(62,184,229)));
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
 }
 #f12key:before {
     content: "F12";
@@ -112,12 +108,6 @@ html.tvViewer > body span.keybutton.focus {
     position: absolute;
     left: -30px;
     width: 30px;
-
-    background-color: #2561b4;
-    background-image: linear-gradient(bottom, rgb(10,94,125) 0%, rgb(14,139,184) 100%);
-    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgb(10,94,125)), color-stop(1, rgb(14,139,184)));
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
 }
 #f12key:after {
     content: "debug";
