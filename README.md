@@ -1,4 +1,4 @@
-# CHROME/Chromium extension
+# Chrome/Chromium extension
 
 Embracing such Hybrid Interactive TV Technologies:
 
@@ -7,7 +7,7 @@ Embracing such Hybrid Interactive TV Technologies:
 ## Preamble
 
 ```
-This extension for CHROME will mimic the behavior of the good one called FireHbbTV available only for FIREFOX.
+This extension for CHROME mimics the behavior of the good one called FireHbbTV available only for FIREFOX
 ```
 I have decided to do it, as at work we are only using CHROME as a development tool on a daily basis and I am now used to it. And at last I also wanted CHROME to avoid to download such iTV (interactive television) application pages (exposed by an URL or embedded inside a broadcast transport stream)
 
@@ -39,7 +39,7 @@ I have decided to do it, as at work we are only using CHROME as a development to
 - CI+ HbbTV implementation is hereby emulated with a default code (can be customized)
 - Remote control colored keys will be mapped to specific keyboard keys (R,G,B,Y) and external Apple Remote Control will be taken into account (maybe also Win/LIRC)
 - A dedicated tab might be added in [Chrome Web Inspector](https://developer.chrome.com/devtools) for user debugging purpose
-- :warning: For developers, if you want to use this extension by yourself, you will need to unlock [NaCL feature](https://developer.chrome.com/native-client/devguide/devcycle/running#requirements) inside CHROME
+- :warning: For developers, if you want to use this extension by yourself, you will need to unlock [NaCL feature](https://developer.chrome.com/native-client/devguide/devcycle/running#requirements) in Chrome
 - :calendar: Soon this extension will be published on [CHROME store](https://chrome.google.com/webstore/category/extensions)
 
 ```
