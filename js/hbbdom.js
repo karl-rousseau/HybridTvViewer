@@ -29,6 +29,7 @@
 
     HomePage: https://github.com/karl-rousseau/ChromeHybridTvViewer
 */
+// jshint -W082:true, -W083:true
 
 // If the extension is not activated for this web page then we do nothing and
 // wait for the user to click on the extension icon ... otherwise we inject stuff in the DOM
@@ -243,33 +244,6 @@ if (pageActivated) {
                 }
             }
         }
-
-        // create missing objects ... (not needed by default as the app is creating them)
-        /*var oipfObjs = document.createElement("div");
-        var objCreated = false;
-        for (var typeId in int_objTypes) {
-            var type = int_objTypes[typeId];
-            if (!int_objs[type]) {
-                var obj = document.createElement("object");
-                obj.setAttribute("id", typeId);
-                obj.setAttribute("type", "application/" + type);
-                if (typeId == "oipfAppMan") {
-                    if (oipfApplicationManager) {
-                      mixin(window.oipfApplicationManager, obj);
-                    } else {
-                      obj.getOwnerApplication = function() { return {}; };
-                      // ... see hbbtv.js code to replicate here ...
-                    }
-                }
-                oipfObjs.appendChild(obj);
-                int_objs[type] = obj;
-                objCreated = true;
-            }
-        }
-        if (objCreated) {
-            oipfObjs.setAttribute("style", "visibility:hidden; width:0; height:0;");
-            document.getElementsByTagName("body")[0].appendChild(oipfObjs);
-        }*/
     })(window.document);
 
     console.log("DOM HbbTV emulator added.");
