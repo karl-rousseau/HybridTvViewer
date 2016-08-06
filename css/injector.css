@@ -12,12 +12,15 @@ html.tvViewer > body {
     position: absolute;
     width: 1280px !important;
     height: 720px !important;
-    top: 50% !important;
-    left: 50% !important;
-    margin-top: -360px !important;
-    margin-left: -640px !important;
     box-shadow: 0 0 100px 50px black;
     overflow: visible !important;
+}
+
+html.tvViewer > body.centered {
+  top: 50% !important;
+  left: 50% !important;
+  margin-top: -360px !important;
+  margin-left: -640px !important;
 }
 
 .keybutton {

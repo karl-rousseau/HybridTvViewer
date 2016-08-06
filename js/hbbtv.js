@@ -247,6 +247,9 @@ if (pageActivated) {
 
     })(window.oipf || (window.oipf = {}));
 
+    // 7.13.9 Extensions to video/broadcast for channel list -----------------------
+
+
     // 7.13.6 Extensions to video/broadcast for DRM rights errors ------------------
 
 

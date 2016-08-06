@@ -165,6 +165,9 @@ if (pageActivated) {
         var pageResolution = localStorage.getItem('tvViewer_resolution') || "res720p";
         addClass(document.body, pageResolution);
 
+        var centeredPage = localStorage.getItem('tvViewer_centered') || "centered";
+        addClass(document.body, centeredPage);
+
         var resButton = document.getElementById(pageResolution.replace(/p/g, "key"));
         addClass(resButton, "focus");
     })(window.document);
@@ -230,16 +233,74 @@ if (pageActivated) {
                         'sid': 1,
                         'onid': 1,
                         'tsid': 1,
-                        'name': 'test'
+                        'name': 'test',
+                        'ccid': 'ccid:dvbt.0',
+                        'dsd': ''
                     };
                     oipfPluginObject.currentChannel = currentChannel;
                     oipfPluginObject.bindToCurrentChannel = function() {
                         return currentChannel;
                     };
-                } else if (sType === "video/mp4" || sType === "video/mpeg4") {
-                    window.oipf.videoObject = oipfPluginObject;
-                    oipfPluginObject.play = function (speed) {
+                    oipfPluginObject.prevChannel = function() {
+                        return currentChannel;
                     };
+                    oipfPluginObject.nextChannel = function() {
+                        return currentChannel;
+                    };
+                    function ChannelConfig() {
+	                  }
+                    ChannelConfig.prototype.channelList = {};
+                    ChannelConfig.prototype.channelList._list = [];
+                    ChannelConfig.prototype.channelList._list.push(currentChannel);
+                    Object.defineProperties(ChannelConfig.prototype.channelList, {
+                        'length': {
+                            enumerable: true,
+                            get : function length() {
+                                return window.oipf.ChannelConfig.channelList._list.length;
+                            }
+                        }
+                    });
+                    ChannelConfig.prototype.channelList.item = function(index) {
+                        return window.oipf.ChannelConfig.channelList._list[index];
+                    };
+                    ChannelConfig.prototype.channelList.getChannel = function(ccid) {
+                        var channels = window.oipf.ChannelConfig.channelList._list;
+                        for (var channelIdx in channels) {
+                            var channel = channels[channelIdx];
+                            if (ccid === channel.ccid)
+                                return channel;
+                        }
+                        return null;
+                    };
+                    ChannelConfig.prototype.channelList.getChannelByTriplet = function(onid, tsid, sid, nid) {
+                        var channels = window.oipf.ChannelConfig.channelList._list;
+                        for (var channelIdx in channels) {
+                            var channel = channels[channelIdx];
+                            if (onid === channel.onid &&
+                                tsid === channel.tsid &&
+                                sid === channel.sid)
+                                return channel;
+                        }
+                        return null;
+                    };
+                    window.oipf.ChannelConfig = new ChannelConfig();
+                    oipfPluginObject.getChannelConfig = {}; // OIPF 7.13.9 getChannelConfig
+                    Object.defineProperties(oipfPluginObject, {
+                        'getChannelConfig': {
+                            value : function() {
+                                return window.oipf.ChannelConfig;
+                            },
+                            enumerable: true,
+                            writable : false
+                        }
+                    });
+                } else if (sType === "audio/mp4" ||
+                           sType === "audio/mpeg" ||
+                           sType === "video/mp4" ||
+                           sType === "video/mpeg" ||
+                           sType === "application/dash+xml") {
+                    window.oipf.videoObject = oipfPluginObject;
+                    oipfPluginObject.play = function(speed) { };
 
                 }
             }

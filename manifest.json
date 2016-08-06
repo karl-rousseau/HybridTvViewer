@@ -33,8 +33,7 @@
   "background": {
     "scripts": [ "js/patcher.js" ]
   },
-  "content_scripts": [ // done by Chrome and faster than inside JS with chrome.tabs.executeScript (+ not seen in network panel)
-  {
+  "content_scripts": [ { // done by Chrome and faster than inside JS with chrome.tabs.executeScript (+ not seen in network panel)
       "matches": [ "http://*/*", "https://*/*" ],
       "js": [ "js/first.js" ],
       "css": [ "css/injector.css" ],
@@ -66,5 +65,13 @@
   {
     "path": "plugins/native-object.nmf",
     "mime_type": "application/oipfParentalControlManager"
+  },
+  {
+    "path": "plugins/native-object.nmf",
+    "mime_type": "application/hbbtvMediaSynchroniser"
+  },
+  {
+    "path": "plugins/native-object.nmf",
+    "mime_type": "application/hbbtvCSManager"
   }]
 }
