@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    ChromeTvViewer - a browser extension to open HbbTV,CE-HTML,BML,OHTV webpages
+    HybridTvViewer - a browser extension to open HbbTV,CE-HTML,BML,OHTV webpages
     instead of downloading them. A mere simulator is also provided.
 
     Copyright (C) 2015 Karl Rousseau
@@ -27,13 +27,14 @@
 
     See the MIT License for more details: http://opensource.org/licenses/MIT
 
-    HomePage: https://github.com/karl-rousseau/ChromeHybridTvViewer
+    HomePage: https://github.com/karl-rousseau/HybridTvViewer
 */
 /* global Application, oipfObjectFactory, oipfApplicationManager, oipfConfiguration, oipfCapabilities */
 
+(function(window) {
 // If the extension is not activated for this web page then we do nothing and
 // wait for the user to click on the extension icon ...
-var pageActivated = localStorage.getItem('tvViewer_active') == 'true';
+var pageActivated = window.localStorage.getItem('tvViewer_active') == 'true';
 if (pageActivated) {
 
     window.oipf = window.oipf || {};
@@ -53,10 +54,10 @@ if (pageActivated) {
             //  mimeType === "application/oipfSearchManager";
         };
         oipfObjectFactory.createVideoBroadcastObject = function() {
-            return null;
+            return {};
         };
         oipfObjectFactory.createVideoMpegObject = function() {
-            return null;
+            return {};
         };
         oipfObjectFactory.onLowMemory = function() {
             // FIXME: see when we can generate this event (maybe inside the Web Inspector panel)
@@ -68,7 +69,7 @@ if (pageActivated) {
 
     (function(oipfApplicationManager) {
         Object.defineProperties(window.Document.prototype, {
-            "_application": {
+            '_application': {
                 value: undefined,
                 writable: true,
                 enumerable: false
@@ -128,8 +129,7 @@ if (pageActivated) {
             }
         });
         Application.prototype.privateData.getFreeMem = function() {
-            // FIXME: better use https://developer.chrome.com/extensions/examples/api/processes/process_monitor/popup.js
-            return ((window.performance && window.performance.memory.usedJSHeapSize) || -1);
+            return ((window.performance && window.performance.memory.usedJSHeapSize) || 0);
         };
 
         Application.prototype.show = function() {
@@ -164,10 +164,10 @@ if (pageActivated) {
 
     (function(oipfConfiguration) {
         oipfConfiguration.configuration = {};
-        oipfConfiguration.configuration.preferredAudioLanguage = "FRA";
-        oipfConfiguration.configuration.preferredSubtitleLanguage = "ENG,FRA";
-        oipfConfiguration.configuration.preferredUILanguage = "ENG,FRA";
-        oipfConfiguration.configuration.countryId = "FRA";
+        oipfConfiguration.configuration.preferredAudioLanguage = window.localStorage.getItem("tvViewer_country") || "ENG";
+        oipfConfiguration.configuration.preferredSubtitleLanguage = window.localStorage.getItem("tvViewer_country") || "ENG,FRA";
+        oipfConfiguration.configuration.preferredUILanguage = window.localStorage.getItem("tvViewer_country") || "ENG,FRA";
+        oipfConfiguration.configuration.countryId = window.localStorage.getItem("tvViewer_country") || "ENG";
         //oipfConfiguration.configuration.regionId = 0;
         //oipfConfiguration.localSystem = {};
         oipfConfiguration.getText = function(key) {
@@ -182,7 +182,7 @@ if (pageActivated) {
     // 7.15.3 The application/oipfCapabilities embedded object ---------------------
 
     (function(oipfCapabilities) {
-        var storedCapabilities = localStorage.getItem("tvViewer_capabilities"); // FIXME: postMessage to retrieve this value from Chrome extension
+        var storedCapabilities = window.localStorage.getItem("tvViewer_capabilities"); // FIXME: use tvViewer_caps object
         var currentCapabilities = storedCapabilities ||
             '<profilelist>' +
             '<ui_profile name="OITF_HD_UIPROF+META_SI+META_EIT+TRICKMODE+RTSP+AVCAD+DRM+DVB_T">' +
@@ -208,7 +208,7 @@ if (pageActivated) {
         oipfCapabilities.extraSDVideoDecodes = videoProfiles.length > 1 ? videoProfiles.slice(1).join().split('_SD_').slice(1).length : 0;
         oipfCapabilities.extraHDVideoDecodes = videoProfiles.length > 1 ? videoProfiles.slice(1).join().split('_HD_').slice(1).length : 0;
         oipfCapabilities.hasCapability = function(capability) {
-            return !!~new XMLSerializer().serializeToString(oipfCapabilities.xmlCapabilities).indexOf(capability.toString() || "??");
+            return !!~new window.XMLSerializer().serializeToString(oipfCapabilities.xmlCapabilities).indexOf(capability.toString() || "??");
         };
     })(window.oipfCapabilities || (window.oipfCapabilities = {}));
 
@@ -229,21 +229,24 @@ if (pageActivated) {
 
     // 7.13.1 The video/broadcast embedded object ----------------------------------
 
-    (function(oipfCapabilities) {
-        window.oipf.channelList = {};
-        window.oipf.channelList._list = [];
-        window.oipf.channelList._list.push({
+    (function(oipf) {
+        oipf.channelList = {};
+        oipf.channelList._list = [];
+        oipf.channelList._list.push({
             'id': '0',
             'idType' : 12,
             'name': 'channel0',
             'ccid': 'ccid:dvbt.0'
         });
-        window.oipf.channelList.getChannel = function (id) {
+        oipf.channelList.getChannel = function (id) {
             return window.oipf.channelList._list[id];
         };
-        window.oipf.getCurrentTVChannel = function () {
+        oipf.getCurrentTVChannel = function () {
             return window.oipf.channelList.getChannel(0);
         };
+        oipf.programmes = [];
+        oipf.programmes.push({name:'Event 1, umlaut \u00e4',channelId:'ccid:dvbt.0',duration:600,startTime:Date.now()/1000,description:'EIT present event is under construction'});
+        oipf.programmes.push({name:'Event 2, umlaut \u00f6',channelId:'ccid:dvbt.0',duration:300,startTime:Date.now()/1000+600,description:'EIT following event is under construction'});
 
     })(window.oipf || (window.oipf = {}));
 
@@ -264,12 +267,17 @@ if (pageActivated) {
 
     // Listening to external messages ----------------------------------------------
 
-    (function(document) {
+    /*(function(document) {
         window.addEventListener("message", function(event) {
             console.log("hbbtv event received: ", event);
 
         });
-    })(window.document);
+    })(window.document);*/
 
-    console.log("HbbTV emulator added !");
+    //console.log("HbbTV emulator added !");
 }
+})(
+    typeof self !== 'undefined' && self ||
+    typeof window !== 'undefined' && window ||
+    typeof global !== 'undefined' && global || {}
+);

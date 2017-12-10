@@ -1,0 +1,94 @@
+* {
+  font-family: sans-serif, monospace;
+  font-size: 15px sans-serif;
+}
+
+body {
+  margin: 0;
+  width: 490px;
+}
+
+td > div {
+  line-height: 21px;
+  height: 100%;
+  display: inline-block;
+}
+
+button, img {
+  margin-top: 6px;
+}
+
+input[disabled] + label, #model {
+  color:gray;
+}
+
+small, input {
+  font-size: 13px;
+}
+
+textarea {
+  resize: none;
+  white-space: pre;
+}
+
+.light * {
+  background-color: #ffffff;
+  color: black;
+}
+
+.dark * {
+  background-color: #444444;
+  color: white;
+}
+
+#sites {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(100% - 80px);
+  height: 60%;
+  padding: 40px;
+  border: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  white-space: nowrap;
+  visibility: hidden;
+}
+#sites.shown {
+  visibility: visible;
+}
+
+#buttons {
+  width: 100%;
+  text-align: center;
+  padding-bottom: 10px;
+}
+button {
+  display: inline-block;
+}
+
+button:hover {
+    cursor: pointer;
+    border-color: blue;
+}
+
+#power-button {
+    cursor: pointer;
+    padding-left: 100px;
+    width:50px;
+    height:50px;
+    background-color: gray;
+    -webkit-mask: url('../img/power.svg') no-repeat center;
+    mask: url('../img/power.svg') no-repeat center;
+}
+#power-button.enabled {
+    background-color: blue;
+}
+#power-button:hover {
+    // TODO: put a CSS3 animation color loop
+}
+#power-text {
+    padding-left: 10px;
+}

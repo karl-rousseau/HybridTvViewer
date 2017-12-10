@@ -1,15 +1,237 @@
 <!doctype html>
 <html>
   <head>
-    <meta charset=utf-8>
-    <title>Chrome extension for Hybrid iDTV pages</title>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/options.css">
+    <script src="../js/options.js"></script>
   </head>
   <body>
-    <header>
-      <h1>Under Construction</h1>
-    </header>
-    <article>
+    <table id="options">
+      <tr>
+        <td>
+          <div id="power-button" title="disable or enable extension on current tab"></div><div id="power-text">You can manually force this web page<br />to be recognized as an iTV application.</div>
+          <!--form>
+            <fieldset>
+              <legend>User Interface</legend>
+              <input type="radio" name="ui_alignment" value="ui_default" checked />default (top left)&nbsp;&nbsp;&nbsp;
+              <input type="radio" name="ui_alignment" value="ui_centered" />centered<br />
+              <input type="radio" name="ui_theme" value="ui_theme_light" checked />light color theme&nbsp;&nbsp;&nbsp;
+              <input type="radio" name="ui_theme" value="ui_theme_dark" />dark color theme
+            </fieldset>
+          </form-->
+        </td>
+        <td>
+        </td>
+      </tr>
 
-    </article>
+      <tr>
+        <td>
+          <form>
+            <fieldset>
+              <legend>Device Software Version</legend>
+              <!--input type="radio" name="hbb_version" value="0.5" disabled /><label>V0.5 (draft) ~2008</label><br /-->
+              <input type="radio" name="hbb_version" value="1.0" disabled /><label>V1.0 (<a target="_blank" href="http://www.etsi.org/deliver/etsi_ts/102700_102799/102796/01.01.01_60/ts_102796v010101p.pdf">etsi 1.1.1</a>) ~2009/2010</label><br />
+              <input type="radio" name="hbb_version" value="1.5" checked /><label>V1.5 (<a target="_blank" href="http://www.etsi.org/deliver/etsi_ts%5C102700_102799%5C102796%5C01.02.01_60%5Cts_102796v010201p.pdf">etsi 1.2.1</a>) ~2012 <small>(DRM + DASH)</small></label><br />
+              <input type="radio" name="hbb_version" value="2.0" disabled /><label>V2.0 (<a target="_blank" href="http://www.etsi.org/deliver/etsi_ts%5C102700_102799%5C102796%5C01.03.01_60%5Cts_102796v010301p.pdf">etsi 1.3.1</a>) ~2015 <small>(DVB-CSS + HTML5)</small></label><br />
+              <input type="radio" name="hbb_version" value="2.0.1" disabled /><label>V2.0.1 (<a target="_blank" href="http://www.etsi.org/deliver/etsi_ts/102700_102799/102796/01.04.01_60/ts_102796v010401p.pdf">etsi 1.4.1</a>) ~2016 <small>(UHD + EME + WebAudio)</small></label><br />
+              <!--input type="radio" name="hbb_version" value="2.5" disabled /><label>V2.1 (etsi 1.5.1) ~2018 <small>(WebAssembly ? WebGL ?)</small></label-->
+            </fieldset>
+          </form>
+          <!--form>
+            <fieldset>
+              <legend>HbbTV OSD resolution</legend>
+              <input type="radio" name="hbb_osd" value="720p" checked />720p&nbsp;
+              <input type="radio" name="hbb_osd" value="1080p" disabled /><label>1080p&nbsp;</label>
+              <input type="radio" name="hbb_osd" value="2160p" disabled /><label>2160p</label>
+            </fieldset>
+          </form-->
+        </td>
+        <td>
+        </td>
+      </tr>
+
+      <!--tr>
+        <td>
+          <form>
+            <fieldset>
+              <legend>Device Capabilities</legend>
+              <input type="checkbox" name="hbb_ciplus" value="hbb_ciplus" checked>CI+ (Common Interface)</input><br />
+              <input type="checkbox" name="hbb_pvr" value="hbb_pvr" />PVR (Personal Video Recorder)<br />
+              <input type="checkbox" name="hbb_dl" value="hbb_dl" />DL (File DownLoad)<br />
+              <input type="checkbox" name="hbb_eit" value="hbb_eit" />META_SI (DVB-SI through EIT metadata)&nbsp;&nbsp;&nbsp;<small>HbbTV V1.5+</small><br />
+              <input type="checkbox" name="hbb_version" value="hbb_drm" checked />DRM (Digital Right Management)&nbsp;&nbsp;&nbsp;<small>HbbTV V1.5+</small><br />
+                <dd><input type="checkbox" name="hbb_mss" value="hbb_mss" checked />PlayReady <small>(CASid=19219)</small></dd>
+                <dd><input type="checkbox" name="hbb_mrl" value="hbb_mrl" />Marlin <small>(CASid=19188)</small></dd>
+              <input type="checkbox" name="hbb_dash" value="hbb_dash" />DASH (Mpeg-DASH transport)&nbsp;&nbsp;&nbsp;<small>HbbTV V1.5+</small><br />
+              <input type="checkbox" name="hbb_afs" value="hbb_afs" />AFS (Auxiliary File System in CI+ V1.4)&nbsp;&nbsp;&nbsp;<small>HbbTV V2.0+</small><br />
+              <input type="checkbox" name="hbb_sync" value="hbb_sync" />SYNC_SLAVE (Slave device for inter-device synchronization)&nbsp;&nbsp;&nbsp;<small>HbbTV V2.0+</small><br />
+              <input type="checkbox" name="hbb_uhd" value="hbb_uhd" />video UHD profiles (2160p / HEVC)&nbsp;&nbsp;&nbsp;<small>HbbTV V2.0+</small><br />
+              <input type="checkbox" name="hbb_hd" value="hbb_hd" />video HD profiles (720p / 1080p)<br />
+              <input type="checkbox" name="hbb_sd" value="hbb_sd" />video SD profiles (480p / 576p)<br />
+              <input type="checkbox" name="hbb_audio" value="hbb_audio" />audio profiles (MP3 / HE-AAC)
+            </fieldset>
+          </form>
+        </td>
+        <td>
+        </td>
+      </tr-->
+
+      <!--tr>
+        <td>
+          <form>
+            <fieldset>
+              <legend>Device Hardware Signature</legend>
+              <select id="devices">
+                <option value="stb" selected="selected">STB</option>
+                <option value="dtv-samsung">Samsung iDTV</option>
+                <option value="dtv-lg">LG iDTV</option>
+                <option value="dtv-sony">Sony iDTV</option>
+                <option value="dtv-philips">Philips iDTV</option>
+                <option value="dtv-philips">Panasonic iDTV</option>
+                <option value="dtv-philips">Toshiba iDTV</option>
+                <option value="dtv-philips">Sharp iDTV</option>
+                <option value="dtv-philips">HiSense iDTV</option>
+                <option value="dtv-philips">Vestel iDTV</option>
+              </select>
+              &nbsp;model:
+              <select id="year">
+                <option value="2011">2011</option>
+                <option value="2012">2012</option>
+                <option value="2013">2013</option>
+                <option value="2014">2014</option>
+                <option value="2015">2015</option>
+                <option value="2016">2016</option>
+                <option value="2017" selected="selected">2017</option>
+              </select>
+              &nbsp;demux:
+              <select id="demux">
+                <option value="SD">SD</option>
+                <option value="H264" selected="selected">H264</option>
+                <option value="HEVC">HEVC</option>
+              </select>
+              <br />&nbsp;capabilities:
+              <input type="checkbox" name="device_caps" value="DRM" checked />DRM&nbsp;
+              <input type="checkbox" name="device_caps" value="PVR" />PVR&nbsp;
+              <input type="checkbox" name="device_caps" value="DL" />DL&nbsp;
+              <input type="checkbox" name="device_caps" value="CI+" />CI+&nbsp;
+              <input type="checkbox" name="device_caps" value="AFS" />AFS&nbsp;
+            </fieldset>
+          </form>
+        </td>
+        <td>
+        </td>
+      </tr-->
+
+      <!--tr>
+        <td>
+          <form>
+            <fieldset>
+              <legend>Device Configuration</legend>
+              Country:
+              <select id="device_country_lang">
+                <option value="ENG">ENG</option>
+                <option value="FRA" selected="selected">FRA</option>
+                <option value="ITA">ITA</option>
+                <option value="RUS">RUS</option>
+                <option value="ARE">ARE</option>
+              </select>
+              <label>Audio: </label><input type="text" name="device_audio_lang" value="ENG" size="3" />&nbsp;
+              <label>Subtitle: </label><input type="text" name="device_sub_lang" value="ENG" size="3" />
+            </fieldset>
+          </form>
+        </td>
+        <td>
+        </td>
+      </tr-->
+
+      <tr>
+        <td>
+          <form>
+            <fieldset>
+              <legend>Video Player emulation</legend>
+              <input type="radio" name="video_player" value="player_videojs" checked />VideoJS <small>(TS, DASH)</small>&nbsp;
+              <input type="radio" name="video_player" value="player_vlc" disabled /><label>VLC <small>(E-AC3, HEVC, TS, DASH, Sat>Ip)</small></label>
+            </fieldset>
+          </form>
+        </td>
+        <td>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <form>
+            <fieldset>
+              <legend>Tuner emulation</legend>
+              <!--input type="radio" name="tuner_rf" value="tuner_dvbt" onclick="checkOnlyOne(this.value);" checked />DVB-T&nbsp;&nbsp;&nbsp;
+              <input type="radio" name="tuner_rf" value="tuner_dvbc" onclick="checkOnlyOne(this.value);" />DVB-C&nbsp;&nbsp;&nbsp;
+              <input type="checkbox" name="tuner" value="tuner_dvbs" onclick="checkOnlyOne(this.value);" />DVB-S&nbsp;&nbsp;&nbsp;
+              <label>with LCN start at </label><input type="value" name="tuner_lcn" value="800" size="4" /><br />
+              <input type="checkbox" name="tuner" value="tuner_usb" onclick="checkOnlyOne(this.value);" disabled /><label>USB key (Windows BDA or LinuxDVB)</label>
+              <input type="checkbox" name="remote" value="tuner_remote" onclick="checkOnlyOne(this.value);" disabled /><label>Remote (BDA or LIRC or IOKit)</label><br />
+              <input type="checkbox" name="tuner" value="tuner_satip" onclick="checkOnlyOne(this.value);" disabled /><label>Sat>IP streams</label><br />
+              <input type="checkbox" name="scheme_dvb" value="scheme_dvb" disabled /><label>handle DVB:// scheme</label><br /-->
+              <label>broadcast url </label><input type="url" name="broadcast_url" value="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" size="38" pattern="https?://.+" required />
+            </fieldset>
+          </form>
+        </td>
+        <td>
+        </td>
+      </tr>
+
+      <!--tr>
+        <td>
+          <form>
+            <fieldset>
+              <legend>Cicam emulation</legend>
+              <label>CAM CAS id: </label><input type="text" name="cicam_casid" value="0x0100" size="6" />&nbsp;&nbsp;&nbsp;
+              <label>SmartCard CAS id: </label><input type="text" name="smartcard_casid" value="0x0110" size="6" />&nbsp;&nbsp;&nbsp;<a href="http://www.dvbservices.com/identifiers/ca_system_id">list of CAS id</a><br />
+              <input type="checkbox" name="cicam_in" value="cicam_in" checked />CAM inserted in CI+&nbsp;&nbsp;&nbsp;
+              <input type="checkbox" name="smartcard_in" value="smartcard_in" checked />SmartCard inserted in CAM&nbsp;&nbsp;&nbsp;<br />
+              <label>Pin Code: </label><input type="number" name="cicam_pin" value="1234" min="0000" max="9999" size="4" />&nbsp;&nbsp;&nbsp;
+              <label>Parental Rating: </label><input type="text" name="cicam_parental" value="18+" size="4" />&nbsp;&nbsp;&nbsp;
+              <label>Country: </label><input type="text" name="cicam_country" value="FR" size="4" /><br />
+              <input type="checkbox" name="scheme_ci" value="scheme_ci" disabled /><label>handle CI:// scheme</label>
+            </fieldset>
+          </form>
+        </td>
+        <td>
+        </td>
+      </tr-->
+
+      <!--tr>
+        <td>
+          <form>
+            <fieldset>
+              <legend>HbbTV V2 Media Synchronization emulation</legend>
+            </fieldset>
+          </form>
+        </td>
+        <td>
+        </td>
+      </tr-->
+
+      <!--tr>
+        <td colspan="2">
+          <span>In next release, this extension will follow those standards:</span><br />
+          <img src="../img/logo_DVB-T.svg" width="100" />&nbsp;&nbsp;&nbsp;
+          <img src="../img/logo_DVB-C.svg" width="100" />&nbsp;&nbsp;&nbsp;
+          <img src="../img/logo_DVB-S.svg" width="100" />&nbsp;&nbsp;&nbsp;
+          <img src="../img/logo_DVB-CSS.svg" width="100" />&nbsp;&nbsp;&nbsp;<br />
+          <img src="../img/logo_CIplus.svg" width="80" />&nbsp;&nbsp;&nbsp;
+          <img src="../img/logo_HEVC.png" width="100" />&nbsp;&nbsp;&nbsp;
+          <img src="../img/logo_DASH.jpg" width="100" />&nbsp;&nbsp;&nbsp;
+          <img src="../img/logo_SATIP.svg" width="100" />&nbsp;&nbsp;&nbsp;
+        </td>
+      </tr-->
+
+    </table>
+    <div id="sites"></div>
+    <!--br /-->
+    <div id="buttons">
+      <button id="sites-button">Show identified sites</button>&nbsp;&nbsp;&nbsp;
+      <button id="clear-button">Clear stored identified sites</button>
+    </div>
   </body>
 </html>

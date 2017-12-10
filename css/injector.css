@@ -8,6 +8,13 @@ html.tvViewer {
     background-image: repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(0,0,0,.5) 15px, rgba(0,0,0,.5) 30px) !important;
 }
 
+html.tvViewer > body.light {
+    background-color: white;
+    background-image: repeating-linear-gradient(-45deg, #eeeeee, #eeeeee 33%,
+                                                        #fbfbfb 33%, #fbfbfb 66%,
+                                                        #eeeeee 66%, #eeeeee) !important;
+}
+
 html.tvViewer > body {
     position: absolute;
     width: 1280px !important;
@@ -24,6 +31,7 @@ html.tvViewer > body.centered {
 }
 
 .keybutton {
+    z-index: 999;
     position: absolute;
     bottom: -30px;
     width: 40px;
@@ -37,11 +45,16 @@ html.tvViewer > body.centered {
 html.tvViewer > body span.keybutton {
     text-align: center;
     border-radius: 5px;
+    border: 1px solid transparent;
     background-color: darkgray;
 }
 
 html.tvViewer > body span.keybutton.focus {
     background-color: #333;
+}
+
+html.tvViewer > body span.keybutton:hover {
+    border: 1px solid #fff;
 }
 
 #redkey {
@@ -80,11 +93,13 @@ span.keybutton.btrightgradient {
   border-bottom-right-radius: 5px !important;
   border-top-left-radius: 0 !important;
   border-bottom-left-radius: 0 !important;
+  border: 0px solid transparent !important;
+  box-sizing: border-box;
 }
 
 #f11key {
-    width: 40px;
     left: 50%;
+    width: 40px;
     margin-left: -40px;
 }
 #f11key:before {
@@ -98,10 +113,15 @@ span.keybutton.btrightgradient {
 #f11key:after {
     content: "fullscr";
 }
+#f11key:hover {
+    background-color: #fff !important;
+    background-image: linear-gradient(bottom, #fff 0%, #fff 100%);
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #fff), color-stop(1, #fff));
+}
 
 #f12key {
-    width: 40px;
     left: 50%;
+    width: 40px;
     margin-left: 40px;
 }
 #f12key:before {
@@ -114,6 +134,13 @@ span.keybutton.btrightgradient {
 }
 #f12key:after {
     content: "debug";
+}
+
+.macos #f11key:before {
+    content: "^⌘F";
+  }
+.macos #f12key:before {
+    content: "⌥⌘I";
 }
 
 #res2160key {
@@ -146,16 +173,39 @@ span.keybutton.btrightgradient {
 
 html.tvViewer > body.res720p {
     zoom: 1.0;
+    -ms-zoom: 1.0;
+    -moz-transform: scale(1);
 }
 
 html.tvViewer > body.res1080p {
     zoom: 1.5;
+    -ms-zoom: 1.5;
+    -moz-transform: scale(1.5);
 }
 
 html.tvViewer > body.res1440p {
     zoom: 2.0;
+    -ms-zoom: 2.0;
+    -moz-transform: scale(2);
 }
 
 html.tvViewer > body.res2160p {
     zoom: 3.0;
+    -ms-zoom: 3.0;
+    -moz-transform: scale(3);
+}
+
+@-webkit-keyframes detected-object {
+  from {}
+}
+@keyframes detected-object {
+  from {}
+}
+object {
+  -webkit-animation-delay: 0s !important;
+  -webkit-animation-name: detected-object !important;
+  -webkit-animation-play-state: running !important;
+  animation-delay: 0s !important;
+  animation-name: detected-object !important;
+  animation-play-state: running !important;
 }

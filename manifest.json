@@ -1,9 +1,15 @@
 {
-  "name": "ChromeHybridTvViewer",
-  "version": "0.2",
+  "name": "HybridTvViewer",
+  "version": "0.3.0",
   "manifest_version": 2,
-  "minimum_chrome_version": "18",
-  "description": "Extension making CHROME to open HbbTV,CE-HTML,BML,OHTV webpages instead of downloading them (HbbTV, StreamEvents, CI+ and DVB-SI are software emulated)",
+  "description": "Extension making CHROME & FIREFOX to deal with HbbTV,CE-HTML,BML,OHTV webpages",
+
+  "applications": {
+    "gecko": { // needed for FIREFOX in order to send messages
+      "id": "hybridtvviewer@github.com",
+      "strict_min_version": "57.0"
+    }
+  },
 
   "permissions": [
     "tabs",
@@ -24,7 +30,8 @@
       "19": "img/tv-icon19-off.png",
       "38": "img/tv-icon38-off.png"
     },
-    "default_title": "Hybrid TV viewer"
+    "default_title": "Hybrid TV viewer",
+    "default_popup": "html/options.html"
   },
   "icons": {
     "128": "img/tv-icon128-on.png"
@@ -33,45 +40,6 @@
   "background": {
     "scripts": [ "js/patcher.js" ]
   },
-  "content_scripts": [ { // done by Chrome and faster than inside JS with chrome.tabs.executeScript (+ not seen in network panel)
-      "matches": [ "http://*/*", "https://*/*" ],
-      "js": [ "js/first.js" ],
-      "css": [ "css/injector.css" ],
-      "run_at": "document_start"
-  }
-],
-  "options_page": "html/options.html",
+  "devtools_page": "html/hbbdevtools.html"
 
-  "nacl_modules": [{
-    "path": "plugins/native-object.nmf",
-    "mime_type": "video/broadcast"
-  },
-  {
-    "path": "plugins/native-object.nmf",
-    "mime_type": "application/oipfConfiguration"
-  },
-  {
-    "path": "plugins/native-object.nmf",
-    "mime_type": "application/oipfApplicationManager"
-  },
-  {
-    "path": "plugins/native-object.nmf",
-    "mime_type": "application/oipfCapabilities"
-  },
-  {
-    "path": "plugins/native-object.nmf",
-    "mime_type": "application/oipfSearchManager"
-  },
-  {
-    "path": "plugins/native-object.nmf",
-    "mime_type": "application/oipfParentalControlManager"
-  },
-  {
-    "path": "plugins/native-object.nmf",
-    "mime_type": "application/hbbtvMediaSynchroniser"
-  },
-  {
-    "path": "plugins/native-object.nmf",
-    "mime_type": "application/hbbtvCSManager"
-  }]
 }

@@ -1,0 +1,57 @@
+{
+  "title": "HybridTvViewer",
+  "name": "HybridTvViewer",
+  "description": "Extension making CHROME & FIREFOX to deal with HbbTV,CE-HTML,BML,OHTV webpages",
+  "version": "0.3.0",
+  "scripts": {
+    "run-test": "npm run test-html-coverage",
+    "run-firefox-extension": "echo 'Running Firefox extension ...'; web-ext lint; web-ext run",
+    "test": "mocha test/*.js",
+    "test-with-coverage": "nyc --reporter=text mocha",
+    "test-html-coverage": "nyc --reporter=html mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/karl-rousseau/HybridTvViewer.git"
+  },
+  "keywords": [
+    "js",
+    "html",
+    "hbbtv",
+    "bml",
+    "ohtv",
+    "dvb",
+    "mpeg",
+    "dash",
+    "ci+"
+  ],
+  "author": "Karl Rousseau",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/karl-rousseau/HybridTvViewer/issues"
+  },
+  "\\": "below are Firefox and NodeJS features",
+  "homepage": "https://github.com/karl-rousseau/HybridTvViewer",
+  "permissions": {
+    "private-browsing": "true",
+    "cross-domain-content": []
+  },
+  "engines": {
+    "firefox": ">=48",
+    "node": ">=6.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-node": "^4.2.2",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "jsdom": "",
+    "mocha": "",
+    "should": "",
+    "sinon-chrome": "^2.2.1",
+    "xmldom": "",
+    "web-ext": ""
+  }
+}

@@ -1,4 +1,4 @@
-# Chrome/Chromium extension
+# WEB extension
 
 Embracing such Hybrid Interactive TV Technologies:
 
@@ -7,44 +7,49 @@ Embracing such Hybrid Interactive TV Technologies:
 ## Preamble
 
 ```
-This extension for CHROME mimics the behavior of the good one called FireHbbTV available only for FIREFOX
+This extension for CHROME & FIREFOX mimics the behavior of the good one called FireHbbTV available only for FIREFOX
 ```
-I have decided to do it, as at work we are only using CHROME as a development tool on a daily basis and I am now used to it. And at last I also wanted CHROME to avoid to download such iTV (interactive television) application pages (exposed by an URL or embedded inside a broadcast transport stream)
+I have decided to do it, as at work we are only using CHROME as a development tool on a daily basis and I am now used to it. Moreover I also wanted to avoid the default action of our browsers which is to download such iTV (interactive television) application pages (exposed by an URL or embedded inside a broadcast transport stream)
+
+| Opera (chrome based)    | Firefox (V57+) | Google Chrome | Microsoft Edge | Safari |
+| -------- | ------- | ------ | ------ | ------ |
+| [free](https://addons.opera.com/en/extensions/details/hybridtvviewer/) | [free](https://addons.mozilla.org/en-US/firefox/addon/hybridtvviewer/) | not free :cry: | not tested and not free :cry: | no support for Web Extensions yet |
+
+## Screenshot
+
+![](img/screenshot_popup.png)
 
 ## Features
 
 | Feature            | Description |
 | ------------------ | ----------- |
 | auto-detection     | an analysis of HTTP server headers plus inside header & meta tags is performed |
-| forced detection   | user on-clicked extension icon will force its iTV emulation (auto-saved too) |
+| forced detection   | user on-clicked power button will force the iTV emulation (auto-saved in web extension local storage) |
 | bottom status bar  | underneath the screen rendering, the emulator is providing some buttons (colored keys, resolutions for zoomed rendering, ...) |
 | iDTV customization | the extension enables customization of various parameters (user-agent, OIPF capabilities, country, CAS id, DVB channels, ...) |
 | external inputs | it handles some external inputs such as CI+ APDU reply message, Stream-Event content customization & triggering, DVB channels with customized LCN, ... |
-| video support | it will handle the rendering of CHROME unrecognized broadcast video stream: Mpeg-TS and Mpeg-DASH |
+| video support | it will handle the rendering of browser unrecognized broadcast video stream: Mpeg-TS and Mpeg-DASH |
 
 ## Status
 
-- :white_check_mark: ~~removing CHROME warning popups for various undefined mime-types~~
-- :construction: currently only as a prototype stage but the proof of concept has been validated
+- [x] ~~removing CHROME warning popups for various undefined mime-types~~
+- [x] ~~currently only as a prototype stage but the proof of concept has been validated and many features have been put in the options page~~.
 - :skull: SUN MHP technology has been put aside as it will need to have a JVM installed with its associated plugin
   (a mess to install and moreover this technology is now replaced by the brand new one called HbbTV)
-  I know [GINGA](https://en.wikipedia.org/wiki/Ginga_(middleware)) is MHP based and still present in South America but for how long ...
-- :satellite: **DVB-SI/PSI** tables (such as EIT & AIT) extraction inside MPEG-TS files, will be handle by an external Chrome application
+  I know [GINGA](https://en.wikipedia.org/wiki/Ginga_(middleware) is MHP based and still present in South America but for how long ...
+- :satellite: **DVB-SI/PSI** tables (such as EIT & AIT) extraction inside MPEG-TS files, will be handle by an external Chrome application or ...
 - :vhs: **MP4 Transport Stream** video (without DRM) might be supported using an external library:
   * will have to investigate :mag:  [upipe](https://github.com/cmassiot/upipe/tree/master/examples/chrome/player_chrome) Chrome NaCl rendering plugin
   * might also have a look at [Video.JS](https://github.com/videojs/video.js) library handling also HLS and DASH
+  * Chrome V55+ can handle HEVC with HTML5 video tag but it need [to be recompiled](https://lexxai.blogspot.fr/2016/09/chromium-ubuntu-x265-hevc.html) with a proper FFmpeg
 - :scissors: OIPF technology will not be fully implemented (only the HbbTV subset will be done)
 - **HbbTV V2.0** might be present (with an exposed WebSocket server) when V1.5 implementation will be done
   * for the meantime, look at [node-hbbtv](https://github.com/fraunhoferfokus/node-hbbtv) from the well-known Fraunhofer (creator of MP3)
-- CI+ HbbTV implementation is hereby emulated with a default code (can be customized)
-- Remote control colored keys will be mapped to specific keyboard keys (R,G,B,Y) and external Apple Remote Control will be taken into account (maybe also Win/LIRC)
-- A dedicated tab might be added in [Chrome Web Inspector](https://developer.chrome.com/devtools) for user debugging purpose
-- :warning: For developers, if you want to use this extension by yourself, you will need to unlock [NaCL feature](https://developer.chrome.com/native-client/devguide/devcycle/running#requirements) in Chrome
-- :calendar: Soon this extension will be published on [CHROME store](https://chrome.google.com/webstore/category/extensions)
+- [ ] CI+ HbbTV implementation is hereby emulated with a default code (can be customized)
+- [ ] A dedicated tab will be added in [Chrome Web Inspector](https://developer.chrome.com/devtools) for user debugging purpose
 
 ```
-This extension might use a CHROME application in the future in order to have video and EIT handled
-(like Mpeg-TS and Mpeg-DASH properly played inside the browser)
+If you have video Cross-Origin issues, you can temporary test your video by adding those parameters when launching your Chrome based browser: --disable-web-security --user-data-dir
 ```
 
 ## Detection and usage
@@ -75,11 +80,11 @@ and sometime with the addition of a given DOCTYPE:
 | *HbbTV*       | &lt;!DOCTYPE html PUBLIC "-//HbbTV//1.1.1//EN" "http://www.hbbtv.org/dtd/HbbTV-1.1.1.dtd" &gt; |
 | *BML*         | &lt;!DOCTYPE BML PUBLIC "+//ARIB STD-B24:1999//DTD BML Document//JA" "http://www.arib.or.jp/B24/DTD/BML_1_0.dtd" &gt; |
 
-In other cases, you can also manually click on the extension icon inside CHROME's bar to force the page to be interpreted as an Hybrid iDTV page. (this action is saved in local storage for further visits)
+In other cases, you can also manually click on the extension icon inside the browser's bar to show a popup then by clicking on a power icon button, you can force the page to be interpreted as an Hybrid iTV page. (this action is saved in local storage for further visits)
 
 ## Examples
 
-The purpose of this extension is mainly to validate the **MIT-xperts test suite** under CHROME.
+The purpose of this extension is mainly to validate the **MIT-xperts test suite** under CHROME and FIREFOX.
 Here are some example URL that have been extracted from various sources:
 
 | Name          | Source | URL |
@@ -117,8 +122,3 @@ Here are some example URL that have been extracted from various sources:
 - BML (Broadcast Markup Language) : similar to HbbTV and defined by ARIB STD B-24 standard used in JAPAN over ISDB-T broadcasted channels like [*NHK*](https://www.nhk.or.jp/strl/publica/bt/en/fe0003-1.html)
 - CE-HTML (Consumer Electronics HTML) : nowadays less used and only found on old devices
 - OIPF (Open IPTV Forum) : used on some STB and since 2014 activities have been transfered to HbbTV association
-
-## License
-
-  [The MIT License][0]
-  [0]: http://opensource.org/licenses/MIT
