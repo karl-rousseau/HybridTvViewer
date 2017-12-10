@@ -229,7 +229,18 @@ window.onload = function() {
             hybridPages = hybridPages ? JSON.parse(hybridPages) : [];
             document.getElementById('options').style.visibility = "hidden";
             document.getElementById('sites').className = "shown";
-            document.getElementById('sites').innerHTML = hybridPages.map(function(url) { return '<a target="_blank" href="' + url + '">' + url + '</a>'; }).join('<br />');
+            // clickable links to open iTV application web site in new tabs ... (kind of history of previously visited pages)
+            var links = hybridPages.map(function(url) { return url; });
+            for (var i = 0, l = links.length; i < l; i++) {
+                var link = document.createElement('a');
+                link.setAttribute('target', '_blank');
+                link.setAttribute('href', links[i]);
+                var linkText = document.createTextNode(links[i]);
+                link.appendChild(linkText);
+                document.getElementById('sites').appendChild(link);
+                var endOfLine = document.createElement('br');
+                document.getElementById('sites').appendChild(endOfLine);
+            }
             enableDisableSitesButton.textContent = "Show configuration";
         }
     });
@@ -240,7 +251,7 @@ window.onload = function() {
         hybridPages = hybridPages ? JSON.parse(hybridPages) : [];
         if (hybridPages.length > 0) {
             localStorage.setItem('tvViewer_tabs', JSON.stringify(["http://itv.mit-xperts.com/hbbtvtest/capabilities/"]));
-            document.getElementById('sites').innerHTML = hybridPages.map(function(url) { return '<a target="_blank" href="' + url + '">' + url + '</a>'; }).join('<br />');
+            document.getElementById('sites').textContent = hybridPages.map(function(url) { return url; }).join('\n');
         }
     });
 

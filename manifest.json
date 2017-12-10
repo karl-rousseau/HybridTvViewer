@@ -5,7 +5,7 @@
   "description": "Extension making CHROME & FIREFOX to deal with HbbTV,CE-HTML,BML,OHTV webpages",
 
   "applications": {
-    "gecko": { // needed for FIREFOX in order to send messages
+    "gecko": {
       "id": "hybridtvviewer@github.com",
       "strict_min_version": "57.0"
     }
