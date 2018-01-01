@@ -1,0 +1,72 @@
+{
+  "name": "HybridTvViewer",
+  "version": "0.4.0",
+  "manifest_version": 2,
+  "description": "Extension making CHROME & FIREFOX to deal with HbbTV,CE-HTML,BML,OHTV webpages",
+
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "webRequest",
+    "webRequestBlocking",
+    "<all_urls>"
+  ],
+  "web_accessible_resources": [
+    "js/*.js",
+    "plugins/native-object.nmf",
+    "css/*.css",
+    "css/*.ttf",
+    "img/*.png"
+  ],
+
+  "browser_action": {
+    "default_icon": {
+      "19": "img/tv-icon19-off.png",
+      "38": "img/tv-icon38-off.png"
+    },
+    "default_title": "Hybrid TV viewer",
+    "default_popup": "html/options.html"
+  },
+  "icons": {
+    "128": "img/tv-icon128-on.png"
+  },
+
+  "background": {
+    "scripts": [ "js/patcher.js" ]
+  },
+  "devtools_page": "html/hbbdevtools.html",
+
+  "nacl_modules": [{
+    "path": "plugins/native-object.nmf",
+    "mime_type": "video/broadcast"
+  },
+  {
+    "path": "plugins/native-object.nmf",
+    "mime_type": "application/oipfConfiguration"
+  },
+  {
+    "path": "plugins/native-object.nmf",
+    "mime_type": "application/oipfApplicationManager"
+  },
+  {
+    "path": "plugins/native-object.nmf",
+    "mime_type": "application/oipfCapabilities"
+  },
+  {
+    "path": "plugins/native-object.nmf",
+    "mime_type": "application/oipfSearchManager"
+  },
+  {
+    "path": "plugins/native-object.nmf",
+    "mime_type": "application/oipfParentalControlManager"
+  },
+  {
+    "path": "plugins/native-object.nmf",
+    "mime_type": "application/hbbtvMediaSynchroniser"
+  },
+  {
+    "path": "plugins/native-object.nmf",
+    "mime_type": "application/hbbtvCSManager"
+  }]
+
+}

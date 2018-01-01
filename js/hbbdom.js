@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    ChromeTvViewer - a browser extension to open HbbTV,CE-HTML,BML,OHTV webpages
+    HybridTvViewer - a browser extension to open HbbTV,CE-HTML,BML,OHTV webpages
     instead of downloading them. A mere simulator is also provided.
 
     Copyright (C) 2015 Karl Rousseau
@@ -27,7 +27,7 @@
 
     See the MIT License for more details: http://opensource.org/licenses/MIT
 
-    HomePage: https://github.com/karl-rousseau/ChromeHybridTvViewer
+    HomePage: https://github.com/karl-rousseau/HybridTvViewer
 */
 
 // If the extension is not activated for this web page then we do nothing and
@@ -35,7 +35,7 @@
 var pageActivated = localStorage.getItem('tvViewer_active') === 'true';
 if (pageActivated) {
     function addClass(element, className) {
-        if (element.classList) {
+        if (element.classList && className !== '' && className !== null) {
             element.classList.add(className);
         } else {
             element.className += ' ' + className;
@@ -43,7 +43,7 @@ if (pageActivated) {
     }
 
     function removeClass(element, className) {
-        if (element.classList) {
+        if (element.classList && className !== '' && className !== null) {
             element.classList.remove(className);
         }
     }
@@ -134,8 +134,24 @@ if (pageActivated) {
 
     (function injectButtons(document) {
 
-        if (document.getElementById('redkey')) {
+        if (document.getElementById('tvkeys')) {
             return ;
+        } else {
+            var tvkeys = document.createElement('div');
+            tvkeys.setAttribute('id', 'tvkeys');
+            var body = document.getElementsByTagName('body')[0];
+            if (body) {
+                body.appendChild(tvkeys);
+            }
+        }
+
+        function getInjectedParams() {
+            var scripts = document.head.getElementsByTagName('script');
+            if (scripts.length == 0) {
+                return;
+            }
+            scripts = [].slice.call(scripts).filter(function(l) { return l.src.indexOf('hbbdom.js') !== -1; });
+            return scripts && scripts.length > 0 ? scripts[0].src : null;
         }
 
         function doKeyPress(key) {
@@ -200,9 +216,9 @@ if (pageActivated) {
                     }
                 }
             }.bind(this));
-            var body = document.getElementsByTagName('body')[0];
-            if (body) {
-                body.appendChild(keyButton);
+            var tvkeys = document.getElementById('tvkeys');
+            if (tvkeys) {
+                tvkeys.appendChild(keyButton);
             }
         }
 
@@ -253,8 +269,15 @@ if (pageActivated) {
         var pageResolution = localStorage.getItem('tvViewer_resolution') || 'res720p';
         addClass(document.body, pageResolution);
 
-        var centeredPage = localStorage.getItem('tvViewer_centered') || 'centered';
+        var currentPageUrl = getInjectedParams();
+        var lightTheme = currentPageUrl.indexOf('light') !== -1 ? 'light' : '';
+        addClass(document.documentElement, lightTheme);
+
+        var centeredPage = currentPageUrl.indexOf('centered') !== -1 ? 'centered' : '';
         addClass(document.body, centeredPage);
+
+        var overscanFlag = currentPageUrl.indexOf('overscan') !== -1 ? 'overscan' : '';
+        addClass(document.body, overscanFlag);
 
         var resButton = document.getElementById(pageResolution.replace(/p/g, 'key'));
         addClass(resButton, 'focus');
@@ -333,14 +356,34 @@ if (pageActivated) {
                         'dsd': ''
                     };
                     oipfPluginObject.currentChannel = currentChannel;
+                    oipfPluginObject.createChannelObject = function() {
+                        console.log("<BroadcastVideo> createChannelObject() ...");
+                    };
                     oipfPluginObject.bindToCurrentChannel = function() {
-                        return currentChannel;
+                        console.log("<BroadcastVideo> bindToCurrentChannel() ...");
+                        var player = document.getElementById('video-player');
+                        if (player) {
+                            player.play();
+                        }
+                    };
+                    oipfPluginObject.setChannel = function() {
+                        console.log("<BroadcastVideo> setChannel() ...");
                     };
                     oipfPluginObject.prevChannel = function() {
+                        console.log("<BroadcastVideo> prevChannel() ...");
                         return currentChannel;
                     };
                     oipfPluginObject.nextChannel = function() {
+                        console.log("<BroadcastVideo> nextChannel() ...");
                         return currentChannel;
+                    };
+                    oipfPluginObject.release = function() {
+                        console.log("<BroadcastVideo> release() ...");
+                        var player = document.getElementById('video-player');
+                        if (player) {
+                            player.stop();
+                            player.parentNode.removeChild(player);
+                        }
                     };
                     function ChannelConfig() {
 	                  }
@@ -392,6 +435,81 @@ if (pageActivated) {
                     oipfPluginObject.programmes = [];
                     oipfPluginObject.programmes.push({name:'Event 1, umlaut \u00e4',channelId:'ccid:dvbt.0',duration:600,startTime:Date.now()/1000,description:'EIT present event is under construction'});
                     oipfPluginObject.programmes.push({name:'Event 2, umlaut \u00f6',channelId:'ccid:dvbt.0',duration:300,startTime:Date.now()/1000+600,description:'EIT following event is under construction'});
+                    Object.defineProperty(oipfPluginObject, 'COMPONENT_TYPE_VIDEO', { value: 0, enumerable: true });
+                    Object.defineProperty(oipfPluginObject, 'COMPONENT_TYPE_AUDIO', { value: 1, enumerable: true });
+                    Object.defineProperty(oipfPluginObject, 'COMPONENT_TYPE_SUBTITLE', { value: 2, enumerable: true });
+                    class AVComponent {
+                        constructor() {
+                            this.COMPONENT_TYPE_VIDEO = 0;
+                            this.COMPONENT_TYPE_AUDIO = 1;
+                            this.COMPONENT_TYPE_SUBTITLE = 2;
+                            this.componentTag = 0;
+                            this.pid = undefined;
+                            this.type = undefined;
+                            this.encoding = "DVB-SUBT";
+                            this.encrypted = false;
+                        }
+                    };
+                    class AVVideoComponent extends AVComponent {
+                        constructor() {
+                            super();
+                            this.type = this.COMPONENT_TYPE_VIDEO;
+                            this.aspectRatio = 1.78;
+                        }
+                    };
+                    class AVAudioComponent extends AVComponent {
+                        constructor() {
+                            super();
+                            this.type = this.COMPONENT_TYPE_AUDIO;
+                            this.language = "eng";
+                            this.audioDescription = false;
+                            this.audioChannels = 2;
+                        }
+                    };
+                    class AVSubtitleComponent extends AVComponent {
+                        constructor() {
+                            super();
+                            this.type = this.COMPONENT_TYPE_SUBTITLE;
+                            this.language = "deu";
+                            this.hearingImpaired = false;
+                        }
+                    };
+                    class AVComponentCollection extends Array {
+                        constructor(num) {
+                            super(num);
+                        }
+                        item(idx) {
+                            return idx < this.length ? this[idx] : [];
+                        }
+                    };
+                    oipfPluginObject.getComponents = (function(type) {
+                        return [
+                            type === this.COMPONENT_TYPE_VIDEO ? new AVVideoComponent() :
+                            type === this.COMPONENT_TYPE_AUDIO ? new AVAudioComponent() :
+                            type === this.COMPONENT_TYPE_SUBTITLE ? new AVSubtitleComponent() : null
+                        ];
+                    }).bind(oipfPluginObject);
+// TODO: read those values from a message to the extension (+ using a dedicated worker to retrieve those values from the TS file inside broadcast_url form field)
+                    oipfPluginObject.getCurrentActiveComponents = (function() { return [ new AVVideoComponent(), new AVAudioComponent(), new AVSubtitleComponent() ]; }).bind(oipfPluginObject);
+                    oipfPluginObject.selectComponent = (function(cpt) { return true; }).bind(oipfPluginObject);
+                    oipfPluginObject.unselectComponent = (function(cpt) { return true; }).bind(oipfPluginObject);
+                    oipfPluginObject.setFullScreen = (function(state) { this.onFullScreenChange(state); var player = this.children.length > 0 ? this.children[0] : undefined; if (player && state) { player.style.width='100%'; player.style.height='100%'; } }).bind(oipfPluginObject);
+                    oipfPluginObject.onFullScreenChange = function() {
+                    };
+                    oipfPluginObject.onChannelChangeError = function(channel, error) {
+                    };
+                    oipfPluginObject.onChannelChangeSucceeded = function(channel) {
+                    };
+                    oipfPluginObject.addStreamEventListener = function(url, eventName, listener) {
+
+                    };
+                    oipfPluginObject.removeStreamEventListener = function(url, eventName, listener) {
+
+                    };
+                    oipfPluginObject.addEventListener = function(type, listener, capture) {
+                    };
+                    oipfPluginObject.removeEventListener = function(type, listener, capture) {
+                    };
                     console.info("BROADCAST VIDEO PLAYER ...");
                 } else if (isBroadbandVideo(sType)) {
                     console.info("BROADBAND VIDEO PLAYER ...");
@@ -399,55 +517,50 @@ if (pageActivated) {
                     oipfPluginObject.play = (function(speed) { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) player.play(); }).bind(oipfPluginObject);
                     oipfPluginObject.stop = (function() { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) player.stop(); }).bind(oipfPluginObject);
                     oipfPluginObject.seek = (function(pos) { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) player.currentTime=pos/1000; }).bind(oipfPluginObject);
-                    oipfPluginObject.data = (function(src) { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) console.log(src); }).bind(oipfPluginObject);
+                    //oipfPluginObject.data = (function(src) { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) console.log(src); }).bind(oipfPluginObject);
                     oipfPluginObject.playState = (function() { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) console.log('state'); }).bind(oipfPluginObject);
                     oipfPluginObject.playPosition = (function() { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) console.log('pos='+(player.currentTime*1000)); }).bind(oipfPluginObject);
                     oipfPluginObject.speed = (function() { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) console.log('speed='+player.playbackRate); }).bind(oipfPluginObject);
-
+                    oipfPluginObject.onPlayStateChange = (function(s) { console.log('PlayStateChange='+s); this.playState = s; }).bind(oipfPluginObject);
+                    oipfPluginObject.onPlayPositionChanged = (function(p) { console.log('PositionChange='+s); this.playPosition = p; }).bind(oipfPluginObject);
+                    oipfPluginObject.onPlaySpeedChanged = (function(s) { console.log('PositionChange='+s); this.speed = s; }).bind(oipfPluginObject);
                 }
 
                 // if video is broadcast or broadband one ... do the in-common video player injection ...
-                /*if (isBroadcastVideo(sType) || isBroadbandVideo(sType)) {
+                if (isBroadcastVideo(sType) ||
+                   (isBroadbandVideo(sType) && sType.indexOf('application/dash+xml') == 0)) {
                     var isVideoPlayerAlreadyAdded = oipfPluginObject.children.length > 0;
-//console.warn('BROADCAST OR BROADBAND VIDEO PLAYER ... ',isVideoPlayerAlreadyAdded)
                     if (!isVideoPlayerAlreadyAdded) {
                         var videoTag = document.createElement('video');
                         videoTag.setAttribute('id', 'video-player');
-                        videoTag.setAttribute('autoplay', '');
-                        videoTag.setAttribute('style', 'postion:inherit; top:inherit; left:inherit; width:inherit; height:inherit;');
-                        videoTag.src = 'http://clips.vorwaerts-gmbh.de/VfE_html5.mp4';
+                        //videoTag.setAttribute('autoplay', '');
+                        videoTag.setAttribute('loop', '');
+                        videoTag.setAttribute('style', 'top:inherit; left:inherit; width:inherit; height:inherit;');
+                        videoTag.src = localStorage.getItem("tvViewer_broadcast_url") || 'http://clips.vorwaerts-gmbh.de/VfE_html5.mp4';
                         oipfPluginObject.appendChild(videoTag);
-//console.warn('BROADCAST OR BROADBAND VIDEO PLAYER ... ADDED')
-                        var canPlay = !!videoTag.canPlayType(sType);
+console.warn('BROADCAST OR BROADBAND VIDEO PLAYER ... ADDED')
+                        /*var canPlay = !!videoTag.canPlayType(sType);
                         if (!canPlay) { // if video type is not supported by HTML5 then use Video.JS ...
                             console.warn('Adding VIDEO.JS for video type ' + sType + ' ...');
                             var head = document.getElementsByTagName('head')[0];
 
                             var videoJsScript = document.createElement('script');
                             videoJsScript.setAttribute('type', 'text/javascript');
-                            videoJsScript.setAttribute('src', 'https://unpkg.com/video.js/dist/video.js');
+                            videoJsScript.setAttribute('src', 'https://cdn.dashjs.org/latest/dash.all.min.js');
                             head.appendChild(videoJsScript);
 
                             videoJsScript = document.createElement('script');
                             videoJsScript.setAttribute('type', 'text/javascript');
-                            videoJsScript.setAttribute('src', 'http://cdn.dashjs.org/latest/dash.all.debug.js');
+                            videoJsScript.setAttribute('textContent', 'var player=dashjs.MediaPlayer().create(); player.initialize('+videoTag+',"http://itv.mit-xperts.com/video/dash/new.php/test.mpd",true);');
                             head.appendChild(videoJsScript);
 
-                            videoJsScript = document.createElement('script');
-                            videoJsScript.setAttribute('type', 'text/javascript');
-                            videoJsScript.setAttribute('src', 'https://unpkg.com/videojs-contrib-dash/dist/videojs-dash.js');
-                            head.appendChild(videoJsScript);
-
-                            videoJsScript = document.createElement('script');
-                            videoJsScript.setAttribute('type', 'text/javascript');
-                            videoJsScript.setAttribute('textContent', 'var player = videojs("example-video"); player.src({src:"http://itv.mit-xperts.com/video/dash/new.php/test.mpd",type:"application/dash+xml"});');
-                            head.appendChild(videoJsScript);
-
-                        }
+                        }*/
                     }
-                    // observe changes on this tag ...
+                    // observe this tag for attribute data changes ...
 
-                }*/
+                } else if (isBroadbandVideo(sType) && sType.indexOf('application/dash+xml') !== 0) {
+
+                }
             }
         }
     })(window.document);

@@ -136,6 +136,20 @@ function isCurrentTabInList(callback) {
 }
 
 window.onload = function() {
+
+    function updatePageRendering(renderingUpdateCode) {
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            var tab = tabs[0];
+            chrome.tabs.executeScript(tab.id, {
+                code: renderingUpdateCode
+            }, function() {
+                if (chrome.runtime.lastError) {
+                    console.error(chrome.runtime.lastError.message);
+                }
+            });
+        });
+    }
+
     function disableExtensionIcon(callback) { // Utility method to patch Firefox bug with bad icon update
         var canvas = document.createElement("canvas"), ctx = canvas.getContext("2d"), img = new Image();
         function drawIcon() {
@@ -175,7 +189,7 @@ window.onload = function() {
                 chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                     var tab = tabs[0];
                     chrome.tabs.executeScript(tab.id, {
-                        code: "if (document.body) {document.body.classList.remove('centered','res720p','res1080p','res2160p'); document.documentElement.classList.remove('tvViewer');}"
+                        code: "if (document.body) {document.body.classList.remove('overscan','centered','res720p','res1080p','res2160p'); document.documentElement.classList.remove('tvViewer');}"
                     }, function() {
                         if (chrome.runtime.lastError) {
                             console.error(chrome.runtime.lastError.message);
@@ -260,14 +274,28 @@ window.onload = function() {
     var inputFields = document.querySelectorAll('input[type="radio"]');
     inputFields.forEach(function(inputField) {
         inputField.onchange = function(evt) {
-            if (evt.target.value === 'ui_theme_dark') {
-                addClass(document.documentElement, 'dark');
-                removeClass(document.documentElement, 'light');
+            if (evt.target.value === 'ui_default' || evt.target.value === 'ui_centered') {
+                var renderingCode;
+                if (evt.target.value === 'ui_centered') {
+                    renderingCode = "document.body.classList.add('centered')";
+                } else {
+                    renderingCode = "document.body.classList.remove('centered')";
+                }
+                updatePageRendering(renderingCode);
+                localStorage.setItem('tvViewer_ui_centered', evt.target.value === 'ui_centered' ? 'true' : 'false');
+
+            } else if (evt.target.value === 'ui_theme_dark' || evt.target.value === 'ui_theme_light') {
+                addClass(document.documentElement, evt.target.value === 'ui_theme_dark' ? 'dark' : 'light');
+                removeClass(document.documentElement, evt.target.value === 'ui_theme_dark' ? 'light' : 'dark');
                 localStorage.setItem('tvViewer_ui_dark', evt.target.value === 'ui_theme_dark' ? 'true' : 'false');
-            } else if (evt.target.value === 'ui_theme_light') {
-                addClass(document.documentElement, 'light');
-                removeClass(document.documentElement, 'dark');
-                localStorage.setItem('tvViewer_ui_dark', evt.target.value === 'ui_theme_dark' ? 'true' : 'false');
+                var renderingCode;
+                if (evt.target.value === 'ui_theme_light') {
+                    renderingCode = "document.documentElement.classList.add('light')";
+                } else {
+                    renderingCode = "document.documentElement.classList.remove('light')";
+                }
+                updatePageRendering(renderingCode);
+
             } else if (evt.target.name === 'hbb_version' && evt.target.checked) {
                 localStorage.setItem('tvViewer_hbbtv', evt.target.value);
                 setCiVersion(evt.target.value);
@@ -280,9 +308,16 @@ window.onload = function() {
     inputFields.forEach(function(inputField) {
         if (!inputField.disabled) {
             inputField.onclick = function(evt) {
-                localStorage.setItem('tvViewer_ui_centered', inputField.ui_centered ? 'true' : 'false');
-
-
+              if (evt.target.name == 'ui_safearea') {
+                  localStorage.setItem('tvViewer_ui_overscan', inputField.checked ? 'true' : 'false');
+                  var renderingCode;
+                  if (inputField.checked) {
+                      renderingCode = "document.body.classList.add('overscan')";
+                  } else {
+                      renderingCode = "document.body.classList.remove('overscan')";
+                  }
+                  updatePageRendering(renderingCode);
+              }
             };
 
         }
@@ -300,26 +335,33 @@ window.onload = function() {
     var value = localStorage.getItem('tvViewer_ui_centered');
     if (value === 'true') {
         inputFields.forEach(function(inputField) {
-            inputField.checked = inputField.value === 'ui_centered';
+            inputField.checked = (inputField.value === 'ui_centered');
         });
     }
     inputFields = document.querySelectorAll('input[name="ui_theme"]');
     value = localStorage.getItem('tvViewer_ui_dark');
     if (value === 'true') {
         inputFields.forEach(function(inputField) {
-            inputField.checked = inputField.value === 'ui_theme_dark';
+            inputField.checked = (inputField.value === 'ui_theme_dark');
             if (inputField.value === 'ui_theme_dark') {
                 inputField.dispatchEvent(new Event('change'/*, { 'bubbles': true }*/));
             }
         });
     }
+    inputFields = document.querySelectorAll('input[name="ui_safearea"]');
+    value = localStorage.getItem('tvViewer_ui_overscan');
+    if (value && inputFields.length == 1) {
+        inputFields[0].checked = (value === 'true');
+    }
     inputFields = document.querySelectorAll('input[name="hbb_version"]');
     value = localStorage.getItem('tvViewer_hbbtv');
     if (value) {
         inputFields.forEach(function(inputField) {
-            inputField.checked = inputField.value === value;
+            inputField.checked = (inputField.value === value);
         });
-    }
+    } /*else {
+        localStorage.setItem('tvViewer_hbbtv', '1.5');
+    }*/
 
 
     // update the shown XML capabilities using checked values ...

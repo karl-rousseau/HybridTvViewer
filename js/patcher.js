@@ -129,103 +129,100 @@
     }
 
     function getUserPreferences() {
-        var preferences = 'hbbtv=' + localStorage.getItem('tvViewer_hbbtv');
+        var preferences = localStorage.getItem('tvViewer_hbbtv') ? 'hbbtv=' + localStorage.getItem('tvViewer_hbbtv') : '';
         //preferences += '&device=' + localStorage.getItem('tvViewer_device');
         //preferences += '&model=' + localStorage.getItem('tvViewer_model');
+        preferences += localStorage.getItem('tvViewer_ui_dark') === 'true' ? '' : '&light=true';
+        preferences += localStorage.getItem('tvViewer_ui_centered') === 'true' ? '&centered=true' : '';
+        preferences += localStorage.getItem('tvViewer_ui_overscan') === 'true' ? '&overscan=true' : '';
         return preferences;
     }
 
     // -- Filtering browser's HTTP headers -------------------------------------
 
-    var callback = function(info) {
-        var url = (info.url || ''), headers = info.responseHeaders;
-
-        if (url.indexOf("http") !== 0) { // if URL is not starting by http(s) then exit ...
-            return {
-                responseHeaders: headers
-            };
-        }
-
-        if (url.indexOf(".cehtml") > -1) { // if URL is ended with .cehtml like some ARTE pages then we do the injection ...
-            _DEBUG_ && console.log("CE HTML found !");
-            //chrome.browserAction.setBadgeText && chrome.browserAction.setBadgeText({ text: 'ce' });
-            chrome.browserAction.setIcon && chrome.browserAction.setIcon({ path: '../img/tv-icon128-on.png' });
-            checkAndStoreUrl(url);
-        }
-
-        if (url.indexOf('view-source:') === 0 ||
-            url.indexOf('.json') > -1 || // also .jsonp
-            url.indexOf('.js') > -1 ||
-            url.indexOf('.css') > -1 ||
-            url.indexOf('.ico') > -1 ||
-            url.indexOf('.jpg') > -1 ||
-            url.indexOf('.png') > -1 ||
-            url.indexOf('.gif') > -1 ||
-            url.indexOf('.webp') > -1 ||
-            url.indexOf('.m3u8') > -1 ||
-            url.indexOf('.mpd') > -1 ||
-            url.indexOf('.ts') > -1 ||
-            url.indexOf('.mpg') > -1 ||
-            url.indexOf('.mp3') > -1 ||
-            url.indexOf('.mp4') > -1 ||
-            url.indexOf('.mov') > -1 ||
-            url.indexOf('.avi') > -1 ||
-            url.indexOf('.pdf') > -1 ||
-            url.indexOf('.ppt') > -1 ||
-            url.indexOf('.pptx') > -1 ||
-            url.indexOf('.xls') > -1 ||
-            url.indexOf('.xlsx') > -1 ||
-            url.indexOf('.doc') > -1 ||
-            url.indexOf('.docx') > -1 ||
-            url.indexOf('.zip') > -1 ||
-            url.indexOf('.rar') > -1 ||
-            url.indexOf('.7z') > -1
-        ) { // already parsed, detected and stored URL page or un-wanted one ?
-            return {
-                responseHeaders: headers
-            };
-        }
-
-        headers.forEach(function(header) {
-            var headerWithHbbtv = header.value.substring(0, knownMimeTypes.hbbtv.length) === knownMimeTypes.hbbtv;
-            var headerWithCeHtml = header.value.substring(0, knownMimeTypes.cehtml.length) === knownMimeTypes.cehtml;
-            var headerWithOhtv = header.value.substring(0, knownMimeTypes.ohtv.length) === knownMimeTypes.ohtv;
-            var headerWithBml = header.value.substring(0, knownMimeTypes.bml.length) === knownMimeTypes.bml;
-_DEBUG_ && console.log('onHeadersReceived header: ', header);
-            switch (header.name.toLowerCase()) {
-                case 'content-type':
-                if (headerWithHbbtv || headerWithCeHtml || headerWithOhtv || headerWithBml) {
-                    _DEBUG_ && console.log('onHeadersReceived -> hybrid url: ' + url);
-
-                    chrome.browserAction.setIcon && chrome.browserAction.setIcon({ path: '../img/tv-icon128-on.png' });
-                    checkAndStoreUrl(url);
-
-                    header.value = 'application/xhtml+xml'; // override current content-type to avoid browser automatic download
-                }
-                break;
-            }
-        });
-        return {
-            responseHeaders: headers
-        };
-    };
-    var filter = {
-        urls: ['<all_urls>']
-    };
-    var opt_extraInfoSpec = ['blocking', 'responseHeaders'];
-
     chrome.webRequest.onHeadersReceived.addListener(
-        callback,
-        filter,
-        opt_extraInfoSpec
-    ); // filtering headers of each browser request ...
+        function(info) {
+            var url = (info.url || ''), headers = info.responseHeaders;
+
+            if (url.indexOf("http") !== 0) { // if URL is not starting by http(s) then exit ...
+                return {
+                    responseHeaders: headers
+                };
+            }
+
+            if (url.indexOf(".cehtml") > -1) { // if URL is ended with .cehtml like some ARTE pages then we do the injection ...
+                _DEBUG_ && console.log("CE HTML found !");
+                //chrome.browserAction.setBadgeText && chrome.browserAction.setBadgeText({ text: 'ce' });
+                chrome.browserAction.setIcon && chrome.browserAction.setIcon({ path: '../img/tv-icon128-on.png' });
+                checkAndStoreUrl(url);
+            }
+
+            if (url.indexOf('view-source:') === 0 ||
+                url.indexOf('.json') > -1 || // also .jsonp
+                url.indexOf('.js') > -1 ||
+                url.indexOf('.css') > -1 ||
+                url.indexOf('.ico') > -1 ||
+                url.indexOf('.jpg') > -1 ||
+                url.indexOf('.png') > -1 ||
+                url.indexOf('.gif') > -1 ||
+                url.indexOf('.webp') > -1 ||
+                url.indexOf('.m3u8') > -1 ||
+                url.indexOf('.mpd') > -1 ||
+                url.indexOf('.ts') > -1 ||
+                url.indexOf('.mpg') > -1 ||
+                url.indexOf('.mp3') > -1 ||
+                url.indexOf('.mp4') > -1 ||
+                url.indexOf('.mov') > -1 ||
+                url.indexOf('.avi') > -1 ||
+                url.indexOf('.pdf') > -1 ||
+                url.indexOf('.ppt') > -1 ||
+                url.indexOf('.pptx') > -1 ||
+                url.indexOf('.xls') > -1 ||
+                url.indexOf('.xlsx') > -1 ||
+                url.indexOf('.doc') > -1 ||
+                url.indexOf('.docx') > -1 ||
+                url.indexOf('.zip') > -1 ||
+                url.indexOf('.rar') > -1 ||
+                url.indexOf('.7z') > -1
+            ) { // already parsed, detected and stored URL page or un-wanted one ?
+                return {
+                    responseHeaders: headers
+                };
+            }
+
+            headers.forEach(function(header) {
+                var headerWithHbbtv = header.value.substring(0, knownMimeTypes.hbbtv.length) === knownMimeTypes.hbbtv;
+                var headerWithCeHtml = header.value.substring(0, knownMimeTypes.cehtml.length) === knownMimeTypes.cehtml;
+                var headerWithOhtv = header.value.substring(0, knownMimeTypes.ohtv.length) === knownMimeTypes.ohtv;
+                var headerWithBml = header.value.substring(0, knownMimeTypes.bml.length) === knownMimeTypes.bml;
+                _DEBUG_ && console.log('onHeadersReceived header: ', header);
+                switch (header.name.toLowerCase()) {
+                    case 'content-type':
+                    if (headerWithHbbtv || headerWithCeHtml || headerWithOhtv || headerWithBml) {
+                        _DEBUG_ && console.log('onHeadersReceived -> hybrid url: ' + url);
+
+                        chrome.browserAction.setIcon && chrome.browserAction.setIcon({ path: '../img/tv-icon128-on.png' });
+                        checkAndStoreUrl(url);
+
+                        header.value = 'application/xhtml+xml'; // override current content-type to avoid browser automatic download
+                    }
+                    break;
+                }
+            });
+            return {
+                responseHeaders: headers
+            };
+        },
+        { urls: [ '<all_urls>' ] },
+        [ 'blocking', 'responseHeaders' ]
+    );
 
     // -- User-Agent change on recognized URL ... -----------------------------
 
     chrome.webRequest.onBeforeSendHeaders.addListener(
         function(details) {
             if (details.method === 'GET') {
-                var urlFound = isUrlStored(details.url);
+                var urlFound = isUrlStored(getUrlDomain(details.url || ''));
                 if (urlFound) {
                     var notFound = true;
                     var currentSystem = navigator.userAgent.split(/\s*[;)(]\s*/).slice(1,3).join(' ');
@@ -251,7 +248,7 @@ _DEBUG_ && console.log('onHeadersReceived header: ', header);
             }
         },
         { urls: [ '<all_urls>' ] },
-        [ 'blocking', 'requestHeaders' ]
+        [ 'blocking', 'requestHeaders' ] // blocking flag is needed to override user-agent header (see manifest.json webRequestBlocking flag)
     );
 
     // -- Listen to active TAB ... ---------------------------------------------
@@ -262,7 +259,7 @@ _DEBUG_ && console.log('onHeadersReceived header: ', header);
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             var tab = tabs[0];
             if (tab.id == activeInfo.tabId) {
-                var urlFound = isUrlStored(tab.url);
+                var urlFound = isUrlStored(getUrlDomain(tab.url));
                 _DEBUG_ && console.warn('FOUND TAB: ', tab, ' url:', tab.url, ' found:', urlFound);
 
                 chrome.browserAction.setIcon && chrome.browserAction.setIcon({ path: '../img/tv-icon128-' + (urlFound ? 'on' : 'off') + '.png' });
@@ -307,16 +304,18 @@ _DEBUG_ && console.log('onHeadersReceived header: ', header);
                 }
             });
             injectCss(tabId, 'css/injector.css', 'HbbTV CSS injection done.');
-            injectJs(tabId, 'js/hbbtv.js?' + userPreferences, 'HbbTV JS injection done.', true, true);
-            injectJs(tabId, 'js/hbbdom.js?' + userPreferences, 'HbbTV DOM JS injection done.', true, true, 'async');
+            injectJs(tabId, 'js/hbbtv.js', 'HbbTV JS injection done.', true, true);
+            injectJs(tabId, 'js/hbbdom.js' + '?' + userPreferences, 'HbbTV DOM JS injection done.', true, true, 'async');
             injectJs(tabId, 'js/first.js', '', true, true, 'async');
         }
 
         if (urlFound && tab.status === 'complete') { // page has been fully reloaded ... then inject JS simulator ...
-            //injectJs(tabId, 'js/hbbvideo.js?' + userPreferences, 'HbbTV VIDEO JS injection done.', true, false, 'async');
+            //injectJs(tabId, 'plugins/ts.min.js', 'TS.js injection done.', true, false, 'async');
+            injectJs(tabId, 'plugins/dash.min.js'/*'https://cdn.dashjs.org/latest/dash.all.min.js'*/, 'DASH.js injection done.', true, false, 'async');
+            injectJs(tabId, 'js/hbbobj.js', 'HbbTV OBJECT injection done.', true, false, 'async');
         } else if (urlFound === false && tab.status === 'complete') { // page not recognized but loaded then analyze internal meta tags ...
             var checkForMetaTags = "var r=false; if (document.head && document.head.getElementsByTagName('meta').length>0 && [].slice.call(document.head.getElementsByTagName('meta')).map(function(l) { return l.content.indexOf('vnd.hbbtv')!==-1; }).reduce(function(a,b) { return a || b })==true) { "+storeParams+" r=true; }; r;";
-            // if meta with hbbtv notation is found then let a variable returnedin order to store this new recognized page into local storage area
+            // if meta with hbbtv notation is found then let a variable returned in order to store this new recognized page into local storage area
             chrome.tabs.executeScript(tabId, {
                 code: checkForMetaTags
             }, function(result) {
@@ -338,9 +337,17 @@ _DEBUG_ && console.log('onHeadersReceived header: ', header);
     chrome.runtime.onInstalled.addListener(function handleInstalled(details) {
         _DEBUG_ && console.log("Extension onInstalled event: ", details.reason);
         if (details.reason == 'install') {
-            var testPage = "http://itv.mit-xperts.com/hbbtvtest/capabilities/";
+            var testPage = "http://itv.mit-xperts.com/hbbtvtest/videoformats/";
             checkAndStoreUrl(testPage);
             chrome.tabs.create({ url: testPage });
+        } else if (details.reason == 'update' && chrome.notifications) { // not available yet under Firefox
+            var manifest = chrome.runtime.getManifest();
+            chrome.notifications.create('onInstalled', {
+                type: 'basic',
+                title: manifest.name,
+                message: 'Web extension updated to version ' + manifest.version,
+                iconUrl: manifest.icons['128'] // or chrome.extension.getURL("img/tv-icon128-on.png")
+            });
         }
     });
 

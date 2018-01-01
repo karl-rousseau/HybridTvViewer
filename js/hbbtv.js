@@ -44,20 +44,54 @@ if (pageActivated) {
     (function(oipfObjectFactory) {
 
         oipfObjectFactory.isObjectSupported = function(mimeType) {
+            console.log("isObjectSupported(" + mimeType + ") ...")
             return mimeType === "video/broadcast" ||
-                mimeType === "video/mpeg";
-            //  mimeType === "application/oipfApplicationManager" ||
-            //  mimeType === "application/oipfCapabilities" ||
-            //  mimeType === "application/oipfConfiguration" ||
-            //  mimeType === "application/oipfDrmAgent" ||
-            //  mimeType === "application/oipfParentalControlManager" ||
-            //  mimeType === "application/oipfSearchManager";
+              mimeType === "video/mpeg" ||
+              mimeType === "application/oipfApplicationManager" ||
+              mimeType === "application/oipfCapabilities" ||
+              mimeType === "application/oipfConfiguration" ||
+              mimeType === "application/oipfDrmAgent" ||
+              mimeType === "application/oipfParentalControlManager" ||
+              mimeType === "application/oipfSearchManager";
         };
         oipfObjectFactory.createVideoBroadcastObject = function() {
-            return {};
+            console.log("createVideoBroadcastObject() ...")
+            return class VideoBroadcastObject {
+              bindToCurrentChannel() {}
+              setChannel() {}
+              onblur(evt) {}
+              onfocus(evt) {}
+              addEventListener(eventName, callback, useCapture) { console.log("createVideoBroadcastObject / addEventListener") }
+              removeEventListener(eventName, callback, useCapture) { console.log("createVideoBroadcastObject / addEventListener") }
+              onPlayStateChange(evt) {}
+              onPlaySpeedChanged(evt) {}
+              onPlaySpeedsArrayChanged(evt) {}
+              onPlayPositionChanged(evt) {}
+              onFullScreenChange(evt) {}
+              onParentalRatingChange(evt) {}
+              onParentalRatingError(evt) {}
+              onDRMRightsError(evt) {}
+            }
+            //return {};
         };
         oipfObjectFactory.createVideoMpegObject = function() {
-            return {};
+            console.log("createVideoMpegObject() ...")
+            //return {};
+            return class VideoMpegObject {
+              onblur(evt) {}
+              onfocus(evt) {}
+              addEventListener(eventName, callback, useCapture) { console.log("createVideoBroadcastObject / addEventListener") }
+              removeEventListener(eventName, callback, useCapture) { console.log("createVideoBroadcastObject / addEventListener") }
+              onPlayStateChange(evt) {}
+              onPlaySpeedChanged(evt) {}
+              onPlaySpeedsArrayChanged(evt) {}
+              onPlayPositionChanged(evt) {}
+              onFullScreenChange(evt) {}
+              onParentalRatingChange(evt) {}
+              onParentalRatingError(evt) {}
+              onDRMRightsError(evt) {}
+            }
+            //return new VideoMpegObject();
         };
         oipfObjectFactory.onLowMemory = function() {
             // FIXME: see when we can generate this event (maybe inside the Web Inspector panel)
@@ -247,6 +281,16 @@ if (pageActivated) {
         oipf.programmes = [];
         oipf.programmes.push({name:'Event 1, umlaut \u00e4',channelId:'ccid:dvbt.0',duration:600,startTime:Date.now()/1000,description:'EIT present event is under construction'});
         oipf.programmes.push({name:'Event 2, umlaut \u00f6',channelId:'ccid:dvbt.0',duration:300,startTime:Date.now()/1000+600,description:'EIT following event is under construction'});
+        oipf.onblur = function(evt) {};
+        oipf.onfocus = function(evt) {};
+        oipf.onPlayStateChange = function(evt) {};
+        oipf.onPlaySpeedChanged = function(evt) {};
+        oipf.onPlaySpeedsArrayChanged = function(evt) {};
+        oipf.onPlayPositionChanged = function(evt) {};
+        oipf.onFullScreenChange = function(evt) {};
+        oipf.onParentalRatingChange = function(evt) {};
+        oipf.onParentalRatingError = function(evt) {};
+        oipf.onDRMRightsError = function(evt) {};
 
     })(window.oipf || (window.oipf = {}));
 

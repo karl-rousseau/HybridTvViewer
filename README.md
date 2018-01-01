@@ -1,4 +1,4 @@
-# WEB extension
+# HybridTvViewer ![](http://vanilla-js.com/assets/button.png) [<img align="right" src="https://img.shields.io/github/license/HybridTvViewer/gesturefy.svg">](https://github.com/karl-rousseau/HybridTvViewer/blob/master/LICENSE)
 
 Embracing such Hybrid Interactive TV Technologies:
 
@@ -7,13 +7,13 @@ Embracing such Hybrid Interactive TV Technologies:
 ## Preamble
 
 ```
-This extension for CHROME & FIREFOX mimics the behavior of the good one called FireHbbTV available only for FIREFOX
+This browser extension mimics the behavior of the good one called FireHbbTV available only for FIREFOX
 ```
 I have decided to do it, as at work we are only using CHROME as a development tool on a daily basis and I am now used to it. Moreover I also wanted to avoid the default action of our browsers which is to download such iTV (interactive television) application pages (exposed by an URL or embedded inside a broadcast transport stream)
 
-| Opera (chrome based)    | Firefox (V57+) | Google Chrome | Microsoft Edge | Safari |
+| Mozilla Firefox (V57+) | Opera (chrome based) | Google Chrome | Microsoft Edge | Apple Safari |
 | -------- | ------- | ------ | ------ | ------ |
-| [free](https://addons.opera.com/en/extensions/details/hybridtvviewer/) | [free](https://addons.mozilla.org/en-US/firefox/addon/hybridtvviewer/) | not free :cry: | not tested and not free :cry: | no support for Web Extensions yet |
+| [<img  src="https://addons.cdn.mozilla.net/static/img/addons-buttons/AMO-button_2.png">](https://addons.mozilla.org/en-US/firefox/addon/hybridtvviewer/) | [free](https://addons.opera.com/en/extensions/details/hybridtvviewer/) (ongoing publishing) | not free (5$ fee) | not tested + not free (19$ fee) | no support for Web Extensions yet |
 
 ## Screenshot
 
@@ -34,19 +34,19 @@ I have decided to do it, as at work we are only using CHROME as a development to
 
 - [x] ~~removing CHROME warning popups for various undefined mime-types~~
 - [x] ~~currently only as a prototype stage but the proof of concept has been validated and many features have been put in the options page~~.
-- :skull: SUN MHP technology has been put aside as it will need to have a JVM installed with its associated plugin
+- :skull: ~~SUN MHP technology has been put aside as it will need to have a JVM installed with its associated plugin
   (a mess to install and moreover this technology is now replaced by the brand new one called HbbTV)
-  I know [GINGA](https://en.wikipedia.org/wiki/Ginga_(middleware) is MHP based and still present in South America but for how long ...
-- :satellite: **DVB-SI/PSI** tables (such as EIT & AIT) extraction inside MPEG-TS files, will be handle by an external Chrome application or ...
-- :vhs: **MP4 Transport Stream** video (without DRM) might be supported using an external library:
-  * will have to investigate :mag:  [upipe](https://github.com/cmassiot/upipe/tree/master/examples/chrome/player_chrome) Chrome NaCl rendering plugin
-  * might also have a look at [Video.JS](https://github.com/videojs/video.js) library handling also HLS and DASH
-  * Chrome V55+ can handle HEVC with HTML5 video tag but it need [to be recompiled](https://lexxai.blogspot.fr/2016/09/chromium-ubuntu-x265-hevc.html) with a proper FFmpeg
-- :scissors: OIPF technology will not be fully implemented (only the HbbTV subset will be done)
+  I know [GINGA](https://en.wikipedia.org/wiki/Ginga_(middleware) is MHP based and still present in South America but for how long ...~~
+- [x] A dedicated tab is added in the [Web Inspector](https://developer.chrome.com/devtools) for user debugging purpose
+- :vhs: **MP4 Transport Stream** video (without DRM) is supported using an external library:
+  * ~~Integration of [Dash.JS](https://github.com/Dash-Industry-Forum/dash.js) library handling Mpeg-DASH.~~
+  * ~~Chrome V55+ can handle HEVC with HTML5 video tag but it need [to be recompiled](https://lexxai.blogspot.fr/2016/09/chromium-ubuntu-x265-hevc.html) with a proper FFmpeg~~
+  * will have to investigate :mag:  [upipe](https://github.com/cmassiot/upipe/tree/master/examples/chrome/player_chrome) Chrome NaCl rendering plugin or VLC v3 Asm.js release
+- :satellite: **DVB-SI/PSI** tables (such as EIT & AIT) extraction inside MPEG-TS files, will be handle by an external application (using Asm.js or WebAssembly)
+- :scissors: ~~OIPF technology will not be fully implemented (only the HbbTV subset will be done)~~
 - **HbbTV V2.0** might be present (with an exposed WebSocket server) when V1.5 implementation will be done
-  * for the meantime, look at [node-hbbtv](https://github.com/fraunhoferfokus/node-hbbtv) from the well-known Fraunhofer (creator of MP3)
+  * for the meantime, look at [node-hbbtv](https://github.com/fraunhoferfokus/node-hbbtv) from the well-known Fraunhofer
 - [ ] CI+ HbbTV implementation is hereby emulated with a default code (can be customized)
-- [ ] A dedicated tab will be added in [Chrome Web Inspector](https://developer.chrome.com/devtools) for user debugging purpose
 
 ```
 If you have video Cross-Origin issues, you can temporary test your video by adding those parameters when launching your Chrome based browser: --disable-web-security --user-data-dir
