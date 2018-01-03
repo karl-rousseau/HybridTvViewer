@@ -1,6 +1,6 @@
 /** Listen to external <OBJECT> dynamic changes ... */
 (function(window) {
-    var _DEBUG_ = false;
+    var _DEBUG_ = true;
 
     /**
      * Method adding missing video player events to the user defined object one.
@@ -183,7 +183,6 @@
             var videoTag = document.createElement('video');
             videoTag.setAttribute('id', 'dash-player');
             videoTag.setAttribute('style', 'top:inherit; left:inherit; width:inherit; height:inherit;');
-            //videoTag.src = 'http://itv.mit-xperts.com/video/dash/new.php/test.mpd'
             elem.appendChild(videoTag);
             if (dashjs) {
                 _DEBUG_ && console.warn('starting DASH.JS for video type ' + mimeType + ' at url=' + videoPath + ' ...');

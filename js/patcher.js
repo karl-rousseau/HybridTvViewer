@@ -38,7 +38,8 @@
         'hbbtv': 'application/vnd.hbbtv.xhtml+xml',
         'cehtml': 'application/ce-html+xml',
         'ohtv': 'application/vnd.ohtv',
-        'bml': 'text/X-arib-bml'
+        'bml': 'text/X-arib-bml',
+        'atsc': 'atsc-http-attributes'
         //'mheg': 'application/x-mheg-5',
         //'aitx': 'application/vnd.dvb.ait'
     };
@@ -191,12 +192,14 @@
             }
 
             headers.forEach(function(header) {
-                var headerWithHbbtv = header.value.substring(0, knownMimeTypes.hbbtv.length) === knownMimeTypes.hbbtv;
+                var headerWithHbbtv = header.value.substring(0, knownMimeTypes.hbbtv.length) === knownMimeTypes.hbbtv ||
+                                      header.name.toLowerCase().substring(0, knownMimeTypes.atsc.length) === knownMimeTypes.atsc;
                 var headerWithCeHtml = header.value.substring(0, knownMimeTypes.cehtml.length) === knownMimeTypes.cehtml;
                 var headerWithOhtv = header.value.substring(0, knownMimeTypes.ohtv.length) === knownMimeTypes.ohtv;
                 var headerWithBml = header.value.substring(0, knownMimeTypes.bml.length) === knownMimeTypes.bml;
                 _DEBUG_ && console.log('onHeadersReceived header: ', header);
                 switch (header.name.toLowerCase()) {
+                    case knownMimeTypes.atsc:
                     case 'content-type':
                     if (headerWithHbbtv || headerWithCeHtml || headerWithOhtv || headerWithBml) {
                         _DEBUG_ && console.log('onHeadersReceived -> hybrid url: ' + url);
@@ -303,18 +306,18 @@
                     _DEBUG_ && console.log('local storage injected.');
                 }
             });
-            injectCss(tabId, 'css/injector.css', 'HbbTV CSS injection done.');
             injectJs(tabId, 'js/hbbtv.js', 'HbbTV JS injection done.', true, true);
             injectJs(tabId, 'js/hbbdom.js' + '?' + userPreferences, 'HbbTV DOM JS injection done.', true, true, 'async');
             injectJs(tabId, 'js/first.js', '', true, true, 'async');
         }
 
         if (urlFound && tab.status === 'complete') { // page has been fully reloaded ... then inject JS simulator ...
+            injectCss(tabId, 'css/injector.css', 'HbbTV CSS injection done.');
             //injectJs(tabId, 'plugins/ts.min.js', 'TS.js injection done.', true, false, 'async');
             injectJs(tabId, 'plugins/dash.min.js'/*'https://cdn.dashjs.org/latest/dash.all.min.js'*/, 'DASH.js injection done.', true, false, 'async');
             injectJs(tabId, 'js/hbbobj.js', 'HbbTV OBJECT injection done.', true, false, 'async');
         } else if (urlFound === false && tab.status === 'complete') { // page not recognized but loaded then analyze internal meta tags ...
-            var checkForMetaTags = "var r=false; if (document.head && document.head.getElementsByTagName('meta').length>0 && [].slice.call(document.head.getElementsByTagName('meta')).map(function(l) { return l.content.indexOf('vnd.hbbtv')!==-1; }).reduce(function(a,b) { return a || b })==true) { "+storeParams+" r=true; }; r;";
+            var checkForMetaTags = "var r=false; if (document.head && document.head.getElementsByTagName('meta').length>0 && [].slice.call(document.head.getElementsByTagName('meta')).map(function(l) { return l.content.indexOf('vnd.hbbtv')!==-1 || l.content.indexOf('ce-html+xml')!==-1; }).reduce(function(a,b) { return a || b })==true) { "+storeParams+" r=true; }; r;";
             // if meta with hbbtv notation is found then let a variable returned in order to store this new recognized page into local storage area
             chrome.tabs.executeScript(tabId, {
                 code: checkForMetaTags
@@ -340,7 +343,7 @@
             var testPage = "http://itv.mit-xperts.com/hbbtvtest/videoformats/";
             checkAndStoreUrl(testPage);
             chrome.tabs.create({ url: testPage });
-        } else if (details.reason == 'update' && chrome.notifications) { // not available yet under Firefox
+        } /*else if (details.reason == 'update' && chrome.notifications) { // not available yet under Firefox
             var manifest = chrome.runtime.getManifest();
             chrome.notifications.create('onInstalled', {
                 type: 'basic',
@@ -348,7 +351,7 @@
                 message: 'Web extension updated to version ' + manifest.version,
                 iconUrl: manifest.icons['128'] // or chrome.extension.getURL("img/tv-icon128-on.png")
             });
-        }
+        }*/
     });
 
 })(

@@ -184,19 +184,26 @@ if (pageActivated) {
             removeClass(document.getElementById('res1080key'), 'focus');
             removeClass(document.getElementById('res1440key'), 'focus');
             removeClass(document.getElementById('res2160key'), 'focus');
+            removeClass(document.getElementById('res2880key'), 'focus');
+            removeClass(document.getElementById('res4320key'), 'focus');
             removeClass(document.body, 'res720p');
             removeClass(document.body, 'res1080p');
             removeClass(document.body, 'res1440p');
             removeClass(document.body, 'res2160p');
+            removeClass(document.body, 'res2880p');
+            removeClass(document.body, 'res4320p');
             addClass(document.body, res);
             addClass(document.getElementById(keyId), 'focus');
             localStorage.setItem('tvViewer_resolution', res);
         }
 
-        function generateButton(keyId, keyValue, optionClassName) {
+        function generateButton(keyId, keyValue, optionClassName, optionTooltip) {
             var keyButton = document.createElement('span');
             keyButton.setAttribute('id', keyId);
             keyButton.setAttribute('class', 'keybutton' + (optionClassName ? ' ' + optionClassName : ''));
+            if (optionTooltip) {
+                keyButton.setAttribute('title', optionTooltip);
+            }
             keyButton.addEventListener('click', function(event) {
                 if (keyValue) {
                     doKeyPress(keyValue);
@@ -237,13 +244,28 @@ if (pageActivated) {
         if (navigator.userAgent.indexOf('Android') == -1) {
             generateButton('f11key', '', 'btleftgradient btrightgradient');
             generateButton('f12key', null, 'btleftgradient btrightgradient');
+        } else {
+            var leftValue = window.KeyEvent.VK_LEFT ? window.KeyEvent.VK_LEFT : (typeof window.KeyEvent.VK_LEFT !== 'undefined' ? window.KeyEvent.VK_LEFT : 0x25);
+            var upValue = window.KeyEvent.VK_UP ? window.KeyEvent.VK_UP : (typeof window.KeyEvent.VK_UP !== 'undefined' ? window.KeyEvent.VK_UP : 0x26);
+            var rightValue = window.KeyEvent.VK_RIGHT ? window.KeyEvent.VK_RIGHT : (typeof window.KeyEvent.VK_RIGHT !== 'undefined' ? window.KeyEvent.VK_RIGHT : 0x27);
+            var downValue = window.KeyEvent.VK_DOWN ? window.KeyEvent.VK_DOWN : (typeof window.KeyEvent.VK_DOWN !== 'undefined' ? window.KeyEvent.VK_DOWN : 0x28);
+            var okValue = window.KeyEvent.VK_ENTER ? window.KeyEvent.VK_ENTER : (typeof window.KeyEvent.VK_ENTER !== 'undefined' ? window.KeyEvent.VK_ENTER : 13);
+            var backValue = window.KeyEvent.VK_BACK ? window.KeyEvent.VK_BACK : (typeof window.KeyEvent.VK_BACK !== 'undefined' ? window.KeyEvent.VK_BACK : 461);
+            generateButton('leftkey', leftValue);
+            generateButton('okkey', okValue);
+            generateButton('rightkey', rightValue);
+            generateButton('downkey', downValue);
+            generateButton('backkey', backValue);
+            generateButton('upkey', upValue);
         }
 
         // add resizing screen buttons ...
-        generateButton('res720key');
-        generateButton('res1080key');
-        generateButton('res1440key');
-        generateButton('res2160key');
+        generateButton('res720key',undefined,undefined,'HD');
+        generateButton('res1080key',undefined,undefined,'2K Full HD');
+        generateButton('res1440key',undefined,undefined,'Quad HD');
+        generateButton('res2160key',undefined,undefined,'4K UHD');
+        generateButton('res2880key',undefined,undefined,'5K');
+        generateButton('res4320key',undefined,undefined,'8K');
 
         // add keyboard dedicated keys to colored buttons ...
         window.addEventListener('keypress', function keyhandler(evt) {
@@ -381,7 +403,7 @@ if (pageActivated) {
                         console.log("<BroadcastVideo> release() ...");
                         var player = document.getElementById('video-player');
                         if (player) {
-                            player.stop();
+                            player.pause();
                             player.parentNode.removeChild(player);
                         }
                     };
@@ -510,9 +532,9 @@ if (pageActivated) {
                     };
                     oipfPluginObject.removeEventListener = function(type, listener, capture) {
                     };
-                    console.info("BROADCAST VIDEO PLAYER ...");
+                    //console.info("BROADCAST VIDEO PLAYER ...");
                 } else if (isBroadbandVideo(sType)) {
-                    console.info("BROADBAND VIDEO PLAYER ...");
+                    //console.info("BROADBAND VIDEO PLAYER ...");
                     window.oipf.videoObject = oipfPluginObject;
                     oipfPluginObject.play = (function(speed) { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) player.play(); }).bind(oipfPluginObject);
                     oipfPluginObject.stop = (function() { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) player.stop(); }).bind(oipfPluginObject);
@@ -527,40 +549,24 @@ if (pageActivated) {
                 }
 
                 // if video is broadcast or broadband one ... do the in-common video player injection ...
-                if (isBroadcastVideo(sType) ||
-                   (isBroadbandVideo(sType) && sType.indexOf('application/dash+xml') == 0)) {
+                if (isBroadcastVideo(sType) || isBroadbandVideo(sType)) {
                     var isVideoPlayerAlreadyAdded = oipfPluginObject.children.length > 0;
                     if (!isVideoPlayerAlreadyAdded) {
                         var videoTag = document.createElement('video');
                         videoTag.setAttribute('id', 'video-player');
-                        //videoTag.setAttribute('autoplay', '');
+                        //videoTag.setAttribute('autoplay', ''); // note: call to bindToCurrentChannel() or play() is doing it
                         videoTag.setAttribute('loop', '');
                         videoTag.setAttribute('style', 'top:inherit; left:inherit; width:inherit; height:inherit;');
                         videoTag.src = localStorage.getItem("tvViewer_broadcast_url") || 'http://clips.vorwaerts-gmbh.de/VfE_html5.mp4';
                         oipfPluginObject.appendChild(videoTag);
-console.warn('BROADCAST OR BROADBAND VIDEO PLAYER ... ADDED')
-                        /*var canPlay = !!videoTag.canPlayType(sType);
-                        if (!canPlay) { // if video type is not supported by HTML5 then use Video.JS ...
-                            console.warn('Adding VIDEO.JS for video type ' + sType + ' ...');
-                            var head = document.getElementsByTagName('head')[0];
-
-                            var videoJsScript = document.createElement('script');
-                            videoJsScript.setAttribute('type', 'text/javascript');
-                            videoJsScript.setAttribute('src', 'https://cdn.dashjs.org/latest/dash.all.min.js');
-                            head.appendChild(videoJsScript);
-
-                            videoJsScript = document.createElement('script');
-                            videoJsScript.setAttribute('type', 'text/javascript');
-                            videoJsScript.setAttribute('textContent', 'var player=dashjs.MediaPlayer().create(); player.initialize('+videoTag+',"http://itv.mit-xperts.com/video/dash/new.php/test.mpd",true);');
-                            head.appendChild(videoJsScript);
-
-                        }*/
+                        //console.info('BROADCAST OR BROADBAND VIDEO PLAYER ... ADDED');
                     }
                     // observe this tag for attribute data changes ...
 
-                } else if (isBroadbandVideo(sType) && sType.indexOf('application/dash+xml') !== 0) {
-
                 }
+            } else if (isBroadbandVideo(sType) && sType.indexOf('application/dash+xml') == 0) {
+                console.info('DASH PLAYER ...');
+                oipfPluginObject.style.webkitAnimationPlayState = "running"; // force animation that will be catched in hbbobj.js
             }
         }
     })(window.document);

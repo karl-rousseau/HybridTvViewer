@@ -1,18 +1,19 @@
-html.tvViewer {
+html.tvViewer,html.hbbtv {
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    opacity: 1;
     background-color: gray;
     background-image: repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(0,0,0,.5) 15px, rgba(0,0,0,.5) 30px) !important;
 }
 
-html.tvViewer.light {
+html.tvViewer.light,html.hbbtv.light {
     background-color: white;
-    background-image: repeating-linear-gradient(-45deg, #eeeeee, #eeeeee 15px, #fbfbfb 15px, #fbfbfb 30px) !important;
+    background-image: repeating-linear-gradient(0deg, #ffffff, #ffffff 15px, #eeeeee 15px, #eeeeee 30px) !important;
 }
 
-html.tvViewer > body {
+html.tvViewer > body,html.hbbtv > body {
     position: absolute;
     width: 1280px !important;
     height: 720px !important;
@@ -20,18 +21,18 @@ html.tvViewer > body {
     overflow: visible !important;
 }
 
-html.tvViewer.light > body {
+html.tvViewer.light > body,html.hbbtv.light > body {
     box-shadow: 0 0 100px 50px gray;
 }
 
-html.tvViewer > body.centered {
+html.tvViewer > body.centered,html.hbbtv > body.centered {
     top: 50% !important;
     left: 50% !important;
     margin-top: -360px !important;
     margin-left: -640px !important;
 }
 
-html.tvViewer > body.overscan::after {
+html.tvViewer > body.overscan::after,html.hbbtv > body.overscan::after {
     content: "";
     position: absolute;
     width: 1280px;
@@ -49,7 +50,7 @@ html.tvViewer > body.overscan::after {
     outline-offset: -36px;
 }
 
-html.tvViewer.light > body.overscan::after {
+html.tvViewer.light > body.overscan::after,html.hbbtv.light > body.overscan::after {
     border-color: rgba(255,255,255,.5);
 }
 
@@ -87,18 +88,19 @@ body {
     font-family: tiresias,sans-serif;
 }
 
-html.tvViewer > body span.keybutton {
+body span.keybutton {
     text-align: center;
     border-radius: 5px;
     border: 1px solid transparent;
     background-color: darkgray;
 }
 
-html.tvViewer > body span.keybutton.focus {
+body span.keybutton.focus {
     background-color: #333;
+    color: gray;
 }
 
-html.tvViewer > body span.keybutton:hover {
+body span.keybutton:hover {
     border: 1px solid #fff;
 }
 
@@ -188,56 +190,136 @@ span.keybutton.btrightgradient {
     content: "⌥⌘I";
 }
 
-#res2160key {
+#leftkey {
+    left: 50%;
+    width: 30px;
+    margin-left: -120px;
+}
+#leftkey:before {
+    content: "←";
+}
+
+#okkey {
+    left: 50%;
+    width: 30px;
+    margin-left: -80px;
+}
+#okkey:before {
+    content: "ok";
+}
+
+#rightkey {
+    left: 50%;
+    width: 30px;
+    margin-left: -40px;
+}
+#rightkey:before {
+    content: "→";
+}
+
+#downkey {
+    left: 50%;
+    width: 30px;
+    margin-left: 0;
+}
+#downkey:before {
+    content: "↓";
+}
+
+#backkey {
+    left: 50%;
+    width: 30px;
+    margin-left: 40px;
+}
+#backkey:before {
+    content: "back";
+}
+
+#upkey {
+    left: 50%;
+    width: 30px;
+    margin-left: 80px;
+}
+#upkey:before {
+    content: "↑";
+}
+
+#res4320key {
     right: 10px;
+}
+#res4320key:after {
+    content: "4320p";
+}
+
+#res2880key {
+    right: 60px;
+}
+#res2880key:after {
+    content: "2880p";
+}
+
+#res2160key {
+    right: 110px;
 }
 #res2160key:after {
     content: "2160p";
 }
 
 #res1440key {
-    right: 60px;
+    right: 160px;
 }
 #res1440key:after {
     content: "1440p";
 }
 
 #res1080key {
-    right: 110px;
+    right: 210px;
 }
 #res1080key:after {
     content: "1080p";
 }
 
 #res720key {
-    right: 160px;
+    right: 260px;
 }
 #res720key:after {
     content: "720p";
 }
 
-html.tvViewer > body.res720p {
+body.res720p {
     zoom: 1.0;
     -ms-zoom: 1.0;
     -moz-transform: scale(1);
 }
 
-html.tvViewer > body.res1080p {
+body.res1080p {
     zoom: 1.5;
     -ms-zoom: 1.5;
     -moz-transform: scale(1.5);
 }
 
-html.tvViewer > body.res1440p {
+body.res1440p {
     zoom: 2.0;
     -ms-zoom: 2.0;
     -moz-transform: scale(2);
 }
 
-html.tvViewer > body.res2160p {
+body.res2160p {
     zoom: 3.0;
     -ms-zoom: 3.0;
     -moz-transform: scale(3);
+}
+
+body.res2880p {
+    zoom: 4.0;
+    -ms-zoom: 4.0;
+    -moz-transform: scale(4);
+}
+
+body.res4320p {
+    zoom: 5.875;
+    -ms-zoom: 5.875;
+    -moz-transform: scale(5.875);
 }
 
 @-webkit-keyframes detected-object {
