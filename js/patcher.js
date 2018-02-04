@@ -349,18 +349,10 @@
     chrome.runtime.onInstalled.addListener(function handleInstalled(details) {
         _DEBUG_ && console.log('Extension onInstalled event: ', details.reason);
         if (details.reason == 'install') {
-            var testPage = 'http://itv.mit-xperts.com/hbbtvtest/videoformats/'/*'https://karl-rousseau.github.io/HybridTvViewer/'*/;
+            var testPage = 'https://karl-rousseau.github.io/HybridTvViewer/';
             checkAndStoreUrl(testPage);
             chrome.tabs.create({ url: testPage });
-        } /*else if (details.reason == 'update' && chrome.notifications) { // not available yet under Firefox
-            var manifest = chrome.runtime.getManifest();
-            chrome.notifications.create('onInstalled', {
-                type: 'basic',
-                title: manifest.name,
-                message: 'Web extension updated to version ' + manifest.version,
-                iconUrl: manifest.icons['128'] // or chrome.extension.getURL("img/tv-icon128-on.png")
-            });
-        }*/
+        }
     });
 
 })(
