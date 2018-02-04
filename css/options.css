@@ -18,7 +18,7 @@ button, img {
   margin-top: 6px;
 }
 
-input[disabled] + label, #model {
+label[disabled], input[disabled] + label, #model {
   color:gray;
 }
 

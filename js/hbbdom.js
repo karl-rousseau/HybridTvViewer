@@ -60,18 +60,16 @@ if (pageActivated) {
         if (head) {
             var isViewportAlreadySet = [].slice.call(head.getElementsByTagName('meta'));
             isViewportAlreadySet = isViewportAlreadySet.map(function(l) {
-                return l.name.indexOf('viewport')!==-1;
+                return l.name.indexOf('viewport') !== -1;
             }).reduce(function(a,b) {
                 return a || b;
             })==true;
-            //console.log("isViewportAlreadySet=" + isViewportAlreadySet);
             if (!isViewportAlreadySet) {
                 var viewport = document.createElement('meta');
                 viewport.setAttribute('name', 'viewport');
                 viewport.setAttribute('content', 'width=device-width, initial-scale=' + (1 / window.devicePixelRatio));
                 //viewport.setAttribute('content', 'width=1280, initial-scale=1.0');
                 head.appendChild(viewport);
-                //console.log("Viewport meta added.");
             }
         }
     }
@@ -92,9 +90,10 @@ if (pageActivated) {
 
     try {
         var currentSystem = navigator.userAgent.split(/\s*[;)(]\s*/).slice(1,3).join(' ');
-        var hbbtvVersion = toEtsiVersion(localStorage.getItem("tvViewer_hbbtv"));
+        var hbbtvVersion = toEtsiVersion(localStorage.getItem('tvViewer_hbbtv'));
         // FIXME: read user-agent values from localStorage ...
-        var newUserAgent = 'Mozilla/5.0 (' + currentSystem + "; U; HbbTV/" + hbbtvVersion + " (; TOSHIBA; DTV_L7300; 7.2.67.14.01.1; a5; ) ; ToshibaTP/2.0.0 (+DRM) ; xx) AppleWebKit/537.4 (KHTML, like Gecko) TOSHIBA-DTV (DTV_L7300; 7.2.67.14.01.1; 2013A; NA)";
+        //var newUserAgent = 'Mozilla/5.0 (' + currentSystem + '; U; HbbTV/' + hbbtvVersion + ' (; TOSHIBA; DTV_L7300; 7.2.67.14.01.1; a5; ) ; ToshibaTP/2.0.0 (+DRM) ; xx) AppleWebKit/537.4 (KHTML, like Gecko) TOSHIBA-DTV (DTV_L7300; 7.2.67.14.01.1; 2013A; NA)';
+        var newUserAgent = 'HbbTV/' + hbbtvVersion + ' (+DRM;Samsung;SmartTV2015;T-HKM6DEUC-1490.3;;) HybridTvViewer';
         var modifiedNavigator;
         if (currentSystem.indexOf('Mac OS') !== -1) {
             addClass(document.documentElement, 'macos');
@@ -116,7 +115,8 @@ if (pageActivated) {
                 writable: false
             },
             appVersion: {
-                value: 'AppleWebKit/537.4 (KHTML, like Gecko) TOSHIBA-DTV (DTV_L7300; 7.2.67.14.01.1; 2013A; NA)',
+                value: 'HbbTV/1.2.1 (+DRM;Samsung;SmartTV2015;T-HKM6DEUC-1490.3;;)',
+                //value: 'AppleWebKit/537.4 (KHTML, like Gecko) TOSHIBA-DTV (DTV_L7300; 7.2.67.14.01.1; 2013A; NA)',
                 configurable: false,
                 enumerable: true,
                 writable: false
@@ -163,9 +163,9 @@ if (pageActivated) {
                 get : function() { return this.keyCodeVal; }
             });
             if (oEvent.initKeyboardEvent) {
-                oEvent.initKeyboardEvent("keydown", true, true, document.defaultView, false, false, false, false, key, key);
+                oEvent.initKeyboardEvent('keydown', true, true, document.defaultView, false, false, false, false, key, key);
             } else {
-                oEvent.initKeyEvent("keydown", true, true, document.defaultView, false, false, false, false, key, 0);
+                oEvent.initKeyEvent('keydown', true, true, document.defaultView, false, false, false, false, key, 0);
             }
 
             oEvent.keyCodeVal = key;
@@ -364,9 +364,13 @@ if (pageActivated) {
                     }
                 }
             }
-            if (sType.indexOf('video/') !== -1) {
+            if (sType && sType.indexOf('video/') !== -1) {
                 if (isBroadcastVideo(sType)) {
                     window.oipf.videoObject = oipfPluginObject;
+
+                    //import { injectBroadcastVideoMethods } from 'videobc.jsm';
+                    //injectBroadcastVideoMethods(oipfPluginObject);
+
                     var currentChannel = {
                         'TYPE_TV': 12,
                         'channelType': 12,
@@ -379,28 +383,28 @@ if (pageActivated) {
                     };
                     oipfPluginObject.currentChannel = currentChannel;
                     oipfPluginObject.createChannelObject = function() {
-                        console.log("<BroadcastVideo> createChannelObject() ...");
+                        console.log('<BroadcastVideo> createChannelObject() ...');
                     };
                     oipfPluginObject.bindToCurrentChannel = function() {
-                        console.log("<BroadcastVideo> bindToCurrentChannel() ...");
+                        console.log('<BroadcastVideo> bindToCurrentChannel() ...');
                         var player = document.getElementById('video-player');
                         if (player) {
                             player.play();
                         }
                     };
                     oipfPluginObject.setChannel = function() {
-                        console.log("<BroadcastVideo> setChannel() ...");
+                        console.log('<BroadcastVideo> setChannel() ...');
                     };
                     oipfPluginObject.prevChannel = function() {
-                        console.log("<BroadcastVideo> prevChannel() ...");
+                        console.log('<BroadcastVideo> prevChannel() ...');
                         return currentChannel;
                     };
                     oipfPluginObject.nextChannel = function() {
-                        console.log("<BroadcastVideo> nextChannel() ...");
+                        console.log('<BroadcastVideo> nextChannel() ...');
                         return currentChannel;
                     };
                     oipfPluginObject.release = function() {
-                        console.log("<BroadcastVideo> release() ...");
+                        console.log('<BroadcastVideo> release() ...');
                         var player = document.getElementById('video-player');
                         if (player) {
                             player.pause();
@@ -468,7 +472,7 @@ if (pageActivated) {
                             this.componentTag = 0;
                             this.pid = undefined;
                             this.type = undefined;
-                            this.encoding = "DVB-SUBT";
+                            this.encoding = 'DVB-SUBT';
                             this.encrypted = false;
                         }
                     };
@@ -483,7 +487,7 @@ if (pageActivated) {
                         constructor() {
                             super();
                             this.type = this.COMPONENT_TYPE_AUDIO;
-                            this.language = "eng";
+                            this.language = 'eng';
                             this.audioDescription = false;
                             this.audioChannels = 2;
                         }
@@ -492,7 +496,7 @@ if (pageActivated) {
                         constructor() {
                             super();
                             this.type = this.COMPONENT_TYPE_SUBTITLE;
-                            this.language = "deu";
+                            this.language = 'deu';
                             this.hearingImpaired = false;
                         }
                     };
@@ -507,11 +511,11 @@ if (pageActivated) {
                     oipfPluginObject.getComponents = (function(type) {
                         return [
                             type === this.COMPONENT_TYPE_VIDEO ? new AVVideoComponent() :
-                            type === this.COMPONENT_TYPE_AUDIO ? new AVAudioComponent() :
-                            type === this.COMPONENT_TYPE_SUBTITLE ? new AVSubtitleComponent() : null
+                                type === this.COMPONENT_TYPE_AUDIO ? new AVAudioComponent() :
+                                    type === this.COMPONENT_TYPE_SUBTITLE ? new AVSubtitleComponent() : null
                         ];
                     }).bind(oipfPluginObject);
-// TODO: read those values from a message to the extension (+ using a dedicated worker to retrieve those values from the TS file inside broadcast_url form field)
+                    // TODO: read those values from a message to the extension (+ using a dedicated worker to retrieve those values from the TS file inside broadcast_url form field)
                     oipfPluginObject.getCurrentActiveComponents = (function() { return [ new AVVideoComponent(), new AVAudioComponent(), new AVSubtitleComponent() ]; }).bind(oipfPluginObject);
                     oipfPluginObject.selectComponent = (function(cpt) { return true; }).bind(oipfPluginObject);
                     oipfPluginObject.unselectComponent = (function(cpt) { return true; }).bind(oipfPluginObject);
@@ -532,12 +536,16 @@ if (pageActivated) {
                     };
                     oipfPluginObject.removeEventListener = function(type, listener, capture) {
                     };
-                    //console.info("BROADCAST VIDEO PLAYER ...");
+                    console.info('BROADCAST VIDEO PLAYER ...');
                 } else if (isBroadbandVideo(sType)) {
-                    //console.info("BROADBAND VIDEO PLAYER ...");
+                    console.info('BROADBAND VIDEO PLAYER ...');
                     window.oipf.videoObject = oipfPluginObject;
-                    oipfPluginObject.play = (function(speed) { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) player.play(); }).bind(oipfPluginObject);
-                    oipfPluginObject.stop = (function() { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) player.stop(); }).bind(oipfPluginObject);
+
+                    //import { injectBroadbandVideoMethods } from "videobd.jsm";
+                    //injectBroadbandVideoMethods(oipfPluginObject);
+
+                    oipfPluginObject.play = (function(speed) { console.log('Play('+speed+')'); var player = this.children.length > 0 ? this.children[0] : undefined; if (player) player.play(); }).bind(oipfPluginObject);
+                    oipfPluginObject.stop = (function() { console.log('Stop('+speed+')'); var player = this.children.length > 0 ? this.children[0] : undefined; if (player) player.stop(); }).bind(oipfPluginObject);
                     oipfPluginObject.seek = (function(pos) { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) player.currentTime=pos/1000; }).bind(oipfPluginObject);
                     //oipfPluginObject.data = (function(src) { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) console.log(src); }).bind(oipfPluginObject);
                     oipfPluginObject.playState = (function() { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) console.log('state'); }).bind(oipfPluginObject);
@@ -557,16 +565,17 @@ if (pageActivated) {
                         //videoTag.setAttribute('autoplay', ''); // note: call to bindToCurrentChannel() or play() is doing it
                         videoTag.setAttribute('loop', '');
                         videoTag.setAttribute('style', 'top:inherit; left:inherit; width:inherit; height:inherit;');
-                        videoTag.src = localStorage.getItem("tvViewer_broadcast_url") || 'http://clips.vorwaerts-gmbh.de/VfE_html5.mp4';
+                        videoTag.src = localStorage.getItem('tvViewer_broadcast_url') || 'http://clips.vorwaerts-gmbh.de/VfE_html5.mp4';
                         oipfPluginObject.appendChild(videoTag);
                         //console.info('BROADCAST OR BROADBAND VIDEO PLAYER ... ADDED');
                     }
                     // observe this tag for attribute data changes ...
+                    // TODO: register this tag by doing a call to hbbobj.js
 
                 }
-            } else if (isBroadbandVideo(sType) && sType.indexOf('application/dash+xml') == 0) {
+            } else if (sType && isBroadbandVideo(sType) && sType.indexOf('application/dash+xml') == 0) {
                 console.info('DASH PLAYER ...');
-                oipfPluginObject.style.webkitAnimationPlayState = "running"; // force animation that will be catched in hbbobj.js
+                oipfPluginObject.style.webkitAnimationPlayState = 'running'; // force animation that will be catched in hbbobj.js
             }
         }
     })(window.document);

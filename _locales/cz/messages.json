@@ -1,0 +1,32 @@
+{
+  "powerButton": {
+    "message": "zakázat nebo povolit rozšíření na aktuální kartě",
+    "description": ""
+  },
+
+  "powerText": {
+    "message": "Můžete ručně vynutit, aby tato webová stránka byla rozpoznána jako aplikace iTV.",
+    "description": ""
+  },
+
+  "titleUI": {
+    "message": "Uživatelské rozhraní",
+    "description": ""
+  },
+
+  "titleSoftwareVersion": {
+    "message": "Verze softwaru zařízení",
+    "description": ""
+  },
+
+  "titleDeviceConfig": {
+    "message": "Konfigurace zařízení",
+    "description": ""
+  },
+
+  "countryLanguage": {
+    "message": "Země: ",
+    "description": ""
+  }
+
+}

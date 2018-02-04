@@ -93,9 +93,10 @@
 
     function injectCss(tabId, fileName, succeededMessage) {
         var injectedPath = chrome.extension.getURL(fileName);
-        var checkAlreadyInjected = "if (d.head && d.head.getElementsByTagName('link').length>0 && [].slice.call(d.head.getElementsByTagName('link')).map(function(l) { return l.href.indexOf('" + fileName + "')!==-1; }).reduce(function(a,b) { return a || b })==true) return;";
-        var injectedFile = "(function(d){" + checkAlreadyInjected + "var e=d.createElement('link');e.setAttribute('rel','stylesheet');";
-        injectedFile += "e.setAttribute('type','text/css');e.setAttribute('href','" + injectedPath + "');d.head.insertBefore(e,d.head.firstChild)}(document));";
+        var checkAlreadyInjected = 'if (d.head && d.head.getElementsByTagName("link").length>0 && [].slice.call(d.head.getElementsByTagName("link")).' +
+        'map(function(l) { return l.href.indexOf("' + fileName + '")!==-1; }).reduce(function(a,b) { return a || b })==true) return;';
+        var injectedFile = '(function(d){' + checkAlreadyInjected + 'var e=d.createElement("link");e.setAttribute("rel","stylesheet");' +
+        'e.setAttribute("type","text/css");e.setAttribute("href","' + injectedPath + '");d.head.insertBefore(e,d.head.firstChild)}(document));';
         chrome.tabs.executeScript(tabId, {
             code: injectedFile,
             runAt: 'document_start'
@@ -104,19 +105,21 @@
                 console.error(chrome.runtime.lastError.message);
             } else {
                 _DEBUG_ && console.log(succeededMessage);
+                //chrome.runtime.sendMessage({ toLog: { 'message': succeededMessage } });
             }
         });
     }
 
     function injectJs(tabId, fileName, succeededMessage, addedToHead, addedAsFirstChild, withOption) {
         var pluginPath = chrome.extension.getURL(fileName);
-        var checkAlreadyInjected = "if (d.head.getElementsByTagName('script').length>0 && [].slice.call(d.head.getElementsByTagName('script')).map(function(l) { return l.src.indexOf('" + fileName + "')!==-1; }).reduce(function(a,b) { return a || b })==true) return;";
-        var injectedScript = "(function(d){" + checkAlreadyInjected + "var e=d.createElement('script');";
-        injectedScript += (withOption ? "e.setAttribute('" + withOption + "', '" + withOption + "');" : "");
-        injectedScript += "e.setAttribute('type','text/javascript');e.setAttribute('src','" + pluginPath + "');";
-        injectedScript += (addedToHead ? "d.head" : "d.body");
-        injectedScript += (addedAsFirstChild ? ".insertBefore(e,d.head.firstChild)" : ".appendChild(e)");
-        injectedScript += "}(document));";
+        var checkAlreadyInjected = 'if (d.head.getElementsByTagName("script").length>0 && [].slice.call(d.head.getElementsByTagName("script")).' +
+        'map(function(l) { return l.src.indexOf("' + fileName + '")!==-1; }).reduce(function(a,b) { return a || b })==true) return;';
+        var injectedScript = '(function(d){' + checkAlreadyInjected + 'var e=d.createElement("script");' +
+        (withOption ? 'e.setAttribute("' + withOption + '", "' + withOption + '");' : '') +
+        'e.setAttribute("type","text/javascript");e.setAttribute("src","' + pluginPath + '");' +
+        (addedToHead ? 'd.head' : 'd.body') +
+        (addedAsFirstChild ? '.insertBefore(e,d.head.firstChild)' : '.appendChild(e)') +
+        '}(document));';
         chrome.tabs.executeScript(tabId, {
             code: injectedScript,
             runAt: 'document_end'
@@ -125,6 +128,7 @@
                 console.error(chrome.runtime.lastError.message);
             } else {
                 _DEBUG_ && console.log(succeededMessage);
+                //chrome.runtime.sendMessage({ toLog: { 'message': succeededMessage } });
             }
         });
     }
@@ -145,14 +149,14 @@
         function(info) {
             var url = (info.url || ''), headers = info.responseHeaders;
 
-            if (url.indexOf("http") !== 0) { // if URL is not starting by http(s) then exit ...
+            if (url.indexOf('http') !== 0) { // if URL is not starting by http(s) then exit ...
                 return {
                     responseHeaders: headers
                 };
             }
 
-            if (url.indexOf(".cehtml") > -1) { // if URL is ended with .cehtml like some ARTE pages then we do the injection ...
-                _DEBUG_ && console.log("CE HTML found !");
+            if (url.indexOf('.cehtml') > -1) { // if URL is ended with .cehtml like some ARTE pages then we do the injection ...
+                _DEBUG_ && console.log('CE HTML found !');
                 //chrome.browserAction.setBadgeText && chrome.browserAction.setBadgeText({ text: 'ce' });
                 chrome.browserAction.setIcon && chrome.browserAction.setIcon({ path: '../img/tv-icon128-on.png' });
                 checkAndStoreUrl(url);
@@ -199,8 +203,8 @@
                 var headerWithBml = header.value.substring(0, knownMimeTypes.bml.length) === knownMimeTypes.bml;
                 _DEBUG_ && console.log('onHeadersReceived header: ', header);
                 switch (header.name.toLowerCase()) {
-                    case knownMimeTypes.atsc:
-                    case 'content-type':
+                case knownMimeTypes.atsc:
+                case 'content-type':
                     if (headerWithHbbtv || headerWithCeHtml || headerWithOhtv || headerWithBml) {
                         _DEBUG_ && console.log('onHeadersReceived -> hybrid url: ' + url);
 
@@ -228,10 +232,11 @@
                 var urlFound = isUrlStored(getUrlDomain(details.url || ''));
                 if (urlFound) {
                     var notFound = true;
-                    var currentSystem = navigator.userAgent.split(/\s*[;)(]\s*/).slice(1,3).join(' ');
-                    var customizedUserAgent = 'Mozilla/5.0 (' + currentSystem + '; U; HbbTV/' +
-                                              (toEtsiVersion(localStorage.getItem('tvViewer_hbbtv')) || '1.2.1') + ' (; ' +
-                                              ' (; TOSHIBA; DTV_L7300; 7.2.67.14.01.1; a5; ) ; ToshibaTP/2.0.0 (+DRM) ; xx) HybridTvViewer';
+                    //var currentSystem = navigator.userAgent.split(/\s*[;)(]\s*/).slice(1,3).join(' ');
+                    // var customizedUserAgent = 'Mozilla/5.0 (' + currentSystem + '; U; HbbTV/' +
+                    //                           (toEtsiVersion(localStorage.getItem('tvViewer_hbbtv')) || '1.2.1') + ' (; ' +
+                    //                           ' (; TOSHIBA; DTV_L7300; 7.2.67.14.01.1; a5; ) ; ToshibaTP/2.0.0 (+DRM) ; xx) HybridTvViewer';
+                    var customizedUserAgent = 'HbbTV/' + (toEtsiVersion(localStorage.getItem('tvViewer_hbbtv')) || '1.2.1') + ' (+DRM;Samsung;SmartTV2015;T-HKM6DEUC-1490.3;;) HybridTvViewer';
                     for (var i = 0, len = details.requestHeaders.length; i < len; ++i) {
                         var header = details.requestHeaders[i];
                         if (header.name === 'User-Agent') {
@@ -283,7 +288,7 @@
            tab.url.indexOf('view-source:') !== -1 ||
            tab.url.indexOf('ms-browser-extension://') !== -1 ||
            tab.url.indexOf('http') !== 0) { // if URL is not starting by http(s) then exit ...
-              return;
+            return;
         }
 
         _DEBUG_ && console.log('TAB UPDATE: ', tab.url, changeInfo);
@@ -292,7 +297,8 @@
                           'localStorage.setItem("tvViewer_hbbtv","1.5"); ' +
                           'localStorage.setItem("tvViewer_resolution","res720p"); ' +
                           'localStorage.setItem("tvViewer_caps","{lang:eng,caps:\'+DRM\'}"); ' +
-                          'localStorage.setItem("tvViewer_broadcast_url","http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"); }';
+                          'localStorage.setItem("tvViewer_broadcast_url","' +
+                          (localStorage.getItem('tvViewer_broadcast_url') ? localStorage.getItem('tvViewer_broadcast_url') : 'http://clips.vorwaerts-gmbh.de/VfE_html5.mp4') + '"); }';
         var userPreferences = getUserPreferences();
         var url = getUrlDomain(tab.url);
         var urlFound = isUrlStored(url);
@@ -300,11 +306,11 @@
             chrome.tabs.executeScript(tabId, {
                 code: storeParams
             }, function() {
-                if (chrome.runtime.lastError) {
-                    console.error(chrome.runtime.lastError.message);
-                } else {
-                    _DEBUG_ && console.log('local storage injected.');
-                }
+            //    if (chrome.runtime.lastError) {
+            //        console.error(chrome.runtime.lastError.message);
+            //    } else {
+            //        _DEBUG_ && console.log('local storage injected.');
+            //    }
             });
             injectJs(tabId, 'js/hbbtv.js', 'HbbTV JS injection done.', true, true);
             injectJs(tabId, 'js/hbbdom.js' + '?' + userPreferences, 'HbbTV DOM JS injection done.', true, true, 'async');
@@ -313,11 +319,14 @@
 
         if (urlFound && tab.status === 'complete') { // page has been fully reloaded ... then inject JS simulator ...
             injectCss(tabId, 'css/injector.css', 'HbbTV CSS injection done.');
-            //injectJs(tabId, 'plugins/ts.min.js', 'TS.js injection done.', true, false, 'async');
-            injectJs(tabId, 'plugins/dash.min.js'/*'https://cdn.dashjs.org/latest/dash.all.min.js'*/, 'DASH.js injection done.', true, false, 'async');
+            //injectJs(tabId, 'plugins/mux.min.js', 'mux.js injection done.', true, false, 'async');
+            injectJs(tabId, 'https://cdn.dashjs.org/latest/dash.all.min.js', 'DASH.js injection done.', true, false, 'async');
             injectJs(tabId, 'js/hbbobj.js', 'HbbTV OBJECT injection done.', true, false, 'async');
+
         } else if (urlFound === false && tab.status === 'complete') { // page not recognized but loaded then analyze internal meta tags ...
-            var checkForMetaTags = "var r=false; if (document.head && document.head.getElementsByTagName('meta').length>0 && [].slice.call(document.head.getElementsByTagName('meta')).map(function(l) { return l.content.indexOf('vnd.hbbtv')!==-1 || l.content.indexOf('ce-html+xml')!==-1; }).reduce(function(a,b) { return a || b })==true) { "+storeParams+" r=true; }; r;";
+            var checkForMetaTags = 'var r=false; if (document.head && document.head.getElementsByTagName("meta").length>0 && ' +
+            '[].slice.call(document.head.getElementsByTagName("meta")).map(function(l) { return l.content.indexOf("vnd.hbbtv")!==-1 || l.content.indexOf("ce-html+xml")!==-1; }).' +
+            'reduce(function(a,b) { return a || b })==true) { ' + storeParams + ' r=true; }; r;';
             // if meta with hbbtv notation is found then let a variable returned in order to store this new recognized page into local storage area
             chrome.tabs.executeScript(tabId, {
                 code: checkForMetaTags
@@ -338,9 +347,9 @@
     // -- Listen to extension installation ... ---------------------------------
 
     chrome.runtime.onInstalled.addListener(function handleInstalled(details) {
-        _DEBUG_ && console.log("Extension onInstalled event: ", details.reason);
+        _DEBUG_ && console.log('Extension onInstalled event: ', details.reason);
         if (details.reason == 'install') {
-            var testPage = "http://itv.mit-xperts.com/hbbtvtest/videoformats/";
+            var testPage = 'http://itv.mit-xperts.com/hbbtvtest/videoformats/'/*'https://karl-rousseau.github.io/HybridTvViewer/'*/;
             checkAndStoreUrl(testPage);
             chrome.tabs.create({ url: testPage });
         } /*else if (details.reason == 'update' && chrome.notifications) { // not available yet under Firefox

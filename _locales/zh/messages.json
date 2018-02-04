@@ -1,0 +1,32 @@
+{
+  "powerButton": {
+    "message": "禁用或啟用當前選項卡上的擴展名",
+    "description": ""
+  },
+
+  "powerText": {
+    "message": "您可以手動強制將此網頁識別為iTV應用程序。",
+    "description": ""
+  },
+
+  "titleUI": {
+    "message": "用戶界面",
+    "description": ""
+  },
+
+  "titleSoftwareVersion": {
+    "message": "設備軟件版本",
+    "description": ""
+  },
+
+  "titleDeviceConfig": {
+    "message": "設備配置",
+    "description": ""
+  },
+
+  "countryLanguage": {
+    "message": "國家: ",
+    "description": ""
+  }
+
+}

@@ -1,11 +1,12 @@
 {
   "title": "HybridTvViewer",
   "name": "HybridTvViewer",
-  "description": "Extension making CHROME & FIREFOX to deal with HbbTV,CE-HTML,BML,OHTV webpages",
-  "version": "0.3.0",
+  "description": "Extension to deal with HbbTV,CE-HTML,BML,OHTV webpages",
+  "version": "0.5.0",
   "scripts": {
     "run-test": "npm run test-html-coverage",
     "run-firefox-extension": "echo 'Running Firefox extension ...'; web-ext lint; web-ext run",
+    "package-firefox-extension": "web-ext build --artifacts-dir=zips -i=plugins -i=test -i=docs -i=manifest_chrome.json -i=package*",
     "test": "mocha test/*.js",
     "test-with-coverage": "nyc --reporter=text mocha",
     "test-html-coverage": "nyc --reporter=html mocha"
@@ -47,11 +48,11 @@
     "eslint-plugin-node": "^4.2.2",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
-    "jsdom": "",
-    "mocha": "",
-    "should": "",
+    "jsdom": "^11.5.1",
+    "mocha": "^4.0.1",
+    "should": "^13.1.3",
     "sinon-chrome": "^2.2.1",
-    "xmldom": "",
-    "web-ext": ""
+    "xmldom": "^0.1.27",
+    "web-ext": "^2.4.0"
   }
 }

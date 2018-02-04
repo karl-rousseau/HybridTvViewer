@@ -1,0 +1,32 @@
+{
+  "powerButton": {
+    "message": "deshabilita o habilita la extensión en la pestaña actual",
+    "description": ""
+  },
+
+  "powerText": {
+    "message": "Puede forzar manualmente que esta página web sea reconocida como una aplicación iTV.",
+    "description": ""
+  },
+
+  "titleUI": {
+    "message": "Interfaz de usuario",
+    "description": ""
+  },
+
+  "titleSoftwareVersion": {
+    "message": "Versión del software del dispositivo",
+    "description": ""
+  },
+
+  "titleDeviceConfig": {
+    "message": "Configuración del dispositivo",
+    "description": ""
+  },
+
+  "countryLanguage": {
+    "message": "País: ",
+    "description": ""
+  }
+
+}

@@ -54,16 +54,6 @@ html.tvViewer.light > body.overscan::after,html.hbbtv.light > body.overscan::aft
     border-color: rgba(255,255,255,.5);
 }
 
-@font-face {
-    font-family: "Tiresias";
-    src: url("tiresias.ttf") format('truetype');
-}
-
-@font-face {
-    font-family: "Letter Gothic 12 Pitch";
-    src: url("lettergothic.ttf") format('truetype');
-}
-
 body {
     font-family: Tiresias, sans-serif;
     /*letter-spacing: -1px;*/
@@ -322,9 +312,6 @@ body.res4320p {
     -moz-transform: scale(5.875);
 }
 
-@-webkit-keyframes detected-object {
-  from {}
-}
 @keyframes detected-object {
   from {}
 }

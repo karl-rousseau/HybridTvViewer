@@ -1,0 +1,32 @@
+{
+  "powerButton": {
+    "message": "disabilitare o abilitare l'estensione sulla scheda corrente",
+    "description": ""
+  },
+
+  "powerText": {
+    "message": "È possibile forzare manualmente questa pagina Web per essere riconosciuta come un'applicazione iTV.",
+    "description": ""
+  },
+
+  "titleUI": {
+    "message": "Interfaccia utente",
+    "description": ""
+  },
+
+  "titleSoftwareVersion": {
+    "message": "Versione del software del dispositivo",
+    "description": ""
+  },
+
+  "titleDeviceConfig": {
+    "message": "Configurazione del dispositivo",
+    "description": ""
+  },
+
+  "countryLanguage": {
+    "message": "Nazione: ",
+    "description": ""
+  }
+
+}

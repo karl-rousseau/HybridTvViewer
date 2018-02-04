@@ -1,8 +1,8 @@
 {
   "name": "HybridTvViewer",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "manifest_version": 2,
-  "description": "Extension making CHROME & FIREFOX to deal with HbbTV,CE-HTML,BML,OHTV webpages",
+  "description": "Extension making CHROME to deal with HbbTV,CE-HTML,BML,OHTV webpages",
 
   "permissions": [
     "tabs",
@@ -12,11 +12,21 @@
     "<all_urls>"
   ],
   "web_accessible_resources": [
-    "js/*.js",
-    "plugins/native-object.nmf",
-    "css/*.css",
-    "css/*.ttf",
-    "img/*.png"
+    "js/patcher.js",
+    "js/options.js",
+    "js/hbbdevtools.js",
+    "js/first.js",
+    "js/hbbtv.js",
+    "js/hbbdom.js",
+    "js/hbbobj.js",
+    "css/injector.css",
+    "css/options.css",
+    "img/tv-icon19-off.png",
+    "img/tv-icon38-off.png",
+    "img/tv-icon128-off.png",
+    "img/tv-icon128-on.png",
+    "img/power.svg",
+    "plugins/native-object.nmf"
   ],
 
   "browser_action": {

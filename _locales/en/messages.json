@@ -1,0 +1,32 @@
+{
+  "powerButton": {
+    "message": "disable or enable extension on current tab",
+    "description": ""
+  },
+
+  "powerText": {
+    "message": "You can manually force this web page to be recognized as an iTV application.",
+    "description": ""
+  },
+
+  "titleUI": {
+    "message": "User Interface",
+    "description": ""
+  },
+
+  "titleSoftwareVersion": {
+    "message": "Device Software Version",
+    "description": ""
+  },
+
+  "titleDeviceConfig": {
+    "message": "Device Configuration",
+    "description": ""
+  },
+
+  "countryLanguage": {
+    "message": "Country: ",
+    "description": ""
+  }
+
+}

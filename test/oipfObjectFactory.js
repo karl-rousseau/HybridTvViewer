@@ -49,7 +49,7 @@ describe('oipfObjectFactory', function() {
 
     it('return a BROADCAST video object factory method with the wanted object', function() {
         var result = window && window.oipfObjectFactory && window.oipfObjectFactory.createVideoBroadcastObject();
-        result.should.be.type('object');
+        result.should.have.properties({ name: 'VideoBroadcastObject' });
     });
 
     it('provide a BROADBAND mpeg video object factory method', function() {
@@ -59,7 +59,7 @@ describe('oipfObjectFactory', function() {
 
     it('return a BROADBAND mpeg video object factory method with the wanted object', function() {
         var result = window && window.oipfObjectFactory && window.oipfObjectFactory.createVideoMpegObject();
-        result.should.be.type('object');
+        result.should.have.properties({ name: 'VideoMpegObject' });
     });
 
 });

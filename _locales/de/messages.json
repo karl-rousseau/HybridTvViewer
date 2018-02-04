@@ -1,0 +1,32 @@
+{
+  "powerButton": {
+    "message": "Deaktivieren oder aktivieren Sie die Erweiterung auf der aktuellen Registerkarte",
+    "description": ""
+  },
+
+  "powerText": {
+    "message": "Sie können manuell erzwingen, dass diese Webseite als iTV-Anwendung erkannt wird.",
+    "description": ""
+  },
+
+  "titleUI": {
+    "message": "Benutzeroberfläche",
+    "description": ""
+  },
+
+  "titleSoftwareVersion": {
+    "message": "Gerätesoftware-Version",
+    "description": ""
+  },
+
+  "titleDeviceConfig": {
+    "message": "Gerätekonfiguration",
+    "description": ""
+  },
+
+  "countryLanguage": {
+    "message": "Land: ",
+    "description": ""
+  }
+
+}

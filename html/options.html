@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>FLags for Hybrid iDTV pages</title>
+    <title>Options for Hybrid iDTV pages</title>
     <link rel="stylesheet" type="text/css" href="../css/options.css">
     <script src="../js/options.js"></script>
   </head>
@@ -13,7 +13,7 @@
           <div id="power-button" title="disable or enable extension on current tab"></div><div id="power-text">You can manually force this web page<br />to be recognized as an iTV application.</div>
           <form>
             <fieldset>
-              <legend>User Interface</legend>
+              <legend id="title-ui">User Interface</legend>
               <input type="radio" name="ui_alignment" value="ui_default" checked />standard (top left)&nbsp;&nbsp;&nbsp;
               <input type="radio" name="ui_alignment" value="ui_centered" />centered<br />
               <input type="radio" name="ui_theme" value="ui_theme_light" checked />light color theme&nbsp;&nbsp;&nbsp;
@@ -30,7 +30,7 @@
         <td>
           <form>
             <fieldset>
-              <legend>Device Software Version</legend>
+              <legend id="title-software-version">Device Software Version</legend>
               <input type="radio" name="hbb_version" value="1.0" disabled /><label>V1.0 (<a target="_blank" href="http://www.etsi.org/deliver/etsi_ts/102700_102799/102796/01.01.01_60/ts_102796v010101p.pdf">etsi 1.1.1</a>) ~2009/2010</label><br />
               <input type="radio" name="hbb_version" value="1.5" checked /><label>V1.5 (<a target="_blank" href="http://www.etsi.org/deliver/etsi_ts%5C102700_102799%5C102796%5C01.02.01_60%5Cts_102796v010201p.pdf">etsi 1.2.1</a>) ~2012 <small>(DRM + DASH)</small></label><br />
               <input type="radio" name="hbb_version" value="2.0" disabled /><label>V2.0 (<a target="_blank" href="http://www.etsi.org/deliver/etsi_ts%5C102700_102799%5C102796%5C01.03.01_60%5Cts_102796v010301p.pdf">etsi 1.3.1</a>) ~2015 <small>(DVB-CSS + HTML5)</small></label><br />
@@ -122,29 +122,31 @@
         </td>
       </tr-->
 
-      <!--tr>
+      <tr>
         <td>
           <form>
             <fieldset>
-              <legend>Device Configuration</legend>
-              Country:
+              <legend id="title-device-config">Device Configuration</legend>
+              <label id="country-language">Country: </label>
               <select id="device_country_lang">
-                <option value="ENG">ENG</option>
+                <option value="ENG" selected="selected">ENG</option>
                 <option value="DEU">DEU</option>
                 <option value="SPA">SPA</option>
-                <option value="FRA" selected="selected">FRA</option>
+                <option value="FRA">FRA</option>
                 <option value="ITA">ITA</option>
+                <option value="CZE">CZE</option>
                 <option value="RUS">RUS</option>
                 <option value="ARE">ARE</option>
+                <option value="CHN">CHN</option>
               </select>
-              <label>Audio: </label><input type="text" name="device_audio_lang" value="ENG" size="3" />&nbsp;
-              <label>Subtitle: </label><input type="text" name="device_sub_lang" value="ENG" size="3" />
+              &nbsp;<label disabled>Audio: </label><input type="text" name="device_audio_lang" value="ENG" size="3" disabled />&nbsp;
+              <label>Subtitle: </label><input type="text" name="device_sub_lang" value="ENG" size="3" disabled />
             </fieldset>
           </form>
         </td>
         <td>
         </td>
-      </tr-->
+      </tr>
 
       <!--tr>
         <td>
@@ -173,7 +175,7 @@
               <input type="checkbox" name="remote" value="tuner_remote" onclick="checkOnlyOne(this.value);" disabled /><label>Remote (BDA or LIRC or IOKit)</label><br />
               <input type="checkbox" name="tuner" value="tuner_satip" onclick="checkOnlyOne(this.value);" disabled /><label>Sat>IP streams</label><br />
               <input type="checkbox" name="scheme_dvb" value="scheme_dvb" disabled /><label>handle DVB:// scheme</label><br /-->
-              <label>broadcast url </label><input type="url" name="broadcast_url" value="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" size="38" pattern="https?://.+" required />
+              <label>video stream url </label><input type="url" name="broadcast_url" value="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" size="38" pattern="https?://.+" required />
             </fieldset>
           </form>
         </td>

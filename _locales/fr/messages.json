@@ -1,0 +1,32 @@
+{
+  "powerButton": {
+    "message": "désactive ou active l'extension sur l'onglet courant",
+    "description": ""
+  },
+
+  "powerText": {
+    "message": "Vous pouvez forcer manuellement cette page web à être reconnue comme une application iTV.",
+    "description": ""
+  },
+
+  "titleUI": {
+    "message": "Interface Utilisateur",
+    "description": ""
+  },
+
+  "titleSoftwareVersion": {
+    "message": "Version logicielle de l'appareil",
+    "description": ""
+  },
+
+  "titleDeviceConfig": {
+    "message": "Configuration de l'appareil",
+    "description": ""
+  },
+
+  "countryLanguage": {
+    "message": "Pays: ",
+    "description": ""
+  }
+
+}
