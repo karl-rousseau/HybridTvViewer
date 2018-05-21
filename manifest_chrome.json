@@ -1,8 +1,9 @@
 {
   "name": "HybridTvViewer",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "manifest_version": 2,
   "description": "Extension making CHROME to deal with HbbTV,CE-HTML,BML,OHTV webpages",
+  "default_locale": "en",
 
   "permissions": [
     "tabs",
@@ -26,7 +27,8 @@
     "img/tv-icon128-off.png",
     "img/tv-icon128-on.png",
     "img/power.svg",
-    "plugins/native-object.nmf"
+    "plugins/native-object.nmf",
+    "https://cdn.dashjs.org/latest/dash.all.min.js"
   ],
 
   "browser_action": {
@@ -42,7 +44,8 @@
   },
 
   "background": {
-    "scripts": [ "js/patcher.js" ]
+    "scripts": [ "js/patcher.js" ],
+    "persistent": true
   },
   "devtools_page": "html/hbbdevtools.html",
 
