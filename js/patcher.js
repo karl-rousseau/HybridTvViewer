@@ -111,7 +111,7 @@
     }
 
     function injectJs(tabId, fileName, succeededMessage, addedToHead, addedAsFirstChild, withOption) {
-        var pluginPath = chrome.extension.getURL(fileName);
+        var pluginPath = fileName.indexOf('cdn.') !== -1 ? fileName : chrome.extension.getURL(fileName);
         var checkAlreadyInjected = 'if (d.head.getElementsByTagName("script").length>0 && [].slice.call(d.head.getElementsByTagName("script")).' +
         'map(function(l) { return l.src.indexOf("' + fileName + '")!==-1; }).reduce(function(a,b) { return a || b })==true) return;';
         var injectedScript = '(function(d){' + checkAlreadyInjected + 'var e=d.createElement("script");' +
