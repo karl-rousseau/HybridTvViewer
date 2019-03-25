@@ -221,7 +221,7 @@
             };
         },
         { urls: [ '<all_urls>' ] },
-        [ 'blocking', 'responseHeaders' ]
+        [ 'blocking', 'responseHeaders' ].concat(navigator.userAgent.includes('Chrom') ? chrome.webRequest.OnHeadersReceivedOptions.EXTRA_HEADERS : [])
     );
 
     // -- User-Agent change on recognized URL ... -----------------------------
@@ -319,7 +319,7 @@
 
         if (urlFound && tab.status === 'complete') { // page has been fully reloaded ... then inject JS simulator ...
             injectCss(tabId, 'css/injector.css', 'HbbTV CSS injection done.');
-            //injectJs(tabId, 'plugins/mux.min.js', 'mux.js injection done.', true, false, 'async');
+            //injectJs(tabId, 'https://cdn.jsdelivr.net/npm/mux.js@5.1.0/dist/mux-mp4.min.js', 'mux.js injection done.', true, false, 'async');
             injectJs(tabId, 'https://cdn.dashjs.org/latest/dash.all.min.js', 'DASH.js injection done.', true, false, 'async');
             injectJs(tabId, 'js/hbbobj.js', 'HbbTV OBJECT injection done.', true, false, 'async');
 
