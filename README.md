@@ -1,21 +1,38 @@
-# HybridTvViewer ![](http://vanilla-js.com/assets/button.png) [<img align="right" src="https://img.shields.io/badge/License-MIT-yellow.svg">](https://github.com/karl-rousseau/HybridTvViewer/blob/master/LICENSE)
-
-Embracing such Hybrid Interactive TV Technologies:
-
-![](img/logo-hbbtv.png) &nbsp;&nbsp;&nbsp; ![](img/logo-ohtv.png) &nbsp;&nbsp;&nbsp; ![](img/logo-oipf.png)
+&nbsp;
+<p align="center">
+<img src="img/tv-icon128-on.png">
+</p>
+<p align="center">
+  <img src="https://img.shields.io/badge/release-v0.6-red.svg">&nbsp;&nbsp;&nbsp;
+	<a href="https://travis-ci.org/HybridTvViewer/Footing" alt="Travis-CI"><img src="https://travis-ci.org/HybridTvViewer/Footing.svg?branch=master"></a>&nbsp;&nbsp;&nbsp;
+  <img src="https://img.shields.io/badge/vanilla-js-yellow.svg">&nbsp;&nbsp;&nbsp;
+	<a href="https://github.com/karl-rousseau/HybridTvViewer/blob/master/LICENSE" alt="License:MIT"><img src="https://img.shields.io/badge/license-MIT-blue.svg"></a><br>
+  <br>
+An extension following such Hybrid interactive TV technologies:<br>
+<br>
+![](img/logo-hbbtv.png) &nbsp;&nbsp;&nbsp; ![](img/logo-oipf.png) &nbsp;&nbsp;&nbsp; ![](img/logo-ohtv.png)
+</p>
 
 ## Preamble
 
 ```
-This browser extension mimics the behavior of the good one called FireHbbTV available only for FIREFOX
+Be aware that if this browser extension version is still less than 1.0, do consider it as a prototype!
 ```
-Please note that I have decided to do this extension during my spare time. I also wanted to avoid the default action of our browsers which is to download such iTV (interactive television) application pages.
+The purpose of this project is to avoid the default browser action which is to download various iTV (interactive television) application pages based on the HTML standard with some proprietary methods. Here this browser extension is detecting those pages and injecting during page load an emulation layer (plus a bottom UI toolbar). In addition, unrecognized video formats are also handled by external HTML5 video plugins.
 
-| Browser: | Mozilla Firefox (V57+) | Opera (chrome based) | Google Chrome | Microsoft Edge | Apple Safari |
-| -------- | -------- | ------- | ------ | ------ | ------ |
-| Extension: | [<img  src="https://addons.cdn.mozilla.net/static/img/addons-buttons/AMO-button_2.png">](https://addons.mozilla.org/en-US/firefox/addon/hybridtvviewer/) | free (publishing stuck) | not free (5$ fee) | not free (19$ fee) | no support for [Web Extensions](https://developer.mozilla.org/en-US/Add-ons/WebExtensions) yet |
-| Codec [H.264](https://caniuse.com/#feat=mpeg4): | yes (plugin by Cisco) | yes | yes | yes | yes |
-| Codec [H.265](https://caniuse.com/#feat=hevc): | no | no | [yes here](https://github.com/henrypp/chromium/releases) (win10) | yes (win10) | yes (MacOS 10.13+) |
+This browser extension is available for free on those distribution platforms:
+
+| Browser: | Mozilla Firefox (V57+) | Google Chrome | Apple Safari |
+| -------- | -------- | ------ | ------ | ------ |
+| Extension: | [<img  src="https://addons.cdn.mozilla.net/static/img/addons-buttons/AMO-button_2.png">](https://addons.mozilla.org/en-US/firefox/addon/hybridtvviewer/) | no free publishing.<br>See dev install in [wiki](https://github.com/karl-rousseau/HybridTvViewer/wiki/HowTo) | no support for [Web Extensions](https://developer.mozilla.org/en-US/Add-ons/WebExtensions) yet |
+
+Please note that not all video codecs are recognized in current (i.e. 2019) browsers:
+
+| Browser: | Mozilla Firefox (V57+) | Google Chrome | Apple Safari |
+| -------- | -------- | ------ | ------ | ------ |
+| Codec [H.264](https://caniuse.com/#feat=mpeg4): | yes (embedded plugin by Cisco) | yes | yes |
+| Codec [H.265](https://caniuse.com/#feat=hevc): | no (not free license) | [yes here](https://github.com/henrypp/chromium/releases) (win10+) | yes (MacOS 10.13+) |
+If you need to create your own video stream (within TS or DASH container), I suggest you the well-known [FFMPEG](https://www.ffmpeg.org/) and [MP4BOX](https://gpac.wp.imt.fr/mp4box/) tools.
 
 ## Screenshot
 
@@ -25,31 +42,73 @@ Please note that I have decided to do this extension during my spare time. I als
 
 | Feature            | Description |
 | ------------------ | ----------- |
-| auto-detection     | an analysis of HTTP server headers plus inside header & meta tags is performed |
-| forced detection   | user on-clicked power button will force iTV emulation (auto-saved in web extension local storage) |
+| auto-detection     | an analysis of HTTP server headers plus inside HTML header & meta tags is performed |
+| forced detection   | user on-clicked power button ![](https://www.iconfinder.com/icons/1608429/download/png/16) will force or disable iTV emulation (auto-saved in web extension local storage) |
 | bottom bar  | underneath the screen rendering, the emulator is providing some buttons (colored keys, resolutions for zoomed rendering, ...) |
 | iDTV customization | the extension enables customization of various parameters (user-agent, OIPF capabilities, country, CAS id, DVB channels, ...) |
 | external inputs | it handles some external inputs such as CI+ APDU reply message, Stream-Event content customization & triggering, DVB channels with customized LCN, ... |
-| video support | it will handle the rendering of browser unrecognized broadcast video stream: Mpeg-TS and Mpeg-DASH (with the help of an external library) |
+| video support | it handles the rendering of browser unrecognized broadcast video stream: Mpeg-TS and Mpeg-DASH (with the help of external libraries) |
 
 ## Usage
 
 You can use the arrow keys <kbd>&leftarrow;</kbd>,<kbd>&rightarrow;</kbd>,<kbd>&uparrow;</kbd>,<kbd>&downarrow;</kbd>, <kbd>enter</kbd> and <kbd>backspace</kbd> keys to navigate inside the emulated iTV application.  
 Colored keys are also mapped to <kbd>R</kbd>, <kbd>G</kbd>, <kbd>B</kbd> and <kbd>Y</kbd> keyboard keys.
 
+For more info, have a look at the [Wiki](https://github.com/karl-rousseau/HybridTvViewer/wiki/HowTo) page.
+
 ## Examples
 
 The purpose of this extension is mainly to validate the **MIT-xperts test suite** under CHROME and FIREFOX.  
-Here are some example URL that have been extracted from various sources:
+Here are some example URLs that have been extracted from various sources:
 
 | Name          | Source | URL |
 | ------------- | ------ |---- |
-| MIT-xperts HbbTV test suite | [TS stream](https://github.com/mitxp/HbbTV-Testsuite/wiki) | http://itv.mit-xperts.com/hbbtvtest/ |
+| MIT-xperts HbbTV test suite | DTT & DVB-S [TS stream](https://github.com/mitxp/HbbTV-Testsuite/wiki) | http://itv.mit-xperts.com/hbbtvtest/ |
 | ARTE HbbTV    | French DTT TS | http://www.arte.tv/hbbtvv2/index.html |
 | ARTE CE-HTML  | Philips iDTV portal | http://cehtml.arte.tv/de/2764896.cehtml |
-| ...           |
+| ...           | Catalog (with dead ones) | http://urju.de/hbbtv/ |
 
-More examples (with dead ones) can be found on this application catalog: http://urju.de/hbbtv/
+If you want to create your own hybrid application, you can start with such code:
+```javascript
+<!DOCTYPE html PUBLIC "-//HbbTV//1.1.1//EN" "http://www.hbbtv.org/dtd/HbbTV-1.1.1.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>My 1st HbbTV app</title>
+<meta http-equiv="Content-Type" content="application/vnd.hbbtv.xhtml+xml; charset=UTF-8" />
+<meta http-equiv="pragma" content="no-cache" />
+<style>* { margin:0; padding:0; background-repeat:no-repeat; font-family:"Tiresias Screenfont",sans-serif; }
+#broadcast { position:absolute; top:0; left:0; width:1280px; height:720px; }
+#title { position:absolute; top:200px; left:200px; width:100px; height:99px; font-size:32px; color:#fff; }</style>
+<script type="text/javascript">
+//<![CDATA[
+window.onload = function() {
+  var app = document.getElementById('oipfAppMan');
+  if (app && app.getOwnerApplication) app = app.getOwnerApplication(document);
+  if (app && app.show) app.show(); // needed to show the HbbTV app on screen
+  if (app && app.activate) app.activate();
+  if (app && app.privateData) app.privateData.keyset.setValue(0x11f);
+  window.addEventListener('keydown', function() { // needed for HbbTV 2.0+
+    var n=navigator.userAgent, hbbtv2=n.test(/HbbTV\/1\.([4-9])\.1/g);
+    if (!this._done && hbbtv2) {
+      this._done=true;
+      try { app.privateData.keyset.setValue(0x11f); console.log('HbbTV2 special keys activated'); } catch(e) {}
+    }
+  }.bind(this), false);
+  window.focus();
+  document.getElementById('title').textContent = 'Hello from HbbTV';
+};
+//]]>
+</script>
+</head><body>
+<object id="broadcast" type="video/broadcast"></object>
+<object id="oipfAppMan" type="application/oipfApplicationManager" style="width:0; height:0;"></object>
+<object id="oipfConfig" type="application/oipfConfiguration" style="width:0; height:0;"></object>
+
+<div id="title"></div>
+</body></html>
+```
+Please note that there are more information on the [Wiki page](https://github.com/karl-rousseau/HybridTvViewer/wiki/HowTo).  
+You can also check your page validity content on this [HbbTV validator](http://hbbtv-live.irt.de/validator/).  
+I also recommend you the [BBC Tal framework](http://www.bbc.co.uk/opensource/projects/TAL) which handles HbbTV devices through configuration files.
 
 ## Dependencies
 
@@ -84,9 +143,11 @@ This project is not modifying those libraries and only doing a dynamic dependenc
     * bringing **HTML5 video tag** notation within [HbbTV V2.0 only](https://www.hbbtv.org/resource-library/#specifications)
   * following old MHP AITX structure
   * handling some CEA-2014 notations
-  * implementing a subset of OIPF objects
-- OHTV (Open Hybrid TV) : similar to HbbTV and used for example at [iCON TV](http://able.kbs.co.kr/enter/tal_view.php?mseq=16&pcg=&pgseq=&no=270211) in KOREA by the national broadcaster *KBS* since 2010
+  * implementing a subset of OIPF objects (including **OpApp** tuner scanning features)
+- OHTV (Open Hybrid TV) : similar to HbbTV and used for example at [iCON TV](http://able.kbs.co.kr/enter/tal_view.php?mseq=16&pcg=&pgseq=&no=270211) in KOREA by the national broadcaster *KBS* since 2010. Since 2016, it is now named IBB (Integrated Broadcast Broadband) defined by [ITU-R BT.2267-6](https://www.itu.int/dms_pub/itu-r/opb/rep/R-REP-BT.2267-6-2016-PDF-E.pdf)
 - BML (Broadcast Markup Language) : similar to HbbTV and defined by ARIB STD B-24 standard used in JAPAN over ISDB-T broadcasted channels like [*NHK*](https://www.nhk.or.jp/strl/publica/bt/en/fe0003-1.html)
 - CE-HTML (Consumer Electronics HTML) : nowadays less used and only found on old devices
 - OIPF (Open IPTV Forum) : used on some STB. Since 2014 activities have been transfered to HbbTV association
 - ATSC (Advanced Television Systems Committee) : broadcast standard in US where [ATSC V3](https://www.atsc.org/standards/atsc-3-0-standards/) follows HbbTV V2
+- [OpenCaster](https://github.com/aventuri/opencaster) : if you want to broadcast your application using an USB modulator (such as next Hides Inc one), you can package your TS file and broadcast it using this free software.
+- [Hides Inc](http://www.hides.com.tw/product_opencaster_eng.html) : this company is selling an USB DVB-T modulator named UT-100C.
