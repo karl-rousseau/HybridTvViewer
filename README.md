@@ -4,7 +4,7 @@
 </p>
 <p align="center">
   <img src="https://img.shields.io/badge/release-v0.6-red.svg">&nbsp;&nbsp;&nbsp;
-	<a href="https://travis-ci.org/karl-rousseau/HybridTvViewer/Footing" alt="Travis-CI"><img src="https://travis-ci.org/karl-rousseau/HybridTvViewer/Footing.svg?branch=master"></a>&nbsp;&nbsp;&nbsp;
+	<a href="https://travis-ci.org/karl-rousseau/HybridTvViewer" alt="Travis-CI"><img src="https://travis-ci.com/karl-rousseau/HybridTvViewer.svg?branch=master"></a>&nbsp;&nbsp;&nbsp;
   <img src="https://img.shields.io/badge/vanilla-js-yellow.svg">&nbsp;&nbsp;&nbsp;
 	<a href="https://github.com/karl-rousseau/HybridTvViewer/blob/master/LICENSE" alt="License:MIT"><img src="https://img.shields.io/badge/license-MIT-blue.svg"></a><br>
   <br>
