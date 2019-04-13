@@ -4,14 +4,14 @@
 </p>
 <p align="center">
   <img src="https://img.shields.io/badge/release-v0.6-red.svg">&nbsp;&nbsp;&nbsp;
-	<a href="https://travis-ci.org/HybridTvViewer/Footing" alt="Travis-CI"><img src="https://travis-ci.org/HybridTvViewer/Footing.svg?branch=master"></a>&nbsp;&nbsp;&nbsp;
+	<a href="https://travis-ci.org/karl-rousseau/HybridTvViewer/Footing" alt="Travis-CI"><img src="https://travis-ci.org/karl-rousseau/HybridTvViewer/Footing.svg?branch=master"></a>&nbsp;&nbsp;&nbsp;
   <img src="https://img.shields.io/badge/vanilla-js-yellow.svg">&nbsp;&nbsp;&nbsp;
 	<a href="https://github.com/karl-rousseau/HybridTvViewer/blob/master/LICENSE" alt="License:MIT"><img src="https://img.shields.io/badge/license-MIT-blue.svg"></a><br>
   <br>
 </p>
 An extension following such Hybrid interactive TV technologies:
 
-![](img/logo-hbbtv.png) &nbsp;&nbsp;&nbsp; ![](img/logo-oipf.png) &nbsp;&nbsp;&nbsp; ![](img/logo-ohtv.png)
+![hbbtv](img/logo-hbbtv.png) &nbsp;&nbsp;&nbsp; ![oipf](img/logo-oipf.png) &nbsp;&nbsp;&nbsp; ![atsc3](img/logo-atsc.png) &nbsp;&nbsp;&nbsp; ![ohtv](img/logo-ohtv.png)
 
 
 ## Preamble

@@ -1,0 +1,18 @@
+language: node_js
+
+node_js:
+  - stable
+
+install:
+  - npm config set spin false
+  - npm install
+
+script:
+  - npm run test
+
+#addons:
+#  firefox: "49.0"
+
+notifications:
+  email: false
+
