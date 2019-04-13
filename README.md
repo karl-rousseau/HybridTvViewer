@@ -33,6 +33,7 @@ Please note that not all video codecs are recognized in current (i.e. 2019) brow
 | -------- | -------- | ------ | ------ |
 | Codec [H.264](https://caniuse.com/#feat=mpeg4): | yes (embedded plugin by Cisco) | yes | yes |
 | Codec [H.265](https://caniuse.com/#feat=hevc): | no (not free license) | [yes here](https://github.com/henrypp/chromium/releases) (win10+) | yes (MacOS 10.13+) |
+
 If you need to create your own video stream (within TS or DASH container), I suggest you the well-known [FFMPEG](https://www.ffmpeg.org/) and [MP4BOX](https://gpac.wp.imt.fr/mp4box/) tools.
 
 ## Screenshot
@@ -91,7 +92,8 @@ window.onload = function() {
     var n=navigator.userAgent, hbbtv2=n.test(/HbbTV\/1\.([4-9])\.1/g);
     if (!this._done && hbbtv2) {
       this._done=true;
-      try { app.privateData.keyset.setValue(0x11f); console.log('HbbTV2 special keys activated'); } catch(e) {}
+      app.privateData.keyset.setValue(0x11f);
+      console.log('HbbTV2 special keys activated');
     }
   }.bind(this), false);
   window.focus();
