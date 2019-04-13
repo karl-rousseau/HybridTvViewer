@@ -8,10 +8,11 @@
   <img src="https://img.shields.io/badge/vanilla-js-yellow.svg">&nbsp;&nbsp;&nbsp;
 	<a href="https://github.com/karl-rousseau/HybridTvViewer/blob/master/LICENSE" alt="License:MIT"><img src="https://img.shields.io/badge/license-MIT-blue.svg"></a><br>
   <br>
-An extension following such Hybrid interactive TV technologies:<br>
-<br>
-![](img/logo-hbbtv.png) &nbsp;&nbsp;&nbsp; ![](img/logo-oipf.png) &nbsp;&nbsp;&nbsp; ![](img/logo-ohtv.png)
 </p>
+An extension following such Hybrid interactive TV technologies:
+
+![](img/logo-hbbtv.png) &nbsp;&nbsp;&nbsp; ![](img/logo-oipf.png) &nbsp;&nbsp;&nbsp; ![](img/logo-ohtv.png)
+
 
 ## Preamble
 
@@ -23,13 +24,13 @@ The purpose of this project is to avoid the default browser action which is to d
 This browser extension is available for free on those distribution platforms:
 
 | Browser: | Mozilla Firefox (V57+) | Google Chrome | Apple Safari |
-| -------- | -------- | ------ | ------ | ------ |
+| -------- | -------- | ------ | ------ |
 | Extension: | [<img  src="https://addons.cdn.mozilla.net/static/img/addons-buttons/AMO-button_2.png">](https://addons.mozilla.org/en-US/firefox/addon/hybridtvviewer/) | no free publishing.<br>See dev install in [wiki](https://github.com/karl-rousseau/HybridTvViewer/wiki/HowTo) | no support for [Web Extensions](https://developer.mozilla.org/en-US/Add-ons/WebExtensions) yet |
 
 Please note that not all video codecs are recognized in current (i.e. 2019) browsers:
 
 | Browser: | Mozilla Firefox (V57+) | Google Chrome | Apple Safari |
-| -------- | -------- | ------ | ------ | ------ |
+| -------- | -------- | ------ | ------ |
 | Codec [H.264](https://caniuse.com/#feat=mpeg4): | yes (embedded plugin by Cisco) | yes | yes |
 | Codec [H.265](https://caniuse.com/#feat=hevc): | no (not free license) | [yes here](https://github.com/henrypp/chromium/releases) (win10+) | yes (MacOS 10.13+) |
 If you need to create your own video stream (within TS or DASH container), I suggest you the well-known [FFMPEG](https://www.ffmpeg.org/) and [MP4BOX](https://gpac.wp.imt.fr/mp4box/) tools.
