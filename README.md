@@ -87,14 +87,16 @@ window.onload = function() {
   if (app && app.getOwnerApplication) app = app.getOwnerApplication(document);
   if (app && app.show) app.show(); // needed to show the HbbTV app on screen
   if (app && app.activate) app.activate();
-  if (app && app.privateData) app.privateData.keyset.setValue(0x11f);
-  window.addEventListener('keydown', function() { // needed for HbbTV 2.0+
-    if (!this._done && navigator.userAgent.test(/HbbTV\/1\.([3-9])\.1/g)) {
-      this._done=true;
-      app.privateData.keyset.setValue(0x11f);
-      console.log('HbbTV2 special keys activated');
-    }
-  }.bind(this), false);
+  if (app && app.privateData) app.privateData.keyset.setValue(0x1f);
+  function keyDown(event) {
+	  switch(event.keyCode) {
+		  case 13: case window.VK_ENTER:
+			  document.getElementById('title').textContent = 'OK key pressed';
+			  event.stopPropagation(); event.preventDefault(); return false; break;
+		  default: return true;
+	  }
+  }
+  window.addEventListener('keydown', keyDown.bind(this), false);
   window.focus();
   // Here is you app code ...
   document.getElementById('title').textContent = 'Hello from HbbTV';
@@ -109,7 +111,7 @@ window.onload = function() {
 <div id="title"></div>
 </body></html>
 ```
-Please note that there are more information on the [Wiki page](https://github.com/karl-rousseau/HybridTvViewer/wiki/HowTo).  
+> Please note that there are more information on the [Wiki page](https://github.com/karl-rousseau/HybridTvViewer/wiki/HowTo).  
 You can also check your page validity content on this [HbbTV validator](http://hbbtv-live.irt.de/validator/).  
 I also recommend you the [BBC Tal framework](http://www.bbc.co.uk/opensource/projects/TAL) which handles HbbTV devices through configuration files.
 
@@ -143,7 +145,7 @@ This project is not modifying those libraries and only doing a dynamic dependenc
   * initialy defined by [ETSI TS 101 812](http://www.etsi.org/deliver/etsi_ts/101800_101899/101812/01.02.01_60/ts_101812v010201p.pdf) documentation
 - **HbbTV** (Hybrid Broadband Broadcast TeleVision) :
   * defined by current [ETSI TS 102 796 V1.3.1](http://www.etsi.org/deliver/etsi_ts/102700_102799/102796/01.03.01_60/ts_102796v010301p.pdf) specifications (aka HbbTV V2.0)
-    * bringing **HTML5 video tag** notation within [HbbTV V2.0 only](https://www.hbbtv.org/resource-library/#specifications)
+    * bringing **Companion Screen** management and **HTML5 video tag** notation within [HbbTV V2.0 only](https://www.hbbtv.org/resource-library/#specifications)
   * following old MHP AITX structure
   * handling some CEA-2014 notations
   * implementing a subset of OIPF objects (with optional ones: +PVR +DL ...)
