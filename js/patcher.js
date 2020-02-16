@@ -321,7 +321,7 @@
         if (urlFound && tab.status === 'complete') { // page has been fully reloaded ... then inject JS simulator ...
             injectCss(tabId, 'css/injector.css', 'HbbTV CSS injection done.');
             //injectJs(tabId, 'https://cdn.jsdelivr.net/npm/mux.js@5.1.0/dist/mux-mp4.min.js', 'mux.js injection done.', true, false, 'async');
-            injectJs(tabId, 'https://cdn.dashjs.org/latest/dash.all.min.js', 'DASH.js injection done.', true, false, 'async');
+            injectJs(tabId, 'https://cdn.dashjs.org/v2.9.3/dash.all.min.js', 'DASH.js injection done.', true, false, 'async');
             injectJs(tabId, 'js/hbbobj.js', 'HbbTV OBJECT injection done.', true, false, 'async');
 
         } else if (urlFound === false && tab.status === 'complete') { // page not recognized but loaded then analyze internal meta tags ...
