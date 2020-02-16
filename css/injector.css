@@ -279,36 +279,42 @@ span.keybutton.btrightgradient {
 body.res720p {
     zoom: 1.0;
     -ms-zoom: 1.0;
+    -moz-transform-origin: top left;
     -moz-transform: scale(1);
 }
 
 body.res1080p {
     zoom: 1.5;
     -ms-zoom: 1.5;
+    -moz-transform-origin: top left;
     -moz-transform: scale(1.5);
 }
 
 body.res1440p {
     zoom: 2.0;
     -ms-zoom: 2.0;
+    -moz-transform-origin: top left;
     -moz-transform: scale(2);
 }
 
 body.res2160p {
     zoom: 3.0;
     -ms-zoom: 3.0;
+    -moz-transform-origin: top left;
     -moz-transform: scale(3);
 }
 
 body.res2880p {
     zoom: 4.0;
     -ms-zoom: 4.0;
+    -moz-transform-origin: top left;
     -moz-transform: scale(4);
 }
 
 body.res4320p {
     zoom: 5.875;
     -ms-zoom: 5.875;
+    -moz-transform-origin: top left;
     -moz-transform: scale(5.875);
 }
 
