@@ -173,11 +173,12 @@ This project is not modifying those libraries and only doing a dynamic dependenc
 
 I really hope that next HbbTV 3.0 release will have such features:
 - a well defined **ES5 foundation** following HTML5 browsers with also the addition of [Canvas & WebGL](https://www.khronos.org/webgl/) (every device has now an internal GPU to support hardware acceleration)<br/>
-<img src="https://upload.wikimedia.org/wikipedia/commons/2/25/WebGL_Logo.svg" width=200 />
+<img src="https://upload.wikimedia.org/wikipedia/commons/2/25/WebGL_Logo.svg" width="200" />
+
 - a [complete implementation](http://www.dial-multiscreen.org/dial-protocol-specification) of **DIAL protocol** which provides a list of available registered remote apps (merged from local broadcasting servers during the discovery scan) that we can display as a grid of apps (as an app store like on AndroidTV), for example in an OpApp portal.<br/>
 
 - like [Samsung SmartTV SDK](https://developer.samsung.com/SmartTV/develop/extension-libraries/nacl/getting-started.html) with *NaCl* (migrating to [WASM](https://webassembly.org/) soon), it will be great to have HbbTV with **WebAssembly** (also including Thread support which will help to use multi-core SoC for AI computation. Nowadays most SmartTV do have a 4-cores ARM CPU)<br/>
-<img src="https://webassembly.org/css/webassembly.svg" width=200 />
+<img src="https://webassembly.org/css/webassembly.svg" width="200" />
 
 ## Show your support
 
