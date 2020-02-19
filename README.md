@@ -40,7 +40,7 @@ Please note that not all video codecs are recognized in current (i.e. 2020) brow
 
 If you need to create your own video stream (within TS or DASH container), I suggest you the well-known [FFMPEG](https://www.ffmpeg.org/) or [MP4BOX](https://gpac.wp.imt.fr/mp4box/) tools. And in real life (i.e. without this extension), OpenCaster will help you to create your own TS file that can be broadcasted with a [Dektec](https://www.dektec.com/products/USB/DTU-315/) or [Hides](http://www.hides.com.tw/product_opencaster_eng.html) USB modulator and you will then be able to test your app on a true Oipf/Hbbtv device (like a Smart TV)
 
-➳ see [Tools](#Tools)
+➳ see [Tools](#Tools and hardware)
 
 ## Screenshots
 
@@ -122,7 +122,7 @@ I also recommend you the [BBC Tal framework](http://www.bbc.co.uk/opensource/pro
 ## Dependencies
 
 This project is not modifying those libraries and only doing a dynamic dependency call at runtime on their CDN releases.
-- [DASH.js](https://github.com/Dash-Industry-Forum/dash.js): reference client to decode DASH manifest files and provide DASH segments to HTML5 MSE+EME video player  
+- [DASH.js](https://github.com/Dash-Industry-Forum/dash.js): reference client to decode DASH manifest files and provide segments to HTML5 MSE+EME video player  
   ↳ Copyright 2015 Dash Industry Forum with BSD license
 - [MUX.js](https://github.com/videojs/mux.js): useful library to transmux Mpeg-TS to MP4 on the fly in order to feed HTML5 MSE video player  
   ↳ Copyright 2015 Brightcove with APACHE 2.0 license
@@ -167,14 +167,17 @@ This project is not modifying those libraries and only doing a dynamic dependenc
 - [Mit-Xperts](https://www.mit-xperts.com/products/) is a German 🇩🇪 company selling various softwares like [iMux multiplexer server](https://www.mit-xperts.com/products/imux/imux.pdf) having HbbTV/MHP/MHEG with carousels support
 - [Avalpa OpenCaster](https://github.com/aventuri/opencaster) is a free Italian 🇮🇹 software needed if you want to broadcast your application using a modulator (such as next Hides Inc one), you can package your TS file (including object carousel) and broadcast it using this free software (over your local network or through a modulator)
 - [Hides Inc](http://www.hides.com.tw/product_eng.html) is a Taiwan 🇹🇼 company selling an USB DVB-T modulator named [UT-100C](http://www.hides.com.tw/product_opencaster_eng.html) which includes [OpenCaster software](http://www.avalpa.com/the-key-values/15-free-software/33-opencaster) and [windows & linux drivers](https://www.dropbox.com/sh/r80tjnkapkgzeg9/AAC_CaOmlOKQeh7h90wbkUfpa)
-- [Dektec](https://www.dektec.com/products/) is a US 🇺🇸 company offering a catalog of various modulators on PCIe, USB2 and also USB3, here called [DTU-315](https://www.dektec.com/products/USB/DTU-315/) using the broadcasting command [DtPlay](https://www.dektec.com/downloads/utilities/) on Linux and [StreamXpress](https://www.dektec.com/products/applications/StreamXpress/) under Windows™️
+- [Dektec](https://www.dektec.com/products/) is a US 🇺🇸 company offering a catalog of various modulators on PCIe, USB2 and also USB3, here called [DTU-315](https://www.dektec.com/products/USB/DTU-315/) using the broadcasting command [DtPlay](https://www.dektec.com/downloads/utilities/) on Linux and [StreamXpress](https://www.dektec.com/products/applications/StreamXpress/) under Windows&trade;
 
 ## Personal Wishes
 
 I really hope that next HbbTV 3.0 release will have such features:
-- a well defined ES5 foundation following HTML5 browsers with also the addition of **Canvas & WebGL** (every device has now an internal GPU to support hardware acceleration)
-- a [complete implementation](http://www.dial-multiscreen.org/dial-protocol-specification) of **DIAL protocol** which provides a list of available registered remote apps (merged from local broadcasting servers during the discovery scan) that we can display as a grid of apps (as an app store like on AndroidTV), for example in an OpApp portal.
-- like Samsung SDK with *NaCl* (migrating to WASM soon), it will be great to have HbbTV with **WebAssembly** (also including Thread support which will help to use multi-core SoC for AI computation. Nowadays most SmartTV do have a 4-cores ARM CPU)
+- a well defined **ES5 foundation** following HTML5 browsers with also the addition of [Canvas & WebGL](https://www.khronos.org/webgl/) (every device has now an internal GPU to support hardware acceleration)<br/>
+<img src="https://upload.wikimedia.org/wikipedia/commons/2/25/WebGL_Logo.svg" width=200 />
+- a [complete implementation](http://www.dial-multiscreen.org/dial-protocol-specification) of **DIAL protocol** which provides a list of available registered remote apps (merged from local broadcasting servers during the discovery scan) that we can display as a grid of apps (as an app store like on AndroidTV), for example in an OpApp portal.<br/>
+
+- like [Samsung SmartTV SDK](https://developer.samsung.com/SmartTV/develop/extension-libraries/nacl/getting-started.html) with *NaCl* (migrating to [WASM](https://webassembly.org/) soon), it will be great to have HbbTV with **WebAssembly** (also including Thread support which will help to use multi-core SoC for AI computation. Nowadays most SmartTV do have a 4-cores ARM CPU)<br/>
+<img src="https://webassembly.org/css/webassembly.svg" width=200 />
 
 ## Show your support
 
