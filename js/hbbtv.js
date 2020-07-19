@@ -32,11 +32,10 @@
 /* global Application, oipfObjectFactory, oipfApplicationManager, oipfConfiguration, oipfCapabilities */
 
 (function(window) {
-// If the extension is not activated for this web page then we do nothing and
-// wait for the user to click on the extension icon ...
+    // If the extension is not activated for this web page then we do nothing and wait for the user to click on the extension icon ...
     var pageActivated = window.localStorage.getItem('tvViewer_active') == 'true';
     if (pageActivated) {
-
+        console.log('injecting %c HbbTV %c %s ','color:#fff;background-color:#555555;border-radius:3px 0 0 3px;','color:#000;background-color:#ffc107;border-radius:0 3px 3px 0;',window.localStorage.getItem('tvViewer_hbbtv'));
         window.oipf = window.oipf || {};
 
         // 7.1 Object factory API ------------------------------------------------------
@@ -44,7 +43,7 @@
         (function(oipfObjectFactory) {
 
             oipfObjectFactory.isObjectSupported = function(mimeType) {
-                console.log('isObjectSupported(' + mimeType + ') ...');
+                console.timeStamp && console.timeStamp('isObjectSupported(' + mimeType + ')');
                 return mimeType === 'video/broadcast' ||
                 mimeType === 'video/mpeg' ||
                 mimeType === 'application/oipfApplicationManager' ||
@@ -55,43 +54,50 @@
                 mimeType === 'application/oipfSearchManager';
             };
             oipfObjectFactory.createVideoBroadcastObject = function() {
-                console.log('createVideoBroadcastObject() ...');
-                return class VideoBroadcastObject {
-                    bindToCurrentChannel() {}
-                    setChannel() {}
-                    onblur(evt) {}
-                    onfocus(evt) {}
-                    addEventListener(eventName, callback, useCapture) { console.log('createVideoBroadcastObject / addEventListener'); }
-                    removeEventListener(eventName, callback, useCapture) { console.log('createVideoBroadcastObject / addEventListener'); }
-                    onPlayStateChange(evt) {}
-                    onPlaySpeedChanged(evt) {}
-                    onPlaySpeedsArrayChanged(evt) {}
-                    onPlayPositionChanged(evt) {}
-                    onFullScreenChange(evt) {}
-                    onParentalRatingChange(evt) {}
-                    onParentalRatingError(evt) {}
-                    onDRMRightsError(evt) {}
-                };
+                console.timeStamp && console.timeStamp('createVideoBroadcastObject'); //console.log('createVideoBroadcastObject() ...');
+                var videoObj = document.createElement('video');
+                videoObj.type = 'video/broadcast';
+                videoObj.bindToCurrentChannel = function() { console.timeStamp && console.timeStamp('createVideoBroadcastObject.bindToCurrentChannel'); };
+                videoObj.setChannel = function() { console.timeStamp && console.timeStamp('createVideoBroadcastObject.setChannel'); };
+                videoObj.onBlur = videoObj.onblur = function(evt) { console.timeStamp && console.timeStamp('createVideoBroadcastObject.onBlur'); };
+                videoObj.onFocus = videoObj.onfocus = function(evt) { console.timeStamp && console.timeStamp('createVideoBroadcastObject.onFocus'); };
+                //videoObj.addEventListener(eventName, callback, useCapture) { console.timeStamp && console.timeStamp('createVideoBroadcastObject.addEventListener'); }
+                //videoObj.removeEventListener(eventName, callback, useCapture) { console.timeStamp && console.timeStamp('createVideoBroadcastObject.removeEventListener'); }
+                videoObj.onPlayStateChange = function(evt) { console.timeStamp && console.timeStamp('createVideoBroadcastObject.onPlayStateChange'); };
+                videoObj.onPlaySpeedChanged = function(evt) { console.timeStamp && console.timeStamp('createVideoBroadcastObject.onPlaySpeedChanged'); };
+                videoObj.onPlaySpeedsArrayChanged = videoObj.onplaySpeedsArrayChanged = function(evt) { console.timeStamp && console.timeStamp('createVideoBroadcastObject.onPlaySpeedsArrayChanged'); };
+                videoObj.onPlayPositionChanged = function(evt) { console.timeStamp && console.timeStamp('createVideoBroadcastObject.onPlayPositionChanged'); };
+                videoObj.onFullScreenChange = videoObj.onfullscreenChange = function(evt) { console.timeStamp && console.timeStamp('createVideoBroadcastObject.onFullScreenChange'); };
+                videoObj.onParentalRatingChange = function(evt) { console.timeStamp && console.timeStamp('createVideoBroadcastObject.onParentalRatingChange'); };
+                videoObj.onParentalRatingError = function(evt) { console.timeStamp && console.timeStamp('createVideoBroadcastObject.onParentalRatingError'); };
+                videoObj.onDRMRightsError = function(evt) { console.timeStamp && console.timeStamp('createVideoBroadcastObject.onDRMRightsError'); };
+                videoObj.onChannelChangeSucceeded = function() { console.timeStamp && console.timeStamp('createVideoBroadcastObject.onChannelChangeSucceeded'); };
+                videoObj.onChannelChangeError = function() { console.timeStamp && console.timeStamp('createVideoBroadcastObject.onChannelChangeError'); };
+                videoObj.onSelectedComponentChanged = function() { console.timeStamp && console.timeStamp('createVideoBroadcastObject.onSelectedComponentChanged'); };
+                videoObj.onProgrammesChanged = function() { console.timeStamp && console.timeStamp('createVideoBroadcastObject.onProgrammesChanged'); };
+                videoObj.onRecordingEvent = function() { console.timeStamp && console.timeStamp('createVideoBroadcastObject.onRecordingEvent'); };
+                return videoObj;
             };
             oipfObjectFactory.createVideoMpegObject = function() {
-                console.log('createVideoMpegObject() ...');
+                console.timeStamp && console.timeStamp('createVideoMpegObject'); //console.log('createVideoMpegObject() ...');
                 return class VideoMpegObject {
-                    onblur(evt) {}
-                    onfocus(evt) {}
-                    addEventListener(eventName, callback, useCapture) { console.log('createVideoBroadcastObject / addEventListener'); }
-                    removeEventListener(eventName, callback, useCapture) { console.log('createVideoBroadcastObject / addEventListener'); }
-                    onPlayStateChange(evt) {}
-                    onPlaySpeedChanged(evt) {}
-                    onPlaySpeedsArrayChanged(evt) {}
-                    onPlayPositionChanged(evt) {}
-                    onFullScreenChange(evt) {}
-                    onParentalRatingChange(evt) {}
-                    onParentalRatingError(evt) {}
-                    onDRMRightsError(evt) {}
+                    onblur(evt) { console.timeStamp && console.timeStamp('createVideoMpegObject.onblur'); }
+                    onfocus(evt) { console.timeStamp && console.timeStamp('createVideoMpegObject.onfocus'); }
+                    addEventListener(eventName, callback, useCapture) { console.timeStamp && console.timeStamp('createVideoMpegObject.addEventListener'); }
+                    removeEventListener(eventName, callback, useCapture) { console.timeStamp && console.timeStamp('createVideoMpegObject.removeEventListener'); }
+                    onPlayStateChange(evt) { console.timeStamp && console.timeStamp('createVideoMpegObject.onPlayStateChange'); }
+                    onPlaySpeedChanged(evt) { console.timeStamp && console.timeStamp('createVideoMpegObject.onPlaySpeedChanged'); }
+                    onPlaySpeedsArrayChanged(evt) { console.timeStamp && console.timeStamp('createVideoMpegObject.onPlaySpeedsArrayChanged'); }
+                    onPlayPositionChanged(evt) { console.timeStamp && console.timeStamp('createVideoMpegObject.onPlayPositionChanged'); }
+                    onFullScreenChange(evt) { console.timeStamp && console.timeStamp('createVideoMpegObject.onFullScreenChange'); }
+                    onParentalRatingChange(evt) { console.timeStamp && console.timeStamp('createVideoMpegObject.onParentalRatingChange'); }
+                    onParentalRatingError(evt) { console.timeStamp && console.timeStamp('createVideoMpegObject.onParentalRatingError'); }
+                    onDRMRightsError(evt) { console.timeStamp && console.timeStamp('createVideoMpegObject.onDRMRightsError'); }
                 };
                 //return new VideoMpegObject();
             };
             oipfObjectFactory.onLowMemory = function() {
+                console.timeStamp && console.timeStamp('onLowMemory');
                 // FIXME: see when we can generate this event (maybe inside the Web Inspector panel)
             };
 
@@ -109,10 +115,12 @@
             });
 
             oipfApplicationManager.onLowMemory = function() {
+                console.timeStamp && console.timeStamp('oipfApplicationManager.onLowMemory');
                 // FIXME: see when we can generate this event
             };
 
             oipfApplicationManager.getOwnerApplication = function(document) {
+                console.timeStamp && console.timeStamp('oipfApplicationManager.getOwnerApplication');
                 return window.Document._application || (window.Document._application = new window.Application(document));
             };
 
@@ -155,16 +163,19 @@
                 'currentChannel': {
                     enumerable: true,
                     get: function currentChannel() {
+                        console.timeStamp && console.timeStamp('Application.currentChannel');
                         var currentCcid = window.oipf.getCurrentTVChannel().ccid; // FIXME: ccid is platform-dependent
                         return window.oipf.channelList.getChannel(currentCcid) || {};
                     }
                 }
             });
             Application.prototype.privateData.getFreeMem = function() {
+                console.timeStamp && console.timeStamp('Application.getFreeMem');
                 return ((window.performance && window.performance.memory.usedJSHeapSize) || 0);
             };
 
             Application.prototype.show = function() {
+                console.timeStamp && console.timeStamp('Application.show');
                 if (this._document) {
                     this._document.body.style.visibility = 'visible';
                     return (this._visible = true);
@@ -173,6 +184,7 @@
             };
 
             Application.prototype.hide = function() {
+                console.timeStamp && console.timeStamp('Application.hide');
                 if (this._document) {
                     this._document.body.style.visibility = 'hidden';
                     this._visible = false;
@@ -182,10 +194,12 @@
             };
 
             Application.prototype.createApplication = function(uri, createChild) {
+                console.timeStamp && console.timeStamp('Application.createApplication');
                 this._applicationUrl = uri;
             };
 
             Application.prototype.destroyApplication = function() {
+                console.timeStamp && console.timeStamp('Application.destroyApplication');
                 delete this._applicationUrl;
             };
 
@@ -201,7 +215,21 @@
             oipfConfiguration.configuration.preferredUILanguage = window.localStorage.getItem('tvViewer_country') || 'ENG,FRA';
             oipfConfiguration.configuration.countryId = window.localStorage.getItem('tvViewer_country') || 'ENG';
             //oipfConfiguration.configuration.regionId = 0;
-            //oipfConfiguration.localSystem = {};
+            if (window.localStorage.getItem('tvViewer_hbbtv') === '2.0.1' || window.localStorage.getItem('tvViewer_hbbtv') === '2.0.2') {
+                oipfConfiguration.configuration.subtitlesEnabled = true;
+                oipfConfiguration.configuration.audioDescriptionEnabled = true;
+                oipfConfiguration.configuration.timeShiftSynchronized = true;
+                oipfConfiguration.configuration.dtt_network_ids = [];
+                oipfConfiguration.configuration.deviceId = 'abcdef12345';
+                oipfConfiguration.configuration.requestAccessToDistinctiveIdentifier = function(cb) { if (cb) cb(true); };
+                oipfConfiguration.localSystem = {};
+                oipfConfiguration.localSystem.deviceID = 'no name';
+                oipfConfiguration.localSystem.modelName = 'tv';
+                oipfConfiguration.localSystem.vendorName = 'unknown';
+                oipfConfiguration.localSystem.softwareVersion = '1.0.0';
+                oipfConfiguration.localSystem.hardwareVersion = '1.0';
+                oipfConfiguration.localSystem.serialNumber = '12345';
+            }
             oipfConfiguration.getText = function(key) {
 
             };

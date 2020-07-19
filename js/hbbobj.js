@@ -1,14 +1,6 @@
 /** Listen to external <OBJECT> dynamic changes ... */
 (function(window) {
-    var _DEBUG_ = true;
-
-    function mixin(source, target) { // FIXME: use ES6 Object.assign() and arrow functions
-        for (var prop in source) {
-            if (source.hasOwnProperty(prop)) {
-                target[prop] = source[prop];
-            }
-        }
-    }
+    var _DEBUG_ = false;
 
     function injectBroadcastVideoMethods(oipfPluginObject) {
         var isVideoPlayerAlreadyAdded = oipfPluginObject.children.length > 0;
@@ -16,17 +8,20 @@
             var videoTag = document.createElement('video');
             videoTag.setAttribute('id', 'video-player');
             videoTag.setAttribute('autoplay', ''); // note: call to bindToCurrentChannel() or play() is doing it
+            videoTag.setAttribute('muted', 'true'); // Patch for Firefox 66+ in order to fix autoplay video -> https://hacks.mozilla.org/2019/02/firefox-66-to-block-automatically-playing-audible-video-and-audio/
             videoTag.setAttribute('loop', '');
-            videoTag.setAttribute('style', 'top:inherit; left:inherit; width:inherit; height:inherit;');
+            videoTag.setAttribute('style', 'top:inherit; left:inherit; width:inherit; height:-webkit-fill-available;');
             videoTag.src = localStorage.getItem('tvViewer_broadcast_url') || 'http://clips.vorwaerts-gmbh.de/VfE_html5.mp4';
             oipfPluginObject.appendChild(videoTag);
-            console.info('BROADCAST VIDEO PLAYER ... ADDED');
+            _DEBUG_ && console.info('BROADCAST VIDEO PLAYER ... ADDED');
         }
 
         // inject OIPF methods ...
-        
-        //import import { injectBroadcastVideoMethods } from 'videobc.jsm';
-        //injectBroadcastVideoMethods(oipfPluginObject);
+
+        //import { oipfBroadcastVideoMethods } from './videobc.mjs'; // FireFox 60+ -> https://jakearchibald.com/2017/es-modules-in-browsers/
+        //oipfBroadcastVideoMethods(oipfPluginObject);
+
+        //oipfPluginObject = window.oipfBroadcastVideoObject; // pre-loaded by videobc.js for ES5 browser compatibility
 
         var currentChannel = {
             'TYPE_TV': 12,
@@ -40,10 +35,10 @@
         };
         oipfPluginObject.currentChannel = currentChannel;
         oipfPluginObject.createChannelObject = function() {
-            console.log('<BroadcastVideo> createChannelObject() ...');
+            console.timeStamp && console.timeStamp('bcVideo.createChannelObject');
         };
         oipfPluginObject.bindToCurrentChannel = function() {
-            console.log('<BroadcastVideo> bindToCurrentChannel() ...');
+            console.timeStamp && console.timeStamp('bcVideo.bindToCurrentChannel');
             var player = document.getElementById('video-player');
             if (player) {
                 player.play();
@@ -52,18 +47,18 @@
             return ; // TODO: must return a Channel object
         };
         oipfPluginObject.setChannel = function() {
-            console.log('<BroadcastVideo> setChannel() ...');
+            console.timeStamp && console.timeStamp('bcVideo.setChannel');
         };
         oipfPluginObject.prevChannel = function() {
-            console.log('<BroadcastVideo> prevChannel() ...');
+            console.timeStamp && console.timeStamp('bcVideo.prevChannel');
             return currentChannel;
         };
         oipfPluginObject.nextChannel = function() {
-            console.log('<BroadcastVideo> nextChannel() ...');
+            console.timeStamp && console.timeStamp('bcVideo.nextChannel');
             return currentChannel;
         };
         oipfPluginObject.release = function() {
-            console.log('<BroadcastVideo> release() ...');
+            console.timeStamp && console.timeStamp('bcVideo.release');
             var player = document.getElementById('video-player');
             if (player) {
                 player.pause();
@@ -134,14 +129,14 @@
                 this.encoding = 'DVB-SUBT';
                 this.encrypted = false;
             }
-        };
+        }
         class AVVideoComponent extends AVComponent {
             constructor() {
                 super();
                 this.type = this.COMPONENT_TYPE_VIDEO;
                 this.aspectRatio = 1.78;
             }
-        };
+        }
         class AVAudioComponent extends AVComponent {
             constructor() {
                 super();
@@ -150,7 +145,7 @@
                 this.audioDescription = false;
                 this.audioChannels = 2;
             }
-        };
+        }
         class AVSubtitleComponent extends AVComponent {
             constructor() {
                 super();
@@ -158,7 +153,7 @@
                 this.language = 'deu';
                 this.hearingImpaired = false;
             }
-        };
+        }
         class AVComponentCollection extends Array {
             constructor(num) {
                 super(num);
@@ -166,7 +161,7 @@
             item(idx) {
                 return idx < this.length ? this[idx] : [];
             }
-        };
+        }
         oipfPluginObject.getComponents = (function(type) {
             return [
                 type === this.COMPONENT_TYPE_VIDEO ? new AVVideoComponent() :
@@ -271,9 +266,9 @@
             }
         };
         objectElement.seek = objectElement.seek || function(pos) { // pos in milliseconds
-            var videoTag = document.getElementById('dash-player');
+            var videoPlayer, videoTag = document.getElementById('dash-player');
             if (videoTag) {
-                var videoPlayer = videoTag._player;
+                videoPlayer = videoTag._player;
                 var videoDuration = videoPlayer.duration() * 1000;
                 _DEBUG_ && console.log('>>>>>> seek pos= ', pos, '/', videoDuration);
                 if (videoPlayer && pos < videoDuration) {
@@ -281,7 +276,7 @@
                 }
             } else {
                 videoTag = document.getElementById('video-player');
-                var videoPlayer = videoTag;
+                videoPlayer = videoTag;
                 _DEBUG_ && console.log('>>>>>> HTML5 seek pos= ', pos, '/', videoPlayer.duration);
                 if (videoPlayer && pos < videoPlayer.duration) {
                     videoPlayer.currentTime = pos; // relative time in seconds
@@ -305,10 +300,10 @@
             _DEBUG_ && console.log('>>>>>> onwaiting ', evt.timeStamp);
             objectElement.playState = 4; // buffering
             if (objectElement.onPlayStateChange) {
-                console.log('>>>>>> dispatchEvent onPlayStateChange', objectElement.playState);
+                _DEBUG_ && console.log('>>>>>> dispatchEvent onPlayStateChange', objectElement.playState);
                 objectElement.onPlayStateChange(objectElement.playState);
             } else {
-                console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
+                _DEBUG_ && console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
                 var playerEvent = new Event('PlayStateChange');
                 playerEvent.state = objectElement.playState;
                 objectElement.dispatchEvent(playerEvent);
@@ -321,7 +316,7 @@
             if (objectElement.onPlayStateChange) {
                 objectElement.onPlayStateChange(objectElement.playState);
             } else {
-                console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
+                _DEBUG_ && console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
                 var playerEvent = new Event('PlayStateChange');
                 playerEvent.state = objectElement.playState;
                 objectElement.dispatchEvent(playerEvent);
@@ -331,10 +326,10 @@
             _DEBUG_ && console.log('>>>>>> onpause ', evt.timeStamp);
             objectElement.playState = 2;
             if (objectElement.onPlayStateChange) {
-                console.log('>>>>>> dispatchEvent onPlayStateChange', objectElement.playState);
+                _DEBUG_ && console.log('>>>>>> dispatchEvent onPlayStateChange', objectElement.playState);
                 objectElement.onPlayStateChange(objectElement.playState);
             } else {
-                console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
+                _DEBUG_ && console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
                 var playerEvent = new Event('PlayStateChange');
                 playerEvent.state = objectElement.playState;
                 objectElement.dispatchEvent(playerEvent);
@@ -344,10 +339,10 @@
             _DEBUG_ && console.log('>>>>>> onloadstart');
             objectElement.playState = 3; // connecting
             if (objectElement.onPlayStateChange) {
-                console.log('>>>>>> dispatchEvent onPlayStateChange', objectElement.playState);
+                _DEBUG_ && console.log('>>>>>> dispatchEvent onPlayStateChange', objectElement.playState);
                 objectElement.onPlayStateChange(objectElement.playState);
             } else {
-                console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
+                _DEBUG_ && console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
                 var playerEvent = new Event('PlayStateChange');
                 playerEvent.state = objectElement.playState;
                 objectElement.dispatchEvent(playerEvent);
@@ -360,7 +355,7 @@
         //     if (objectElement.onPlayPositionChanged) {
         //         objectElement.onPlayPositionChanged(pos);
         //     } else {
-        //         console.log('>>>>>> dispatchEvent PlayPositionChanged', pos);
+        //         _DEBUG_ && console.log('>>>>>> dispatchEvent PlayPositionChanged', pos);
         //         var playerEvent = new Event('PlayPositionChanged');
         //         playerEvent.position = pos;
         //         objectElement.dispatchEvent(playerEvent);
@@ -372,7 +367,7 @@
             if (objectElement.onPlayStateChange) {
                 objectElement.onPlayStateChange(objectElement.playState);
             } else {
-                console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
+                _DEBUG_ && console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
                 var playerEvent = new Event('PlayStateChange');
                 playerEvent.state = objectElement.playState;
                 objectElement.dispatchEvent(playerEvent);
@@ -384,7 +379,7 @@
             if (objectElement.onPlayStateChange) {
                 objectElement.onPlayStateChange(objectElement.playState);
             } else {
-                console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
+                _DEBUG_ && console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
                 var playerEvent = new Event('PlayStateChange');
                 playerEvent.state = objectElement.playState;
                 objectElement.dispatchEvent(playerEvent);
@@ -397,7 +392,7 @@
             if (objectElement.onPlaySpeedChanged) {
                 objectElement.onPlaySpeedChanged(playRate);
             } else {
-                console.log('>>>>>> dispatchEvent PlaySpeedChanged', objectElement.playSpeed);
+                _DEBUG_ && console.log('>>>>>> dispatchEvent PlaySpeedChanged', objectElement.playSpeed);
                 var playerEvent = new Event('PlaySpeedChanged');
                 playerEvent.speed = objectElement.playSpeed;
                 objectElement.dispatchEvent(playerEvent);
@@ -410,7 +405,7 @@
             if (objectElement.onPlayPositionChanged) {
                 objectElement.onPlayPositionChanged(pos);
             } else {
-                console.log('>>>>>> dispatchEvent PlayPositionChanged', pos);
+                _DEBUG_ && console.log('>>>>>> dispatchEvent PlayPositionChanged', pos);
                 var playerEvent = new Event('PlayPositionChanged');
                 playerEvent.position = pos;
                 objectElement.dispatchEvent(playerEvent);
@@ -422,7 +417,7 @@
             // if (objectElement.onPlayPositionChanged) {
             //     objectElement.onPlayPositionChanged(pos);
             // } else {
-            //     console.log('>>>>>> dispatchEvent PlayPositionChanged', pos);
+            //     _DEBUG_ && console.log('>>>>>> dispatchEvent PlayPositionChanged', pos);
             //     var playerEvent = new Event('PlayPositionChanged');
             //     playerEvent.position = pos;
             //     objectElement.dispatchEvent(playerEvent);
@@ -434,7 +429,7 @@
             // if (objectElement.onPlayPositionChanged) {
             //     objectElement.onPlayPositionChanged(pos);
             // } else {
-            //     console.log('>>>>>> dispatchEvent PlayPositionChanged', pos);
+            //     _DEBUG_ && console.log('>>>>>> dispatchEvent PlayPositionChanged', pos);
             //     var playerEvent = new Event('PlayPositionChanged');
             //     playerEvent.position = pos;
             //     objectElement.dispatchEvent(playerEvent);
@@ -446,7 +441,7 @@
             if (objectElement.onPlayStateChange) {
                 objectElement.onPlayStateChange(objectElement.playState);
             } else {
-                console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
+                _DEBUG_ && console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
                 var playerEvent = new Event('PlayStateChange');
                 playerEvent.state = objectElement.playState;
                 objectElement.dispatchEvent(playerEvent);
@@ -466,7 +461,7 @@
             if (objectElement.onPlayStateChange) {
                 objectElement.onPlayStateChange(objectElement.playState);
             } else {
-                console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
+                _DEBUG_ && console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
                 var playerEvent = new Event('PlayStateChange');
                 playerEvent.state = objectElement.playState;
                 objectElement.dispatchEvent(playerEvent);
@@ -479,7 +474,7 @@
             if (objectElement.onPlayStateChange) {
                 objectElement.onPlayStateChange(objectElement.playState);
             } else {
-                console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
+                _DEBUG_ && console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
                 var playerEvent = new Event('PlayStateChange');
                 playerEvent.state = objectElement.playState;
                 objectElement.dispatchEvent(playerEvent);
@@ -492,7 +487,7 @@
             if (objectElement.onPlayStateChange) {
                 objectElement.onPlayStateChange(objectElement.playState);
             } else {
-                console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
+                _DEBUG_ && console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
                 var playerEvent = new Event('PlayStateChange');
                 playerEvent.state = objectElement.playState;
                 objectElement.dispatchEvent(playerEvent);
@@ -502,7 +497,7 @@
         // videoTag && videoTag.addEventListener && videoTag.addEventListener('progress', function() {
         //     _DEBUG_ && console.log(')))))) progress');
         //     objectElement.playState = 4;
-        //     console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
+        //     _DEBUG_ && console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
         //     var playerEvent = new Event('PlayStateChange');
         //     playerEvent.state = objectElement.playState;
         //     objectElement.dispatchEvent(playerEvent);
@@ -514,7 +509,7 @@
             if (objectElement.onPlayStateChange) {
                 objectElement.onPlayStateChange(objectElement.playState);
             } else {
-                console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
+                _DEBUG_ && console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
                 var playerEvent = new Event('PlayStateChange');
                 playerEvent.state = objectElement.playState;
                 objectElement.dispatchEvent(playerEvent);
@@ -527,7 +522,7 @@
             if (objectElement.onPlayStateChange) {
                 objectElement.onPlayStateChange(objectElement.playState);
             } else {
-                console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
+                _DEBUG_ && console.log('>>>>>> dispatchEvent PlayStateChange', objectElement.playState);
                 var playerEvent = new Event('PlayStateChange');
                 playerEvent.state = objectElement.playState;
                 objectElement.dispatchEvent(playerEvent);
@@ -541,7 +536,7 @@
                 objectElement.playPosition = pos;
                 objectElement.PlayPositionChanged(pos);
             } else {
-                console.log('>>>>>> dispatchEvent PlayPositionChanged', pos);
+                _DEBUG_ && console.log('>>>>>> dispatchEvent PlayPositionChanged', pos);
                 var playerEvent = new Event('PlayPositionChanged');
                 playerEvent.position = pos;
                 objectElement.dispatchEvent(playerEvent);
@@ -552,7 +547,7 @@
             _DEBUG_ && console.log(')))))) ratechange');
             var playSpeed = videoTag.playbackRate;
 
-            console.log('>>>>>> dispatchEvent PlaySpeedChanged', playSpeed);
+            _DEBUG_ && console.log('>>>>>> dispatchEvent PlaySpeedChanged', playSpeed);
             var playerEvent = new Event('PlaySpeedChanged');
             playerEvent.speed = playSpeed;
             objectElement.dispatchEvent(playerEvent);
@@ -566,7 +561,7 @@
                 objectElement.playPosition = pos;
                 objectElement.PlayPositionChanged(pos);
             } else {
-                console.log('>>>>>> dispatchEvent PlayPositionChanged', pos);
+                _DEBUG_ && console.log('>>>>>> dispatchEvent PlayPositionChanged', pos);
                 var playerEvent = new Event('PlayPositionChanged');
                 playerEvent.position = pos;
                 objectElement.dispatchEvent(playerEvent);
@@ -582,7 +577,7 @@
     function registerEmbeddedVideoPlayerEvents(objectElement, optionHtmlPlayer) {
         //console.log('>> registerEmbeddedVideoPlayerEvents', objectElement);
         var embbededDocument = objectElement.contentDocument;
-        console.log('>> registerEmbeddedVideoPlayerEvents doc=', embbededDocument);
+        _DEBUG_ && console.log('>> registerEmbeddedVideoPlayerEvents doc=', embbededDocument);
         // objectElement.onreadystatechange = function() {
         //   console.log("onreadystatechange state=", objectElement.readyState)
         // };
@@ -617,7 +612,7 @@
         /*var watchDogVideoTag = setInterval*/setTimeout(function () {
             var embbededDocument = document.getElementById(objectElement.id);
             embbededDocument = embbededDocument && embbededDocument.contentDocument ? embbededDocument.contentDocument : null;
-            console.log('>> doc=', embbededDocument);
+            _DEBUG_ && console.log('>> doc=', embbededDocument);
             if (embbededDocument) {
                 var items = embbededDocument.body.children, player;
                 function scanChildrenForPlayer(items) {
@@ -630,7 +625,7 @@
                     });
                 }
                 scanChildrenForPlayer(items);
-                console.log('>> PLAYER:', player);
+                _DEBUG_ && console.log('>> PLAYER:', player);
                 if (player) {
                     //clearInterval(watchDogVideoTag);
                     registerVideoPlayerEvents(objectElement, player); // same events for HTML5 video tag
@@ -639,7 +634,7 @@
                         if (objectElement.onPlayStateChange) {
                             objectElement.onPlayStateChange(objectElement.playState);
                         } else {
-                            console.log('>> dispatchEvent PlayStateChange', objectElement.playState);
+                            _DEBUG_ && console.log('>> dispatchEvent PlayStateChange', objectElement.playState);
                             var playerEvent = new Event('PlayStateChange');
                             playerEvent.state = objectElement.playState;
                             objectElement.dispatchEvent(playerEvent);
@@ -664,7 +659,7 @@
         _DEBUG_ && console.log('object url=' + videoPath);
 
         if (elem.__already_seen__) {
-            console.log('object __already_seen__');
+            _DEBUG_ && console.log('object __already_seen__');
             return;
         }
         elem.__already_seen__ = true;
@@ -673,13 +668,12 @@
             _DEBUG_ && console.warn('DASH VIDEO PLAYER ... ADDED');
             var videoTag = document.createElement('video');
             videoTag.setAttribute('id', 'dash-player');
-            videoTag.setAttribute('style', 'top:inherit; left:inherit; width:inherit; height:inherit;');
+            videoTag.setAttribute('style', 'top:inherit; left:inherit; width:inherit; height:-webkit-fill-available;');
             elem.appendChild(videoTag);
             if (dashjs) {
                 _DEBUG_ && console.warn('starting DASH.JS video at url=' + videoPath + ' ...');
                 videoTag._player = dashjs.MediaPlayer().create();
-                videoTag._player.getDebug().setLogToBrowserConsole(false);
-                videoTag._player.initialize(videoTag, videoPath, /*false*/true); // autostart as we can't grab the play() method call
+                videoTag._player.initialize(videoTag, videoPath, true); // autostart as we can't grab the play() method call
                 registerOipfEventsToVideoPlayer(elem, videoTag._player);
                 registerDashVideoPlayerEvents(elem, videoTag);
             }
@@ -697,7 +691,7 @@
             //     videoTag = document.createElement('video');
             //     videoTag.setAttribute('id', 'video-player');
             //     videoTag.setAttribute('autoplay', ''); // setting src will start the video and send an event
-            //     videoTag.setAttribute('style', 'top:inherit; left:inherit; width:inherit; height:inherit;');
+            //     videoTag.setAttribute('style', 'top:inherit; left:inherit; width:inherit; height:-webkit-fill-available;');
             //     videoTag.src = videoPath; // copy object data url to html5 video tag src attribute ...
             //     elem.appendChild(videoTag);
             //     _DEBUG_ && console.warn('BROADBAND VIDEO PLAYER ... ADDED');
@@ -705,8 +699,30 @@
 
             registerEmbeddedVideoPlayerEvents(elem, videoTag); // videoTag = undefined when using a PHP link (i.e. scanning for inner video tag)
 
-        } else if (mimeType.lastIndexOf('video/mpeg', 0) == 0) {
-            _DEBUG_ && console.warn('TS VIDEO PLAYER ... (under construction)');
+        } else if (mimeType.lastIndexOf('video/mpeg', 0) == 0 && muxjs) {
+            _DEBUG_ && console.warn('TS VIDEO PLAYER ...');
+            /*var videoTag = document.createElement('video');
+            videoTag.setAttribute('id', 'ts-player');
+            videoTag.setAttribute('style', 'top:inherit; left:inherit; width:inherit; height:-webkit-fill-available;');
+            videoTag.controls = true;
+            elem.appendChild(videoTag);
+            mediaSource = new MediaSource();
+            videoTag.src = URL.createObjectURL(mediaSource);
+            //mediaSource.addEventListener('error', logevent);
+            //mediaSource.addEventListener('opened', logevent);
+            //mediaSource.addEventListener('closed', logevent);
+            //mediaSource.addEventListener('sourceended', logevent);
+            var transmuxer = new muxjs.mp4.Transmuxer({ remux: true });
+            // FIXME: read the TS file and feed the transmuxer with data ...
+            transmuxer.on('data', function (segment) { // event when generate fMP4 segment is ready ...
+                var parsed = muxjs.mp4.tools.inspect(segment.data.buffer);
+                console.log('transmuxed', parsed);
+                //document.body.appendChild(document.createTextNode(muxjs.textifyMp4(parsed)));
+
+                sourceBuffer.appendBuffer(segment.data.buffer); // adding segment to MSE buffer ...
+            });
+            transmuxer.on('done', function () {
+            });*/
 
         } else if (mimeType.lastIndexOf('video/broadcast', 0) == 0) {
             _DEBUG_ && console.warn('LIVE BROADCAST VIDEO PLAYER ...');
@@ -716,19 +732,19 @@
             _DEBUG_ && console.log('new application/oipfConfiguration object ...');
             if (window.oipfApplicationManager) {
                 _DEBUG_ && console.log('adding methods to application/oipfConfiguration object ...');
-                mixin(window.oipfApplicationManager, elem);
+                Object.assign(elem, window.oipfApplicationManager);
             }
         } else if (mimeType.lastIndexOf('application/oipfApplicationManager', 0) == 0) {
             _DEBUG_ && console.log('new application/oipfApplicationManager object ...');
             if (window.oipfConfiguration) {
                 _DEBUG_ && console.log('adding methods to application/oipfConfiguration object ...');
-                mixin(window.oipfConfiguration, elem);
+                Object.assign(elem, window.oipfConfiguration);
             }
         } else if (mimeType.lastIndexOf('application/oipfCapabilities', 0) == 0) {
             _DEBUG_ && console.log('new application/oipfCapabilities object ...');
             if (window.oipfCapabilities) {
                 _DEBUG_ && console.log('adding methods to application/oipfCapabilities object ...');
-                mixin(window.oipfCapabilities, elem);
+                Object.assign(elem, window.oipfCapabilities);
             }
         }
 
@@ -741,7 +757,7 @@
                         _DEBUG_ && console.warn('DASH VIDEO PLAYER ... added');
                         var videoTag = document.createElement('video');
                         videoTag.setAttribute('id', 'dash-player');
-                        videoTag.setAttribute('style', 'top:inherit; left:inherit; width:inherit; height:inherit;');
+                        videoTag.setAttribute('style', 'top:inherit; left:inherit; width:inherit; height:-webkit-fill-available;');
                         mutation.target.appendChild(videoTag);
                     }
                 } else if (mutation.attributeName === 'data' && mutation.target.type.lastIndexOf('application/dash+xml', 0) == 0) {
@@ -751,7 +767,6 @@
                     if (dashjs) {
                         _DEBUG_ && console.warn('DASH VIDEO PLAYER start ...');
                         videoTag._player = dashjs.MediaPlayer().create();
-                        videoTag._player.getDebug().setLogToBrowserConsole(false);
                         videoTag._player.initialize(videoTag, videoPath, false); // don't autostart as play() will be called
                         videoTag._player.attachSource(videoPath);
                         //registerOipfEventsToVideoPlayer(mutation.target);
@@ -764,10 +779,10 @@
             }
 
             // TODO: notify extension to update url for such dynamic video allocation + notify web worker to handle TS analysis ...
-            // chrome.runtime.sendMessage('hybridtvviewer@github.com', { videoUrl : videoPath }, function(response) {
-            //     console.log(response);
-            //     //if (!response.success) {}
-            // });
+            //chrome.runtime.sendMessage('hybridtvviewer@github.com', { videoUrl : videoPath }, function(response) {
+            //    console.log(response);
+            //    //if (!response.success) {}
+            //});
         }
 
         // Watch for changes of the src/data/type attributes ...

@@ -55,7 +55,7 @@ if (pageActivated) {
 
     // Android zoom option ---------------------------------------------------------
 
-    if (navigator.userAgent.indexOf('Android') !== -1 && window.devicePixelRatio !== 1) {
+    if (navigator.userAgent.includes('Android') && window.devicePixelRatio !== 1) {
         var head = document.getElementsByTagName('head')[0];
         if (head) {
             var isViewportAlreadySet = [].slice.call(head.getElementsByTagName('meta'));
@@ -63,12 +63,11 @@ if (pageActivated) {
                 return l.name.indexOf('viewport') !== -1;
             }).reduce(function(a,b) {
                 return a || b;
-            })==true;
+            })===true;
             if (!isViewportAlreadySet) {
                 var viewport = document.createElement('meta');
                 viewport.setAttribute('name', 'viewport');
-                viewport.setAttribute('content', 'width=device-width, initial-scale=' + (1 / window.devicePixelRatio));
-                //viewport.setAttribute('content', 'width=1280, initial-scale=1.0');
+                viewport.setAttribute('content', 'width=device-width, user-scalable=yes, maximum-scale=4.0, minimum-scale=0, initial-scale=' + (1 / window.devicePixelRatio));
                 head.appendChild(viewport);
             }
         }
@@ -83,6 +82,7 @@ if (pageActivated) {
             '1.5': '1.2.1',
             '2.0': '1.3.1',
             '2.0.1': '1.4.1',
+            '2.0.2': '1.5.1',
             null: undefined
         };
         return versionMapping[hbbVersion];
@@ -147,7 +147,7 @@ if (pageActivated) {
 
         function getInjectedParams() {
             var scripts = document.head.getElementsByTagName('script');
-            if (scripts.length == 0) {
+            if (scripts.length === 0) {
                 return;
             }
             scripts = [].slice.call(scripts).filter(function(l) { return l.src.indexOf('hbbdom.js') !== -1; });
@@ -157,10 +157,10 @@ if (pageActivated) {
         function doKeyPress(key) {
             var oEvent = document.createEvent('KeyboardEvent');
             Object.defineProperty(oEvent, 'keyCode', { // for Chrome based browser
-                get : function() { return this.keyCodeVal; }
+                get: function() { return this.keyCodeVal; }
             });
             Object.defineProperty(oEvent, 'which', {
-                get : function() { return this.keyCodeVal; }
+                get: function() { return this.keyCodeVal; }
             });
             if (oEvent.initKeyboardEvent) {
                 oEvent.initKeyboardEvent('keydown', true, true, document.defaultView, false, false, false, false, key, key);
@@ -176,7 +176,7 @@ if (pageActivated) {
             // just verify that the click is not done on the same selected button ...
             var res = keyId.replace(/key/g, 'p');
             var storedResolution = localStorage.getItem('tvViewer_resolution') || 'res720p';
-            if (res == storedResolution) {
+            if (res === storedResolution) {
                 return ;
             }
 
@@ -207,7 +207,7 @@ if (pageActivated) {
             keyButton.addEventListener('click', function(event) {
                 if (keyValue) {
                     doKeyPress(keyValue);
-                } else if (typeof keyValue == 'undefined') {
+                } else if (typeof keyValue === 'undefined') {
                     doKeyChangeResolution(keyId);
                 } else if (keyValue === '') {
                     if (document.isFullScreen || document.webkitIsFullScreen || document.mozIsFullScreen || document.msIsFullScreen) {
@@ -231,17 +231,17 @@ if (pageActivated) {
 
         // warning: here for ARTE, we can't use the KeyEvent object but only the global VK_xx
         window.KeyEvent = window.KeyEvent || {};
-        var redValue = window.KeyEvent.VK_RED ? window.KeyEvent.VK_RED : (typeof VK_RED !== 'undefined' ? VK_RED : 403);
-        var greenValue = window.KeyEvent.VK_GREEN ? window.KeyEvent.VK_GREEN : (typeof VK_GREEN !== 'undefined' ? VK_GREEN : 404);
-        var yellowValue = window.KeyEvent.VK_YELLOW ? window.KeyEvent.VK_YELLOW : (typeof VK_YELLOW !== 'undefined' ? VK_YELLOW : 405);
-        var blueValue = window.KeyEvent.VK_BLUE ? window.KeyEvent.VK_BLUE : (typeof VK_BLUE !== 'undefined' ? VK_BLUE : 406);
+        var redValue = window.KeyEvent.VK_RED ? window.KeyEvent.VK_RED : (typeof window.VK_RED !== 'undefined' ? window.VK_RED : 403);
+        var greenValue = window.KeyEvent.VK_GREEN ? window.KeyEvent.VK_GREEN : (typeof window.VK_GREEN !== 'undefined' ? window.VK_GREEN : 404);
+        var yellowValue = window.KeyEvent.VK_YELLOW ? window.KeyEvent.VK_YELLOW : (typeof window.VK_YELLOW !== 'undefined' ? window.VK_YELLOW : 405);
+        var blueValue = window.KeyEvent.VK_BLUE ? window.KeyEvent.VK_BLUE : (typeof window.VK_BLUE !== 'undefined' ? window.VK_BLUE : 406);
         generateButton('redkey', redValue);
         generateButton('greenkey', greenValue);
         generateButton('yellowkey', yellowValue);
         generateButton('bluekey', blueValue);
 
         // add F11 and F12 buttons ...
-        if (navigator.userAgent.indexOf('Android') == -1) {
+        if (navigator.userAgent.indexOf('Android') === -1) {
             generateButton('f11key', '', 'btleftgradient btrightgradient');
             generateButton('f12key', null, 'btleftgradient btrightgradient');
         } else {
@@ -260,12 +260,12 @@ if (pageActivated) {
         }
 
         // add resizing screen buttons ...
-        generateButton('res720key',undefined,undefined,'HD');
-        generateButton('res1080key',undefined,undefined,'2K Full HD');
-        generateButton('res1440key',undefined,undefined,'Quad HD');
-        generateButton('res2160key',undefined,undefined,'4K UHD');
-        generateButton('res2880key',undefined,undefined,'5K');
-        generateButton('res4320key',undefined,undefined,'8K');
+        generateButton('res720key', undefined, undefined, 'HD');
+        generateButton('res1080key', undefined, undefined, '2K Full HD');
+        generateButton('res1440key', undefined, undefined, 'Quad HD');
+        generateButton('res2160key', undefined, undefined, '4K UHD');
+        generateButton('res2880key', undefined, undefined, '5K');
+        generateButton('res4320key', undefined, undefined, '8K');
 
         // add keyboard dedicated keys to colored buttons ...
         window.addEventListener('keypress', function keyhandler(evt) {
@@ -283,7 +283,7 @@ if (pageActivated) {
                 doKeyPress(blueValue);
                 evt.preventDefault();
             } else if (keyCode === 8) { // BACK on PC
-                doKeyPress(window.KeyEvent.VK_BACK ? window.KeyEvent.VK_BACK : (typeof VK_BACK !== 'undefined' ? VK_BACK : 461));
+                doKeyPress(window.KeyEvent.VK_BACK ? window.KeyEvent.VK_BACK : (typeof window.VK_BACK !== 'undefined' ? window.VK_BACK : 461));
                 evt.preventDefault();
             }
         }, false);
@@ -323,14 +323,6 @@ if (pageActivated) {
             oipfAppCapObj: window.oipfCapabilities
         };
 
-        function mixin(source, target) { // FIXME: use ES6 Object.assign() and arrow functions
-            for (var prop in source) {
-                if (source.hasOwnProperty(prop)) {
-                    target[prop] = source[prop];
-                }
-            }
-        }
-
         function isBroadcastVideo(type) {
             return (type === 'video/broadcast');
         }
@@ -353,13 +345,13 @@ if (pageActivated) {
                 if (sType === 'application/' + objType) {
                     int_objs[objType] = oipfPluginObject;
                     if (objType === 'oipfApplicationManager') {
-                        mixin(window.oipfApplicationManager, int_objs[objType]);
+                        Object.assign(int_objs[objType], window.oipfApplicationManager);
                         break;
                     } else if (objType === 'oipfConfiguration') {
-                        mixin(window.oipfConfiguration, int_objs[objType]);
+                        Object.assign(int_objs[objType], window.oipfConfiguration);
                         break;
                     } else if (objType === 'oipfCapabilities') {
-                        mixin(window.oipfCapabilities, int_objs[objType]);
+                        Object.assign(int_objs[objType], window.oipfCapabilities);
                         break;
                     }
                 }
@@ -368,43 +360,43 @@ if (pageActivated) {
                 if (isBroadcastVideo(sType)) {
                     window.oipf.videoObject = oipfPluginObject;
 
-                    //import { injectBroadcastVideoMethods } from 'videobc.jsm';
-                    //injectBroadcastVideoMethods(oipfPluginObject);
+                    //import { oipfBroadcastVideoMethods } from './videobc.mjs';
+                    //oipfBroadcastVideoMethods(oipfPluginObject);
 
                     var currentChannel = {
-                        'TYPE_TV': 12,
-                        'channelType': 12,
-                        'sid': 1,
-                        'onid': 1,
-                        'tsid': 1,
-                        'name': 'test',
-                        'ccid': 'ccid:dvbt.0',
-                        'dsd': ''
+                        TYPE_TV: 12,
+                        channelType: 12,
+                        sid: 1,
+                        onid: 1,
+                        tsid: 1,
+                        name: 'test',
+                        ccid: 'ccid:dvbt.0',
+                        dsd: ''
                     };
                     oipfPluginObject.currentChannel = currentChannel;
                     oipfPluginObject.createChannelObject = function() {
-                        console.log('<BroadcastVideo> createChannelObject() ...');
+                        console.timeStamp && console.timeStamp('bcVideo.createChannelObject');
                     };
                     oipfPluginObject.bindToCurrentChannel = function() {
-                        console.log('<BroadcastVideo> bindToCurrentChannel() ...');
+                        console.timeStamp && console.timeStamp('bcVideo.bindToCurrentChannel');
                         var player = document.getElementById('video-player');
                         if (player) {
                             player.play();
                         }
                     };
                     oipfPluginObject.setChannel = function() {
-                        console.log('<BroadcastVideo> setChannel() ...');
+                        console.timeStamp && console.timeStamp('bcVideo.setChannel');
                     };
                     oipfPluginObject.prevChannel = function() {
-                        console.log('<BroadcastVideo> prevChannel() ...');
+                        console.timeStamp && console.timeStamp('bcVideo.prevChannel');
                         return currentChannel;
                     };
                     oipfPluginObject.nextChannel = function() {
-                        console.log('<BroadcastVideo> nextChannel() ...');
+                        console.timeStamp && console.timeStamp('bcVideo.nextChannel');
                         return currentChannel;
                     };
                     oipfPluginObject.release = function() {
-                        console.log('<BroadcastVideo> release() ...');
+                        console.timeStamp && console.timeStamp('bcVideo.release');
                         var player = document.getElementById('video-player');
                         if (player) {
                             player.pause();
@@ -417,9 +409,9 @@ if (pageActivated) {
                     ChannelConfig.prototype.channelList._list = [];
                     ChannelConfig.prototype.channelList._list.push(currentChannel);
                     Object.defineProperties(ChannelConfig.prototype.channelList, {
-                        'length': {
+                        length: {
                             enumerable: true,
-                            get : function length() {
+                            get: function length() {
                                 return window.oipf.ChannelConfig.channelList._list.length;
                             }
                         }
@@ -475,14 +467,14 @@ if (pageActivated) {
                             this.encoding = 'DVB-SUBT';
                             this.encrypted = false;
                         }
-                    };
+                    }
                     class AVVideoComponent extends AVComponent {
                         constructor() {
                             super();
                             this.type = this.COMPONENT_TYPE_VIDEO;
                             this.aspectRatio = 1.78;
                         }
-                    };
+                    }
                     class AVAudioComponent extends AVComponent {
                         constructor() {
                             super();
@@ -491,7 +483,7 @@ if (pageActivated) {
                             this.audioDescription = false;
                             this.audioChannels = 2;
                         }
-                    };
+                    }
                     class AVSubtitleComponent extends AVComponent {
                         constructor() {
                             super();
@@ -499,7 +491,7 @@ if (pageActivated) {
                             this.language = 'deu';
                             this.hearingImpaired = false;
                         }
-                    };
+                    }
                     class AVComponentCollection extends Array {
                         constructor(num) {
                             super(num);
@@ -507,7 +499,7 @@ if (pageActivated) {
                         item(idx) {
                             return idx < this.length ? this[idx] : [];
                         }
-                    };
+                    }
                     oipfPluginObject.getComponents = (function(type) {
                         return [
                             type === this.COMPONENT_TYPE_VIDEO ? new AVVideoComponent() :
@@ -536,24 +528,25 @@ if (pageActivated) {
                     };
                     oipfPluginObject.removeEventListener = function(type, listener, capture) {
                     };
-                    console.info('BROADCAST VIDEO PLAYER ...');
+                    //console.info('BROADCAST VIDEO PLAYER ...');
+
                 } else if (isBroadbandVideo(sType)) {
-                    console.info('BROADBAND VIDEO PLAYER ...');
+                    //console.info('BROADBAND VIDEO PLAYER ...');
                     window.oipf.videoObject = oipfPluginObject;
 
-                    //import { injectBroadbandVideoMethods } from "videobd.jsm";
-                    //injectBroadbandVideoMethods(oipfPluginObject);
+                    //import { oipfBroadbandVideoMethods } from './videobb.mjs';
+                    //oipfBroadbandVideoMethods(oipfPluginObject);
 
-                    oipfPluginObject.play = (function(speed) { console.log('Play('+speed+')'); var player = this.children.length > 0 ? this.children[0] : undefined; if (player) player.play(); }).bind(oipfPluginObject);
-                    oipfPluginObject.stop = (function() { console.log('Stop('+speed+')'); var player = this.children.length > 0 ? this.children[0] : undefined; if (player) player.stop(); }).bind(oipfPluginObject);
+                    oipfPluginObject.play = (function(speed) { console.timeStamp && console.timeStamp('bbVideo.play('+speed+')'); var player = this.children.length > 0 ? this.children[0] : undefined; if (player) player.play(); }).bind(oipfPluginObject);
+                    oipfPluginObject.stop = (function() { console.timeStamp && console.timeStamp('bbVideo.stop('+speed+')'); var player = this.children.length > 0 ? this.children[0] : undefined; if (player) player.stop(); }).bind(oipfPluginObject);
                     oipfPluginObject.seek = (function(pos) { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) player.currentTime=pos/1000; }).bind(oipfPluginObject);
                     //oipfPluginObject.data = (function(src) { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) console.log(src); }).bind(oipfPluginObject);
-                    oipfPluginObject.playState = (function() { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) console.log('state'); }).bind(oipfPluginObject);
-                    oipfPluginObject.playPosition = (function() { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) console.log('pos='+(player.currentTime*1000)); }).bind(oipfPluginObject);
-                    oipfPluginObject.speed = (function() { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) console.log('speed='+player.playbackRate); }).bind(oipfPluginObject);
-                    oipfPluginObject.onPlayStateChange = (function(s) { console.log('PlayStateChange='+s); this.playState = s; }).bind(oipfPluginObject);
-                    oipfPluginObject.onPlayPositionChanged = (function(p) { console.log('PositionChange='+s); this.playPosition = p; }).bind(oipfPluginObject);
-                    oipfPluginObject.onPlaySpeedChanged = (function(s) { console.log('PositionChange='+s); this.speed = s; }).bind(oipfPluginObject);
+                    oipfPluginObject.playState = (function() { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) console.timeStamp && console.timeStamp('bbVideo.state'); }).bind(oipfPluginObject);
+                    oipfPluginObject.playPosition = (function() { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) console.timeStamp && console.timeStamp('bbVideo.pos='+(player.currentTime*1000)); }).bind(oipfPluginObject);
+                    oipfPluginObject.speed = (function() { var player = this.children.length > 0 ? this.children[0] : undefined; if (player) console.timeStamp && console.timeStamp('bbVideo.speed='+player.playbackRate); }).bind(oipfPluginObject);
+                    oipfPluginObject.onPlayStateChange = (function(s) { console.timeStamp && console.timeStamp('bbVideo.playStateChange='+s); this.playState = s; }).bind(oipfPluginObject);
+                    oipfPluginObject.onPlayPositionChanged = (function(p) { console.timeStamp && console.timeStamp('bbVideo.positionChange='+s); this.playPosition = p; }).bind(oipfPluginObject);
+                    oipfPluginObject.onPlaySpeedChanged = (function(s) { console.timeStamp && console.timeStamp('bbVideo.positionChange='+s); this.speed = s; }).bind(oipfPluginObject);
                 }
 
                 // if video is broadcast or broadband one ... do the in-common video player injection ...
@@ -564,6 +557,7 @@ if (pageActivated) {
                         videoTag.setAttribute('id', 'video-player');
                         //videoTag.setAttribute('autoplay', ''); // note: call to bindToCurrentChannel() or play() is doing it
                         videoTag.setAttribute('loop', '');
+                        videoTag.setAttribute('muted', 'true');
                         videoTag.setAttribute('style', 'top:inherit; left:inherit; width:inherit; height:inherit;');
                         videoTag.src = localStorage.getItem('tvViewer_broadcast_url') || 'http://clips.vorwaerts-gmbh.de/VfE_html5.mp4';
                         oipfPluginObject.appendChild(videoTag);
@@ -574,7 +568,7 @@ if (pageActivated) {
 
                 }
             } else if (sType && isBroadbandVideo(sType) && sType.indexOf('application/dash+xml') == 0) {
-                console.info('DASH PLAYER ...');
+                //console.info('DASH PLAYER ...');
                 oipfPluginObject.style.webkitAnimationPlayState = 'running'; // force animation that will be catched in hbbobj.js
             }
         }
