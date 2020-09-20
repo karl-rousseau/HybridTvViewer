@@ -1,0 +1,32 @@
+{
+  "powerButton": {
+    "message": "aktif sekmede uzantıyı aç ya da kapat",
+    "description": ""
+  },
+
+  "powerText": {
+    "message": "Bu web sayfasını iTV uygulaması olarak tanınması için zorlayabilirsiniz.",
+    "description": ""
+  },
+
+  "titleUI": {
+    "message": "Kullanıcı Arayüzü",
+    "description": ""
+  },
+
+  "titleSoftwareVersion": {
+    "message": "Cihaz Yazılım Versiyonu",
+    "description": ""
+  },
+
+  "titleDeviceConfig": {
+    "message": "Cihaz Ayarları",
+    "description": ""
+  },
+
+  "countryLanguage": {
+    "message": "Ülke: ",
+    "description": ""
+  }
+
+}
