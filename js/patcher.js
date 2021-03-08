@@ -163,33 +163,35 @@
                 checkAndStoreUrl(url);
             }
 
-            if (url.indexOf('view-source:') === 0 ||
-                url.indexOf('.json') > -1 || // also .jsonp
-                url.indexOf('.js') > -1 ||
-                url.indexOf('.css') > -1 ||
-                url.indexOf('.ico') > -1 ||
-                url.indexOf('.jpg') > -1 ||
-                url.indexOf('.png') > -1 ||
-                url.indexOf('.gif') > -1 ||
-                url.indexOf('.webp') > -1 ||
-                url.indexOf('.m3u8') > -1 ||
-                url.indexOf('.mpd') > -1 ||
-                url.indexOf('.ts') > -1 ||
-                url.indexOf('.mpg') > -1 ||
-                url.indexOf('.mp3') > -1 ||
-                url.indexOf('.mp4') > -1 ||
-                url.indexOf('.mov') > -1 ||
-                url.indexOf('.avi') > -1 ||
-                url.indexOf('.pdf') > -1 ||
-                url.indexOf('.ppt') > -1 ||
-                url.indexOf('.pptx') > -1 ||
-                url.indexOf('.xls') > -1 ||
-                url.indexOf('.xlsx') > -1 ||
-                url.indexOf('.doc') > -1 ||
-                url.indexOf('.docx') > -1 ||
-                url.indexOf('.zip') > -1 ||
-                url.indexOf('.rar') > -1 ||
-                url.indexOf('.7z') > -1
+            var pathname = new URL(url).pathname;
+
+            if (pathname.indexOf('view-source:') === 0 ||
+                pathname.indexOf('.json') > -1 || // also .jsonp
+                pathname.indexOf('.js') > -1 ||
+                pathname.indexOf('.css') > -1 ||
+                pathname.indexOf('.ico') > -1 ||
+                pathname.indexOf('.jpg') > -1 ||
+                pathname.indexOf('.png') > -1 ||
+                pathname.indexOf('.gif') > -1 ||
+                pathname.indexOf('.webp') > -1 ||
+                pathname.indexOf('.m3u8') > -1 ||
+                pathname.indexOf('.mpd') > -1 ||
+                pathname.indexOf('.ts') > -1 ||
+                pathname.indexOf('.mpg') > -1 ||
+                pathname.indexOf('.mp3') > -1 ||
+                pathname.indexOf('.mp4') > -1 ||
+                pathname.indexOf('.mov') > -1 ||
+                pathname.indexOf('.avi') > -1 ||
+                pathname.indexOf('.pdf') > -1 ||
+                pathname.indexOf('.ppt') > -1 ||
+                pathname.indexOf('.pptx') > -1 ||
+                pathname.indexOf('.xls') > -1 ||
+                pathname.indexOf('.xlsx') > -1 ||
+                pathname.indexOf('.doc') > -1 ||
+                pathname.indexOf('.docx') > -1 ||
+                pathname.indexOf('.zip') > -1 ||
+                pathname.indexOf('.rar') > -1 ||
+                pathname.indexOf('.7z') > -1
             ) { // already parsed, detected and stored URL page or un-wanted one ?
                 return {
                     responseHeaders: headers
