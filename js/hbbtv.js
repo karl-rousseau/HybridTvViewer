@@ -55,7 +55,7 @@
             };
             oipfObjectFactory.createVideoBroadcastObject = function() {
                 console.timeStamp && console.timeStamp('createVideoBroadcastObject'); //console.log('createVideoBroadcastObject() ...');
-                var videoObj = document.createElement('video');
+                var videoObj = window.document.createElement('video');
                 videoObj.type = 'video/broadcast';
                 videoObj.bindToCurrentChannel = function() { console.timeStamp && console.timeStamp('createVideoBroadcastObject.bindToCurrentChannel'); };
                 videoObj.setChannel = function() { console.timeStamp && console.timeStamp('createVideoBroadcastObject.setChannel'); };
